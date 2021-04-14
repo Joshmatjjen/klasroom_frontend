@@ -1,14 +1,16 @@
 import Head from 'next/head'
+import MainHeader from '../app/components/MainHeader'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
   return (
-    <div className={styles.container}>
+    <>
       <Head>
         <title>Home | Klasroom</title>
-        <link rel="icon" href="/favicon.ico" />
       </Head>
 
-    </div>
+      <MainHeader />
+
+    </>
   )
 }

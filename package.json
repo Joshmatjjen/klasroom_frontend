@@ -38,5 +38,7 @@
     "reselect": "^4.0.0",
     "socicon": "^3.0.5"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "node-sass": "^5.0.0"
+  }
 }
