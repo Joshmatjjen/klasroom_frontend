@@ -2,4 +2,4 @@ npm install
 
 npm run build
 
-npm run start
+pm2 start npm -- start
