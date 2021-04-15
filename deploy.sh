@@ -1,2 +1,7 @@
-sudo docker-compose -f docker-compose.yml up --build -d
+npm install 
 
+npm run build
+
+rm -fr /var/www/html/klasroom-web/*
+
+mv build/* /var/www/html/klasroom-web
