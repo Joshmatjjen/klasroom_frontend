@@ -1,0 +1,74 @@
+[
+    {
+        "unread": true,
+        "sender": "Amina",
+        "type": "recieved",
+        "message": "It’s gradually starting to make sense to me now. Let’s hope this illustrator doesn’t crash again shaa"
+    },
+    {
+        "unread": true,
+        "sender": "Amina",
+        "type": "sent",
+        "message": "Am I the only one with plenty questions? there’s a number of things I still don’t get."
+    },
+    {
+        "unread": true,
+        "sender": "SHEGS!!",
+        "type": "recieved",
+        "message": "Omo, I have plenty questions o, don’t even know where to start 😭"
+    },
+    {
+        "unread": true,
+        "sender": "Somto Agu",
+        "type": "recieved",
+        "message": "But how do we convert bitmap images to vector?"
+    },
+    {
+        "unread": true,
+        "sender": "Amina",
+        "type": "sent",
+        "message": "It’s actually not that hard. Just copy the image into Adobe Illustrator and use the image tracing tool there. Always works for me."
+    },
+    {
+        "unread": true,
+        "sender": "Halima B.",
+        "type": "recieved",
+        "message": "Thank you! Trying this now..."
+    },
+    {
+        "unread": true,
+        "sender": "Amina",
+        "type": "recieved",
+        "message": "It’s gradually starting to make sense to me now. Let’s hope this illustrator doesn’t crash again shaa"
+    },
+    {
+        "unread": true,
+        "sender": "Amina",
+        "type": "sent",
+        "message": "Am I the only one with plenty questions? there’s a number of things I still don’t get."
+    },
+    {
+        "unread": true,
+        "sender": "SHEGS!!",
+        "type": "recieved",
+        "message": "Omo, I have plenty questions o, don’t even know where to start 😭"
+    },
+    {
+        "unread": true,
+        "sender": "Somto Agu",
+        "type": "recieved",
+        "message": "But how do we convert bitmap images to vector?"
+    },
+    {
+        "unread": true,
+        "sender": "Amina",
+        "type": "sent",
+        "message": "It’s actually not that hard. Just copy the image into Adobe Illustrator and use the image tracing tool there. Always works for me."
+    },
+    {
+        "unread": true,
+        "sender": "Halima B.",
+        "type": "recieved",
+        "message": "Thank you! Trying this now..."
+    }
+]
