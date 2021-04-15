@@ -2,6 +2,6 @@ npm install
 
 npm run build
 
-rm -fr /var/www/html/klasroom-web/*
+sudo rm -fr /var/www/html/klasroom-web/*
 
-mv build/* /var/www/html/klasroom-web
+sudo mv build/* /var/www/html/klasroom-web
