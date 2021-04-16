@@ -121,11 +121,13 @@ export default {
     },
     toggleLogin(e) {
       if (e) e.preventDefault()
+      this.opt = false
       this.open = false
       this.$store.commit('app/LOGIN_MODAL', 'login')
     },
     toggleRegister(e) {
       if (e) e.preventDefault()
+      this.opt = false
       this.open = false
       this.$store.commit('app/LOGIN_MODAL', 'register')
     },
