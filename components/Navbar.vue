@@ -50,7 +50,7 @@
               Blog
             </nuxt-link>
           </div>
-          <div class="mt-8 md:mt-0 mb-6 md:mb-0">
+          <div class="mt-8 md:mt-0 mb-6 md:mb-0 flex flex-row relative">
             <a
               href="#"
               class="btn lg:mr-4 bg-blue-400 text-white md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
@@ -60,11 +60,42 @@
             </a>
             <a
               href="#"
-              class="btn btn-primary lg:mt-0 block md:inline-block"
-              @click="toggleRegister"
+              class="btn btn-primary lg:mt-0 flex flex-row"
+              @click="toggleSignUpOpt"
             >
-              Sign Up
+              <p>Sign Up</p>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 ml-1"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
             </a>
+            <div
+              :class="{ hidden: !opt }"
+              class="pop-up absolute bg-white border-1 rounded-lg h-52 w-64 shadow-lg"
+            >
+              <a
+                href="#"
+                class="pop-up-item lg:mr-4 md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                @click="toggleLogin"
+              >
+                Become a student
+              </a>
+              <a
+                href="#"
+                class="pop-up-item lg:mr-4 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                @click="toggleRegister"
+              >
+                <p>Become a tutor</p>
+              </a>
+            </div>
           </div>
         </div>
       </nav>
@@ -77,6 +108,7 @@ import { mapState } from 'vuex'
 export default {
   data: () => ({
     open: false,
+    opt: false,
   }),
   computed: {
     ...mapState({
@@ -96,6 +128,9 @@ export default {
       if (e) e.preventDefault()
       this.open = false
       this.$store.commit('app/LOGIN_MODAL', 'register')
+    },
+    toggleSignUpOpt() {
+      this.opt = !this.opt
     },
   },
 }
@@ -121,6 +156,17 @@ export default {
 .btn {
   @apply text-center;
 }
+.pop-up {
+  top: 4rem;
+  right: 0;
+}
+.pop-up-item {
+  padding: 12.5px 36px;
+  font-size: 0.875rem;
+  font-weight: 300;
+  border-radius: 0.5rem;
+}
+
 @media (min-width: 768px) {
   .menu-group {
     @apply flex items-center w-auto shadow-none;

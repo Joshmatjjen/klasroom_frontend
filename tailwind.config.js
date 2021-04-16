@@ -1,9 +1,9 @@
 /*
-** TailwindCSS Configuration File
-**
-** Docs: https://tailwindcss.com/docs/configuration
-** Default: https://github.com/tailwindcss/tailwindcss/blob/master/stubs/defaultConfig.stub.js
-*/
+ ** TailwindCSS Configuration File
+ **
+ ** Docs: https://tailwindcss.com/docs/configuration
+ ** Default: https://github.com/tailwindcss/tailwindcss/blob/master/stubs/defaultConfig.stub.js
+ */
 const { colors } = require('tailwindcss/defaultTheme')
 module.exports = {
   theme: {
@@ -11,16 +11,20 @@ module.exports = {
       colors: {
         orange: {
           ...colors.orange,
-          '100': '#fcf8f7',
-          '200': '#fef5ec',
-          '500': '#f99e42',
+          100: '#fcf8f7',
+          200: '#fef5ec',
+          500: '#f99e42',
         },
         blue: {
           ...colors.blue,
-          '400': '#0797ce',
-          '600': '#0757ce',
-          '800': '#08305f',
+          400: '#0797ce',
+          600: '#0757ce',
+          800: '#08305f',
         },
+      },
+      inset: {
+        0: 0,
+        '1/2': '50%',
       },
     },
   },
@@ -33,7 +37,7 @@ module.exports = {
       'layouts/**/*.vue',
       'pages/**/*.vue',
       'plugins/**/*.js',
-      'nuxt.config.js'
-    ]
-  }
+      'nuxt.config.js',
+    ],
+  },
 }
