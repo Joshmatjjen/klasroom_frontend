@@ -1,15 +1,18 @@
 {
   "name": "KlasroomApp",
   "version": "0.0.1",
-  "contributors": [{
-    "name": "Joshmat Jjem",
-    "email": "joshmatparrot@gmail.com",
-    "url": "https://github.com/Joshmatjjen"
-  }, {
-    "name": "Nwakwuo Uche",
-    "email": "dukweb4@gmail.com",
-    "url": "https://github.com/Ucheduk"
-  }],
+  "contributors": [
+    {
+      "name": "Joshmat Jjem",
+      "email": "joshmatparrot@gmail.com",
+      "url": "https://github.com/Joshmatjjen"
+    },
+    {
+      "name": "Nwakwuo Uche",
+      "email": "dukweb4@gmail.com",
+      "url": "https://github.com/Ucheduk"
+    }
+  ],
   "license": "MIT",
   "private": true,
   "scripts": {
