@@ -1,7 +1,5 @@
-npm install 
+yarn install 
 
-npm run build
+yarn build
 
-# npm run generate
-
-pm2 start npm -- start
+pm2 start yarn -- start
