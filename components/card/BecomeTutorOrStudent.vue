@@ -19,7 +19,7 @@
           </p>
         </div>
         <div class="col-span-12">
-          <button class="btn btn-primary" @click.prevent="toggleRegister">
+          <button class="btn btn-primary" @click.prevent="(e) => toggleRegister(e, 'student')">
             Create tutor account now
           </button>
         </div>
@@ -37,7 +37,7 @@
           </p>
         </div>
         <div class="col-span-12">
-          <button class="btn btn-primary" @click.prevent="toggleRegister">
+          <button class="btn btn-primary" @click.prevent="(e) => toggleRegister(e, 'tutor')">
             Create student account now
           </button>
         </div>
@@ -53,10 +53,14 @@
 <script>
 export default {
   methods: {
-    toggleRegister(e) {
+    toggleRegister(e, userType) {
       if (e) e.preventDefault()
       this.open = false
-      this.$store.commit('app/LOGIN_MODAL', 'register')
+      this.$store.commit('app/LOGIN_MODAL', {
+        status: true, 
+        type: 'register', 
+        userType
+      });
     },
   },
 }

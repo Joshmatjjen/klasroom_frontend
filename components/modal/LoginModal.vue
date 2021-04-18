@@ -48,7 +48,7 @@
             <button
               aria-label="Close panel"
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
-              @click="$store.commit('app/LOGIN_MODAL', false)"
+              @click="$store.commit('app/LOGIN_MODAL', null)"
             >
               <!-- Heroicon name: x -->
               <svg
@@ -82,7 +82,7 @@
                 {{
                   isLogin
                     ? 'Sign into your account'
-                    : 'Create a student account'
+                    : `Create a ${showLogin.userType} account`
                 }}
               </h2>
               <hr class="mt-8 mb-5" />
@@ -137,8 +137,10 @@
                   <div>
                     <input
                       id="input-name"
+                      type="text"
                       class="form-input"
                       placeholder="Enter your name here"
+                      v-model="signupForm.name"
                     />
                   </div>
                 </div>
@@ -147,8 +149,10 @@
                   <div>
                     <input
                       id="input-email"
+                      type="email"
                       class="form-input"
                       placeholder="Enter your email here"
+                      v-model="signupForm.email"
                     />
                   </div>
                 </div>
@@ -157,8 +161,10 @@
                   <div>
                     <input
                       id="input-password"
+                      type="password"
                       class="form-input"
                       placeholder="Enter your password here"
+                      v-model="signupForm.password"
                     />
                   </div>
                 </div>
@@ -189,6 +195,11 @@ import { mapState } from 'vuex'
 export default {
   data: () => ({
     isLogin: true,
+    signupForm: {
+      name: "",
+      email: "",
+      password: ""
+    }
   }),
   computed: {
     ...mapState({
@@ -198,8 +209,8 @@ export default {
   watch: {
     showLogin: {
       handler(value) {
-        // console.log('showLogin', value)
-        if (value) this.isLogin = value !== 'register'
+        console.log('showLogin', value)
+        if (value) this.isLogin = value.type !== 'register'
       },
       immediate: true,
     },
@@ -208,22 +219,37 @@ export default {
     forgotPassword(e) {
       if (e) e.preventDefault()
       this.$store.commit('app/FORGOT_PASSWORD_MODAL', true)
-      this.$store.commit('app/LOGIN_MODAL', false)
+      this.$store.commit('app/LOGIN_MODAL', null)
     },
     showSuccess(e) {
       if (e) e.preventDefault()
-      this.$store.commit('app/NOTICE_MODAL', {
-        title: 'All done!',
-        text: `You have successfully signed up to klasroom.com. 
-          Please check your email and click the link in it to 
-          complete your registration.`,
-      })
-      this.$store.commit('app/LOGIN_MODAL', false)
+      const data = {
+        ...this.signupForm
+      }
+      console.log('data: ', data)
+      this.$axios.$post('/v1/users', data).then((res) => {
+        this.clearInput()
+        console.log('data: ', res)
+      }).catch((e) => console.log('error: ', e))
+      // this.$store.commit('app/NOTICE_MODAL', {
+      //   title: 'All done!',
+      //   text: `You have successfully signed up to klasroom.com. 
+      //     Please check your email and click the link in it to 
+      //     complete your registration.`,
+      // })
+      // this.$store.commit('app/LOGIN_MODAL', null)
     },
     gotoStudentDash() {
-      this.$store.commit('app/LOGIN_MODAL', false)
+      this.$store.commit('app/LOGIN_MODAL', null)
       this.$router.push('/student/dashboard')
     },
+    clearInput() {
+      this.signupForm = {
+        name: "",
+        email: "",
+        password: ""
+      }
+    }
   },
 }
 </script>

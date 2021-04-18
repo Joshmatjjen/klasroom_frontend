@@ -60,6 +60,7 @@ export default {
     '@nuxtjs/device',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/proxy',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt/content
     '@nuxt/content',
@@ -69,7 +70,13 @@ export default {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    baseURL: process.env.BASE_URL || 'https://api.klasroom.com/',
+    proxy: true
+  },
+  proxy: {
+    '/v1': { target: process.env.BASE_URL || 'https://api.klasroom.com/', pathRewrite: {'^/v1/': ''} }
+  },
   /*
    ** Content module configuration
    ** See https://content.nuxtjs.org/configuration
@@ -89,4 +96,7 @@ export default {
       }),
     ],
   },
+  env: {
+    baseUrl: process.env.BASE_URL || 'https://api.klasroom.com/'
+  }
 }

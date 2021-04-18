@@ -2,7 +2,7 @@
 export const state = () => ({
   menu: false,
   darkMenu: false,
-  loginModal: false,
+  loginModal: null,
   forgotPasswordModal: false,
   resetPasswordModal: false,
   modal: false,
@@ -45,8 +45,8 @@ export const mutations = {
   SET_DARK_MENU(state, status) {
     state.darkMenu = status
   },
-  LOGIN_MODAL(state, status) {
-    state.loginModal = status
+  LOGIN_MODAL(state, loginData) {
+    state.loginModal = loginData
   },
   FORGOT_PASSWORD_MODAL(state, status) {
     state.forgotPasswordModal = status
