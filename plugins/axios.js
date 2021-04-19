@@ -3,11 +3,11 @@ import Swal from 'sweetalert2'
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 export default ({ $axios, app, store, redirect, route }) => {
-  $axios.setBaseURL(process.env.apiUrl)
+  // $axios.setBaseURL(process.env.baseUrl)
 
   // Request interceptor
   $axios.onRequest((request) => {
-    request.baseURL = process.env.apiUrl
+    // request.baseURL = process.env.baseUrl
 
     let token = store.getters['auth/token']
     // console.log('Axios token:', token)
