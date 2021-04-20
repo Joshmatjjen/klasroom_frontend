@@ -52,31 +52,34 @@ export const mutations = {
 
 // actions
 export const actions = {
-  saveToken({ commit, dispatch }, { token, userId, remember = null }) {
-    commit('SET_TOKEN', token)
+  saveToken({ commit, dispatch }, { accessToken, userId, remember = null }) {
+    commit('SET_TOKEN', accessToken)
     commit('SET_USER_ID', userId)
 
-    Cookies.set('token', token, { expires: remember })
+    Cookies.set('token', accessToken, { expires: remember })
     Cookies.set('user_id', userId, { expires: remember })
   },
 
   async signUpUser(vuexContext, userData) {
     try {
       const { data } = await this.$axios.$post(userData.userType === "student" ? '/users' : '/users/tutor', userData)
-      console.log('fetch user success: ', data)
-      // commit('FETCH_USER_SUCCESS', data.data)
       return data
     } catch (e) {
-      console.log('fetch user failed: ', e)
-      // dispatch('app/handleError', e, { root: true })
-      // commit('FETCH_USER_FAILURE')
       return false
     }
-    // return this.$axios.$post('/v1/users', userData).then((res) => {
-    //   console.log('fetch user success: ', res)
-    // }).catch((e) => console.log('fetch user failed: ', e))
-      // console.log('fetch user success: ', data.data)
-      // vuexContext.commit('FETCH_USER_SUCCESS', data.data)
+  },
+
+  async loginUser(vuexContext, userData) {
+    try {
+      const { data } = await this.$axios.$post('/login', userData)
+      console.log('fetch user success: ', data)
+      vuexContext.dispatch("auth/saveToken", data)
+      vuexContext.commit('FETCH_USER_SUCCESS', data)
+      return data
+    } catch (e) {
+      // console.log('fetch user failed: ', e)
+      return false
+    }
   },
 
   async fetchUser({ commit, dispatch }) {

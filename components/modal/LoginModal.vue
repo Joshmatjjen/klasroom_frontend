@@ -48,7 +48,10 @@
             <button
               aria-label="Close panel"
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
-              @click="$store.commit('app/LOGIN_MODAL', null)"
+              @click="() => {
+                $store.commit('app/LOGIN_MODAL', null);
+                clearInput()
+              }"
             >
               <!-- Heroicon name: x -->
               <svg
@@ -93,8 +96,10 @@
                   <div>
                     <input
                       id="input-email"
+                      type="email"
                       class="form-input"
                       placeholder="Enter your email here"
+                      v-model="loginForm.userIdentity"
                     />
                   </div>
                 </div>
@@ -103,8 +108,10 @@
                   <div>
                     <input
                       id="input-password"
+                      type="password"
                       class="form-input"
                       placeholder="Enter your password here"
+                      v-model="loginForm.password"
                     />
                   </div>
                 </div>
@@ -113,7 +120,7 @@
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="gotoStudentDash"
+                      @click="onLogin"
                     >
                       Sign in
                     </button>
@@ -168,7 +175,7 @@
                     />
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-5">
                   <label for="input-password">Password</label>
                   <div>
                     <input
@@ -178,6 +185,22 @@
                       placeholder="Enter your password here"
                       v-model="signupForm.password"
                     />
+                  </div>
+                </div>
+                <div v-if="showLogin.userType === 'tutor'" class="form-group">
+                  <label for="input-courseCategories">Course Categories</label>
+                  <div>
+                    <select
+                      id="input-password"
+                      multiple
+                      class="form-input"
+                      v-model="signupForm.courseCategories"
+                    >
+                      <option disabled value="">Select Course Categories</option>
+                      <option value="Programming">Programming</option>
+                      <option value="Business">Business</option>
+                      <option value="Finance">Finance</option>
+                    </select>
                   </div>
                 </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
@@ -213,7 +236,8 @@ export default {
       name: "",
       email: "",
       phone: "",
-      password: ""
+      password: "",
+      courseCategories: ""
     },
     loginForm: {
       userIdentity: "",
@@ -259,21 +283,19 @@ export default {
         }
       }).catch(e => console.log('e: ', e));
     },
-    onLogin(e, userType) {
+    onLogin(e) {
       if (e) e.preventDefault()
       this.loading = true
       const data = {
-        ...this.signupForm
+        ...this.loginForm
       }
       this.$store.dispatch("auth/loginUser", {
-        ...data,
-        userType
+        ...data
       })
       .then((res) => {
         this.loading = false
         if (res) {
-          this.clearInput()
-          this.showSuccess()
+          this.gotoStudentDash()
         }
       }).catch(e => console.log('e: ', e));
     },
@@ -295,6 +317,12 @@ export default {
         name: "",
         email: "",
         phone: "",
+        password: "",
+        courseCategories: ""
+      }
+
+      this.loginForm = {
+        userIdentity: "",
         password: ""
       }
     }

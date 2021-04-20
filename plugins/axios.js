@@ -74,7 +74,7 @@ export default ({ $axios, app, store, redirect, route }) => {
       })
     }
 
-    if (status === 400 || status === 409) {
+    if (status === 400 || status === 409 || status === 404) {
 
       Swal.fire({
         position: 'top-end',
@@ -96,5 +96,26 @@ export default ({ $axios, app, store, redirect, route }) => {
     }
 
     return Promise.reject(error)
+  })
+
+  $axios.onResponse((res) => {
+    const { status, data } = res;
+    console.log('new data: ', data)
+    if (status === 200 && data.message === "Check your email for confirmation link before proceeding") {
+
+      Swal.fire({
+        position: 'top-end',
+        width: '350px',
+        text: data.message,
+        backdrop: false,
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        showCloseButton: true,
+        timer: 5000,
+      }).then(() => {
+        redirect({ name: 'login' })
+      })
+
+    }
   })
 }
