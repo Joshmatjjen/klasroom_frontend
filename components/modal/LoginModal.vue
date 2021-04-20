@@ -214,6 +214,10 @@ export default {
       email: "",
       phone: "",
       password: ""
+    },
+    loginForm: {
+      userIdentity: "",
+      password: ""
     }
   }),
   computed: {
@@ -243,8 +247,25 @@ export default {
       const data = {
         ...this.signupForm
       }
-      console.log('data: ', data)
       this.$store.dispatch("auth/signUpUser", {
+        ...data,
+        userType
+      })
+      .then((res) => {
+        this.loading = false
+        if (res) {
+          this.clearInput()
+          this.showSuccess()
+        }
+      }).catch(e => console.log('e: ', e));
+    },
+    onLogin(e, userType) {
+      if (e) e.preventDefault()
+      this.loading = true
+      const data = {
+        ...this.signupForm
+      }
+      this.$store.dispatch("auth/loginUser", {
         ...data,
         userType
       })
