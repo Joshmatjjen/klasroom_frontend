@@ -14,7 +14,7 @@
 
 <script>
 export default {
-  updated () {
+  updated() {
     // console.log('default layout mounted')
     this.$store.commit('app/SET_MENU', false)
   },

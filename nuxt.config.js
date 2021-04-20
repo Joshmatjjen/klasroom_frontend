@@ -60,6 +60,7 @@ export default {
     '@nuxtjs/device',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    '@nuxtjs/proxy',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt/content
     '@nuxt/content',
@@ -69,7 +70,13 @@ export default {
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
    */
-  axios: {},
+  axios: {
+    baseURL: process.env.BASE_URL || 'https://api.klasroom.com/',
+    proxy: true
+  },
+  proxy: {
+    '/v1': { target: process.env.BASE_URL || 'https://api.klasroom.com/', pathRewrite: {'^/v1/': ''} }
+  },
   /*
    ** Content module configuration
    ** See https://content.nuxtjs.org/configuration
@@ -89,4 +96,53 @@ export default {
       }),
     ],
   },
+  env: {
+    baseUrl: process.env.BASE_URL || 'https://api.klasroom.com/'
+  }
 }
+
+module.exports = {
+  // If you provide a version, it will be stored inside cache.
+  // Later when you deploy a new version, old cache will be
+  // automatically purged.
+  // version: pkg.version,
+
+  // ....
+
+  modules: [
+      'nuxt-ssr-cache',
+  ],
+  cache: {
+    // if you're serving multiple host names (with differing
+    // results) from the same server, set this option to true.
+    // (cache keys will be prefixed by your host name)
+    // if your server is behind a reverse-proxy, please use
+    // express or whatever else that uses 'X-Forwarded-Host'
+    // header field to provide req.hostname (actual host name)
+    useHostPrefix: false,
+    pages: [
+      // these are prefixes of pages that need to be cached
+      // if you want to cache all pages, just include '/'
+      '/'
+    ],
+    
+    key(route, context) {
+      // custom function to return cache key, when used previous
+      // properties (useHostPrefix, pages) are ignored. return 
+      // falsy value to bypass the cache
+    },
+
+    store: {
+      type: 'redis',
+      host: 'localhost',
+      ttl: 10 * 60,
+      configure: [
+        // these values are configured
+        // on redis upon initialization
+        ['maxmemory', '200mb'],
+        ['maxmemory-policy', 'allkeys-lru'],
+      ],
+    },
+  },
+}
+

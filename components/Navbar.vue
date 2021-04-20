@@ -54,7 +54,7 @@
             <a
               href="#"
               class="btn lg:mr-4 bg-blue-400 text-white md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
-              @click="toggleLogin"
+              @click="(e) => toggleLogin(e, 'student')"
             >
               Log In
             </a>
@@ -80,18 +80,19 @@
             <div
               :class="{ hidden: !opt }"
               class="pop-up absolute bg-white border-1 rounded-lg h-52 w-64 shadow-lg"
+              :style="{ zIndex: 2 }"
             >
               <a
                 href="#"
                 class="pop-up-item lg:mr-4 md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                @click="toggleLogin"
+                @click="(e) => toggleLogin(e, 'student')"
               >
                 Become a student
               </a>
               <a
                 href="#"
                 class="pop-up-item lg:mr-4 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                @click="toggleRegister"
+                @click="(e) => toggleRegister(e, 'tutor')"
               >
                 <p>Become a tutor</p>
               </a>
@@ -119,17 +120,25 @@ export default {
     toggleMenu() {
       this.open = !this.open
     },
-    toggleLogin(e) {
+    toggleLogin(e, userType) {
       if (e) e.preventDefault()
       this.opt = false
       this.open = false
-      this.$store.commit('app/LOGIN_MODAL', 'login')
+      this.$store.commit('app/LOGIN_MODAL', {
+        status: true,
+        type: 'login',
+        userType,
+      })
     },
-    toggleRegister(e) {
+    toggleRegister(e, userType) {
       if (e) e.preventDefault()
       this.opt = false
       this.open = false
-      this.$store.commit('app/LOGIN_MODAL', 'register')
+      this.$store.commit('app/LOGIN_MODAL', {
+        status: true,
+        type: 'register',
+        userType,
+      })
     },
     toggleSignUpOpt() {
       this.opt = !this.opt
