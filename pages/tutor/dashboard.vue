@@ -12,13 +12,19 @@
             more="/student/my-courses"
           />
           <dash-items-status
-            title="Webinars"
+            title="Courses"
             :items="courses"
-            undone="4 upcoming"
-            done="3 attended"
+            weekSales="+13 sales this week"
+            published="4 published"
             more="/student/my-webinars"
           />
-          <dash-undone-tasks :items="undoneTasks" />
+          <dash-items-status
+            title="Webinars"
+            :items="courses"
+            weekSales="+28 sales this week"
+            webinars="6 webinars"
+            more="/student/my-webinars"
+          />
         </div>
       </div>
     </section>

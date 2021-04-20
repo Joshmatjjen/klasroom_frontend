@@ -5,8 +5,19 @@
         {{ title }}
       </h4>
       <div class="block">
-        <p class="text-xs md:text-sm text-gray-700">{{ undone }}</p>
-        <p class="text-xs md:text-sm text-gray-700">{{ done }}</p>
+        <p v-if="undone" class="text-xs md:text-sm text-gray-700">
+          {{ undone }}
+        </p>
+        <p v-if="done" class="text-xs md:text-sm text-gray-700">{{ done }}</p>
+        <p v-if="weekSales" class="text-xs md:text-sm text-green-500">
+          {{ weekSales }}
+        </p>
+        <p v-if="published" class="text-xs md:text-sm text-gray-700">
+          {{ published }}
+        </p>
+        <p v-if="webinars" class="text-xs md:text-sm text-gray-700">
+          {{ webinars }}
+        </p>
       </div>
       <div class="hidden md:block mt-8">
         <img
@@ -19,7 +30,7 @@
       </div>
     </div>
     <div v-if="more" class="absolute text-center bottom-0 mb-5 w-full px-5">
-      <hr data-v-6cf0f546="" class="mb-4">
+      <hr data-v-6cf0f546="" class="mb-4" />
       <nuxt-link :to="more" class="text-gray-700 inline-block">
         <span class="text-xs">See more</span>
       </nuxt-link>
@@ -34,6 +45,9 @@ export default {
     items: { type: Array, required: true },
     done: { type: String, required: true },
     undone: { type: String, required: true },
+    weekSales: { type: String, required: true },
+    published: { type: String, required: true },
+    webinars: { type: String, required: true },
     more: { type: String, default: null },
   },
 }
