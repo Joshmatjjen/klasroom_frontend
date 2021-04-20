@@ -309,8 +309,8 @@ export default {
       this.$store.commit('app/LOGIN_MODAL', null)
     },
     gotoStudentDash() {
-      this.$store.commit('app/LOGIN_MODAL', null)
       this.$router.push('/student/dashboard')
+      this.$store.commit('app/LOGIN_MODAL', null)
     },
     clearInput() {
       this.signupForm = {

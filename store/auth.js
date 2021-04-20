@@ -15,6 +15,7 @@ export const getters = {
   check: (state) => state.user !== null,
   token: (state) => state.token,
   bank: (state) => state.bank,
+  isAuthenticated: (state) => state.token !== null
 }
 
 // mutations
