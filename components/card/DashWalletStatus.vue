@@ -8,13 +8,13 @@
           ₦{{ amount }}
         </h4>
         <p
-          class="text-right text-xs md:text-sm text-gray-700 font-normal leading-snug mt-0 md:mt-5 mb-4"
+          class="text-right text-xs md:text-sm text-gray-500 font-normal leading-snug mt-0 md:mt-5 mb-4"
         >
           current bal.
         </p>
       </div>
       <div class="block">
-        <p class="text-xs md:text-sm text-gray-700">
+        <p class="text-xs md:text-sm text-green-500">
           +₦{{ weekSales }} this week
         </p>
         <p class="text-xs md:text-sm text-gray-700">
@@ -24,20 +24,15 @@
           {{ webinarSales }} total webinar sales
         </p>
       </div>
-      <div class="hidden md:block mt-8">
-        <img
-          v-for="(item, key) in items"
-          :key="key"
-          src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144"
-          alt="My profile"
-          class="course-stacks mr-3"
-        />
+      <div class="grid grid-cols-2 gap-5 mt-8">
+        <button class="btn btn-light btn-sm lg:mt-0">Open wallet</button>
+        <button class="btn btn-light btn-sm lg:mt-0">Withdraw</button>
       </div>
     </div>
     <div v-if="more" class="absolute text-center bottom-0 mb-5 w-full px-5">
       <hr data-v-6cf0f546="" class="mb-4" />
       <nuxt-link :to="more" class="text-gray-700 inline-block">
-        <span class="text-xs">See more</span>
+        <span class="text-xs">View all sales</span>
       </nuxt-link>
     </div>
   </div>
@@ -50,7 +45,8 @@ export default {
     items: { type: Array, required: true },
     weekSales: { type: String, required: true },
     courseSales: { type: String, required: true },
-    webinarSales: { type: String, default: null },
+    webinarSales: { type: String, required: true },
+    more: { type: String, default: null },
   },
 }
 </script>
