@@ -61,9 +61,20 @@ export const actions = {
   },
 
   async signUpUser(vuexContext, userData) {
-    return this.$axios.$post('/v1/users', userData).then((res) => {
-      console.log('fetch user success: ', res)
-    }).catch((e) => console.log('fetch user failed: ', e))
+    try {
+      const { data } = await this.$axios.$post(userData.userType === "student" ? '/users' : '/users/tutor', userData)
+      console.log('fetch user success: ', data)
+      // commit('FETCH_USER_SUCCESS', data.data)
+      return data
+    } catch (e) {
+      console.log('fetch user failed: ', e)
+      // dispatch('app/handleError', e, { root: true })
+      // commit('FETCH_USER_FAILURE')
+      return false
+    }
+    // return this.$axios.$post('/v1/users', userData).then((res) => {
+    //   console.log('fetch user success: ', res)
+    // }).catch((e) => console.log('fetch user failed: ', e))
       // console.log('fetch user success: ', data.data)
       // vuexContext.commit('FETCH_USER_SUCCESS', data.data)
   },

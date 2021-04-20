@@ -42,11 +42,11 @@ export default ({ $axios, app, store, redirect, route }) => {
 
     if (status >= 500) {
       Swal.fire({
-        type: 'error',
         position: 'top-end',
         width: '350px',
         text: 'Something went wrong. Try again',
         backdrop: false,
+        allowOutsideClick: false,
         showConfirmButton: false,
         showCloseButton: true,
         timer: 5000,
@@ -58,11 +58,11 @@ export default ({ $axios, app, store, redirect, route }) => {
       store.dispatch('auth/logout')
 
       Swal.fire({
-        type: 'warning',
         position: 'top-end',
         width: '350px',
         text: 'Your session has expired',
         backdrop: false,
+        allowOutsideClick: false,
         showConfirmButton: false,
         showCloseButton: true,
         timer: 5000,
@@ -74,21 +74,20 @@ export default ({ $axios, app, store, redirect, route }) => {
       })
     }
 
-    if (status === 400) {
+    if (status === 400 || status === 409) {
 
       Swal.fire({
-        type: 'error',
         position: 'top-end',
         width: '350px',
         text: error.response.data.message,
         backdrop: false,
+        allowOutsideClick: false,
         showConfirmButton: false,
         showCloseButton: true,
         timer: 5000,
       }).then(() => {
         redirect({ name: 'login' })
       })
-      console.log('Swal.fired')
     }
 
     // no access to route

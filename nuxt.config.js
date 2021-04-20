@@ -71,11 +71,11 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    proxy: true
+    // proxy: true
   },
-  proxy: {
-    '/v1': { target: process.env.BASE_URL || 'https://api.staging.klasroom.com/', pathRewrite: {'^/v1/': ''} }
-  },
+  // proxy: {
+  //   '/v1': { target: process.env.BASE_URL || 'https://api.staging.klasroom.com/', pathRewrite: {'^/v1/': ''} }
+  // },
   /*
    ** Content module configuration
    ** See https://content.nuxtjs.org/configuration
@@ -96,7 +96,7 @@ export default {
     ],
   },
   env: {
-    baseUrl: process.env.BASE_URL || 'https://api.staging.klasroom.com/',
+    baseUrl: process.env.BASE_URL || 'https://api.staging.klasroom.com/v1/',
     secret: process.env.SECRET
   }
 }

@@ -8,6 +8,11 @@ const { colors } = require('tailwindcss/defaultTheme')
 module.exports = {
   theme: {
     extend: {
+      strokeWidth: {
+        '3': '3',
+        '4': '4',
+        '5': '5',
+      },
       colors: {
         orange: {
           ...colors.orange,

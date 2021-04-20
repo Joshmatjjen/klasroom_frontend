@@ -156,6 +156,18 @@
                     />
                   </div>
                 </div>
+                <div class="form-group mb-5">
+                  <label for="input-email">Phone</label>
+                  <div>
+                    <input
+                      id="input-phone"
+                      type="phone"
+                      class="form-input"
+                      placeholder="Enter your phone number here"
+                      v-model="signupForm.phone"
+                    />
+                  </div>
+                </div>
                 <div class="form-group">
                   <label for="input-password">Password</label>
                   <div>
@@ -176,6 +188,7 @@
                       @click="(e) => onSignUp(e, showLogin.userType)"
                     >
                       Sign up
+                      <loader v-if="loading" color="white" />
                     </button>
                   </span>
                 </div>
@@ -195,9 +208,11 @@ import { mapState } from 'vuex'
 export default {
   data: () => ({
     isLogin: true,
+    loading: false,
     signupForm: {
       name: "",
       email: "",
+      phone: "",
       password: ""
     }
   }),
@@ -224,6 +239,7 @@ export default {
     },
     onSignUp(e, userType) {
       if (e) e.preventDefault()
+      this.loading = true
       const data = {
         ...this.signupForm
       }
@@ -232,10 +248,12 @@ export default {
         ...data,
         userType
       })
-      .then(() => {
-        this.clearInput()
-        this.showSuccess()
-        // this.$router.push('/admin');
+      .then((res) => {
+        this.loading = false
+        if (res) {
+          this.clearInput()
+          this.showSuccess()
+        }
       }).catch(e => console.log('e: ', e));
     },
     showSuccess() {
@@ -255,6 +273,7 @@ export default {
       this.signupForm = {
         name: "",
         email: "",
+        phone: "",
         password: ""
       }
     }

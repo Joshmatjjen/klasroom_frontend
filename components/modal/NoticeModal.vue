@@ -48,7 +48,7 @@
             <button
               aria-label="Close panel"
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
-              @click="$store.commit('app/RESET_PASSWORD_MODAL', false)"
+              @click="closeModal"
             >
               <!-- Heroicon name: x -->
               <svg
@@ -122,6 +122,9 @@ export default {
         this.$store.commit('app/NOTICE_MODAL', false)
       }
     },
+    closeModal() {
+      this.$store.commit('app/NOTICE_MODAL', false)
+    }
   },
 }
 </script>
