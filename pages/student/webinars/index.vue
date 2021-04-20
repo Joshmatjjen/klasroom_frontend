@@ -74,7 +74,7 @@ const webinars = require('@/static/json/webinars.json')
 
 export default {
   layout: 'dashboard',
-  middleware: ['auth'],
+  middleware: ['check-auth', 'auth'],
   fetch({ store }) {
     store.commit('app/SET_TITLE', 'Webinars')
   },
