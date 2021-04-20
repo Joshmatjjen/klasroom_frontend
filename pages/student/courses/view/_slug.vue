@@ -262,6 +262,7 @@ const reviews = require('@/static/json/reviews.json')
 
 export default {
   layout: 'dashboard',
+  middleware: ['check-auth', 'auth'],
   fetch({ store }) {
     store.commit('app/SET_DARK_MENU', true)
     store.commit('app/SET_TITLE', 'Courses')

@@ -48,7 +48,10 @@
             <button
               aria-label="Close panel"
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
-              @click="$store.commit('app/LOGIN_MODAL', null)"
+              @click="() => {
+                $store.commit('app/LOGIN_MODAL', null);
+                clearInput()
+              }"
             >
               <!-- Heroicon name: x -->
               <svg
@@ -93,8 +96,10 @@
                   <div>
                     <input
                       id="input-email"
+                      type="email"
                       class="form-input"
                       placeholder="Enter your email here"
+                      v-model="loginForm.userIdentity"
                     />
                   </div>
                 </div>
@@ -103,8 +108,10 @@
                   <div>
                     <input
                       id="input-password"
+                      type="password"
                       class="form-input"
                       placeholder="Enter your password here"
+                      v-model="loginForm.password"
                     />
                   </div>
                 </div>
@@ -113,7 +120,7 @@
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="gotoStudentDash"
+                      @click="onLogin"
                     >
                       Sign in
                     </button>
@@ -156,7 +163,19 @@
                     />
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-5">
+                  <label for="input-email">Phone</label>
+                  <div>
+                    <input
+                      id="input-phone"
+                      type="phone"
+                      class="form-input"
+                      placeholder="Enter your phone number here"
+                      v-model="signupForm.phone"
+                    />
+                  </div>
+                </div>
+                <div class="form-group mb-5">
                   <label for="input-password">Password</label>
                   <div>
                     <input
@@ -168,14 +187,31 @@
                     />
                   </div>
                 </div>
+                <div v-if="showLogin.userType === 'tutor'" class="form-group">
+                  <label for="input-courseCategories">Course Categories</label>
+                  <div>
+                    <select
+                      id="input-password"
+                      multiple
+                      class="form-input"
+                      v-model="signupForm.courseCategories"
+                    >
+                      <option disabled value="">Select Course Categories</option>
+                      <option value="Programming">Programming</option>
+                      <option value="Business">Business</option>
+                      <option value="Finance">Finance</option>
+                    </select>
+                  </div>
+                </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="showSuccess"
+                      @click="(e) => onSignUp(e, showLogin.userType)"
                     >
                       Sign up
+                      <loader v-if="loading" color="white" />
                     </button>
                   </span>
                 </div>
@@ -195,9 +231,16 @@ import { mapState } from 'vuex'
 export default {
   data: () => ({
     isLogin: true,
+    loading: false,
     signupForm: {
       name: "",
       email: "",
+      phone: "",
+      password: "",
+      courseCategories: ""
+    },
+    loginForm: {
+      userIdentity: "",
       password: ""
     }
   }),
@@ -209,7 +252,8 @@ export default {
   watch: {
     showLogin: {
       handler(value) {
-        console.log('showLogin', value)
+        // console.log('showLogin', value)
+        // console.log('secret: ', process.env.secret)
         if (value) this.isLogin = value.type !== 'register'
       },
       immediate: true,
@@ -221,32 +265,64 @@ export default {
       this.$store.commit('app/FORGOT_PASSWORD_MODAL', true)
       this.$store.commit('app/LOGIN_MODAL', null)
     },
-    showSuccess(e) {
+    onSignUp(e, userType) {
       if (e) e.preventDefault()
+      this.loading = true
       const data = {
         ...this.signupForm
       }
-      console.log('data: ', data)
-      this.$axios.$post('/v1/users', data).then((res) => {
-        this.clearInput()
-        console.log('data: ', res)
-      }).catch((e) => console.log('error: ', e))
-      // this.$store.commit('app/NOTICE_MODAL', {
-      //   title: 'All done!',
-      //   text: `You have successfully signed up to klasroom.com. 
-      //     Please check your email and click the link in it to 
-      //     complete your registration.`,
-      // })
-      // this.$store.commit('app/LOGIN_MODAL', null)
+      this.$store.dispatch("auth/signUpUser", {
+        ...data,
+        userType
+      })
+      .then((res) => {
+        this.loading = false
+        if (res) {
+          this.clearInput()
+          this.showSuccess()
+        }
+      }).catch(e => console.log('e: ', e));
+    },
+    onLogin(e) {
+      if (e) e.preventDefault()
+      this.loading = true
+      const data = {
+        ...this.loginForm
+      }
+      this.$store.dispatch("auth/loginUser", {
+        ...data
+      })
+      .then((res) => {
+        this.loading = false
+        if (res) {
+          this.gotoStudentDash()
+        }
+      }).catch(e => console.log('e: ', e));
+    },
+    showSuccess() {
+      this.$store.commit('app/NOTICE_MODAL', {
+        title: 'All done!',
+        text: `You have successfully signed up to klasroom.com. 
+          Please check your email and click the link in it to 
+          complete your registration.`,
+      })
+      this.$store.commit('app/LOGIN_MODAL', null)
     },
     gotoStudentDash() {
-      this.$store.commit('app/LOGIN_MODAL', null)
       this.$router.push('/student/dashboard')
+      this.$store.commit('app/LOGIN_MODAL', null)
     },
     clearInput() {
       this.signupForm = {
         name: "",
         email: "",
+        phone: "",
+        password: "",
+        courseCategories: ""
+      }
+
+      this.loginForm = {
+        userIdentity: "",
         password: ""
       }
     }
