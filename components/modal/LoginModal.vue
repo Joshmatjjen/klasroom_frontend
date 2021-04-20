@@ -173,7 +173,7 @@
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="showSuccess"
+                      @click="(e) => onSignUp(e, showLogin.userType)"
                     >
                       Sign up
                     </button>
@@ -209,7 +209,8 @@ export default {
   watch: {
     showLogin: {
       handler(value) {
-        console.log('showLogin', value)
+        // console.log('showLogin', value)
+        // console.log('secret: ', process.env.secret)
         if (value) this.isLogin = value.type !== 'register'
       },
       immediate: true,
@@ -221,23 +222,30 @@ export default {
       this.$store.commit('app/FORGOT_PASSWORD_MODAL', true)
       this.$store.commit('app/LOGIN_MODAL', null)
     },
-    showSuccess(e) {
+    onSignUp(e, userType) {
       if (e) e.preventDefault()
       const data = {
         ...this.signupForm
       }
       console.log('data: ', data)
-      this.$axios.$post('/v1/users', data).then((res) => {
+      this.$store.dispatch("auth/signUpUser", {
+        ...data,
+        userType
+      })
+      .then(() => {
         this.clearInput()
-        console.log('data: ', res)
-      }).catch((e) => console.log('error: ', e))
-      // this.$store.commit('app/NOTICE_MODAL', {
-      //   title: 'All done!',
-      //   text: `You have successfully signed up to klasroom.com. 
-      //     Please check your email and click the link in it to 
-      //     complete your registration.`,
-      // })
-      // this.$store.commit('app/LOGIN_MODAL', null)
+        this.showSuccess()
+        // this.$router.push('/admin');
+      }).catch(e => console.log('e: ', e));
+    },
+    showSuccess() {
+      this.$store.commit('app/NOTICE_MODAL', {
+        title: 'All done!',
+        text: `You have successfully signed up to klasroom.com. 
+          Please check your email and click the link in it to 
+          complete your registration.`,
+      })
+      this.$store.commit('app/LOGIN_MODAL', null)
     },
     gotoStudentDash() {
       this.$store.commit('app/LOGIN_MODAL', null)

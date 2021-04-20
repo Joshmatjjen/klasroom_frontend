@@ -3,11 +3,13 @@ import Swal from 'sweetalert2'
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 export default ({ $axios, app, store, redirect, route }) => {
-  // $axios.setBaseURL(process.env.baseUrl)
+  $axios.setBaseURL(process.env.baseUrl)
 
   // Request interceptor
   $axios.onRequest((request) => {
-    // request.baseURL = process.env.baseUrl
+    request.baseURL = process.env.baseUrl
+
+    request.headers.common['Secret'] = process.env.secret
 
     let token = store.getters['auth/token']
     // console.log('Axios token:', token)
@@ -41,11 +43,13 @@ export default ({ $axios, app, store, redirect, route }) => {
     if (status >= 500) {
       Swal.fire({
         type: 'error',
-        title: app.i18n.t('error_alert_title'),
-        text: app.i18n.t('error_alert_text'),
-        reverseButtons: true,
-        confirmButtonText: app.i18n.t('dismiss'),
-        cancelButtonText: app.i18n.t('cancel')
+        position: 'top-end',
+        width: '350px',
+        text: 'Something went wrong. Try again',
+        backdrop: false,
+        showConfirmButton: false,
+        showCloseButton: true,
+        timer: 5000,
       })
     }
 
@@ -55,14 +59,36 @@ export default ({ $axios, app, store, redirect, route }) => {
 
       Swal.fire({
         type: 'warning',
-        title: app.i18n.t('token_expired_alert_title'),
-        text: app.i18n.t('token_expired_alert_text'),
-        reverseButtons: true,
-        confirmButtonText: app.i18n.t('login'),
-        cancelButtonText: app.i18n.t('cancel')
+        position: 'top-end',
+        width: '350px',
+        text: 'Your session has expired',
+        backdrop: false,
+        showConfirmButton: false,
+        showCloseButton: true,
+        timer: 5000,
+        // reverseButtons: true,
+        // confirmButtonText: app.i18n.t('login'),
+        // cancelButtonText: app.i18n.t('cancel')
       }).then(() => {
         redirect({ name: 'login' })
       })
+    }
+
+    if (status === 400) {
+
+      Swal.fire({
+        type: 'error',
+        position: 'top-end',
+        width: '350px',
+        text: error.response.data.message,
+        backdrop: false,
+        showConfirmButton: false,
+        showCloseButton: true,
+        timer: 5000,
+      }).then(() => {
+        redirect({ name: 'login' })
+      })
+      console.log('Swal.fired')
     }
 
     // no access to route

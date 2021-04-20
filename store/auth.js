@@ -60,6 +60,14 @@ export const actions = {
     Cookies.set('user_id', userId, { expires: remember })
   },
 
+  async signUpUser(vuexContext, userData) {
+    return this.$axios.$post('/v1/users', userData).then((res) => {
+      console.log('fetch user success: ', res)
+    }).catch((e) => console.log('fetch user failed: ', e))
+      // console.log('fetch user success: ', data.data)
+      // vuexContext.commit('FETCH_USER_SUCCESS', data.data)
+  },
+
   async fetchUser({ commit, dispatch }) {
     try {
       const { data } = await this.$axios.get('/me')
