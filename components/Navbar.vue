@@ -125,20 +125,20 @@ export default {
       this.opt = false
       this.open = false
       this.$store.commit('app/LOGIN_MODAL', {
-        status: true, 
-        type: 'login', 
-        userType
-      });
+        status: true,
+        type: 'login',
+        userType,
+      })
     },
     toggleRegister(e, userType) {
       if (e) e.preventDefault()
       this.opt = false
       this.open = false
       this.$store.commit('app/LOGIN_MODAL', {
-        status: true, 
-        type: 'register', 
-        userType
-      });
+        status: true,
+        type: 'register',
+        userType,
+      })
     },
     toggleSignUpOpt() {
       this.opt = !this.opt

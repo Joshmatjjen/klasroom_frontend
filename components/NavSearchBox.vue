@@ -12,7 +12,7 @@ export default {}
 .search-box {
   background-image: url('/icon/search.svg');
   background-repeat: no-repeat;
-  background-color: #fff;
+  background-color: #ffffff;
   background-position: top 14px right 14px;
   padding: 12.5px 50px 12px 18px;
   border: 1px solid rgba(0, 0, 0, 0.1);

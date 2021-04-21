@@ -24,7 +24,9 @@ html {
 }
 
 /* custom */
-#__nuxt, #__layout, .layout {
+#__nuxt,
+#__layout,
+.layout {
   min-height: 100%;
   min-height: 100vh;
 }
@@ -75,10 +77,10 @@ h6 {
 
 select,
 .cs-select,
-input[type="text"],
-input[type="tel"],
-input[type="email"],
-input[type="date"] {
+input[type='text'],
+input[type='tel'],
+input[type='email'],
+input[type='date'] {
   border-radius: 12px;
   background: #f5f5f3;
   color: #8a8a8a;
@@ -133,7 +135,8 @@ input[type="date"] {
   @apply text-sm font-semibold rounded-lg;
 }
 
-.btn:hover, .btn:focus {
+.btn:hover,
+.btn:focus {
   outline: none;
 }
 
@@ -232,11 +235,11 @@ label.checkbox:hover input ~ span.checkmark {
 }
 
 label.checkbox input:checked ~ span.checkmark {
-  background-color: #F99E42;
+  background-color: #f99e42;
 }
 
 label.checkbox span.checkmark::after {
-  content: "";
+  content: '';
   position: absolute;
   display: none;
 }
@@ -293,7 +296,8 @@ label.checkbox span.checkmark::after {
 
 /* Form input */
 
-.form-group {}
+.form-group {
+}
 
 .form-group label {
   @apply text-gray-600 mb-2;
@@ -310,39 +314,113 @@ label.checkbox span.checkmark::after {
   @apply text-sm outline-none;
 }
 
-@media (min-width: 640px) { /* sm: 640px */
+@media (min-width: 640px) {
+  /* sm: 640px */
   .max-h-content-screen {
     max-height: calc(100vh - 170px);
   }
 }
 
-@media (min-width: 768px) { /* md: 768px */
-  h1 { @apply text-4xl; } /* 48px */
-  h2 { @apply text-4xl; } /* 36px */
-  h3 { @apply text-3xl; } /* 30px */
-  h4 { @apply text-2xl; } /* 24px */
-  h5 { @apply text-xl; } /* 20px */
-  h6 { @apply text-lg; } /* 18px */
+/* Vue Good Table */
+.vgt-table th.line-numbers,
+.vgt-table th.vgt-checkbox-col {
+  background: #ffffff !important;
+}
+
+.vgt-table thead th {
+  background: #ffffff !important;
+}
+
+table.vgt-table td {
+  border: none !important;
+}
+
+.vgt-wrap {
+  border: none !important;
+}
+
+.vgt-table th.vgt-checkbox-col {
+  /* border: none !important; */
+}
+.vgt-responsive {
+  border: none !important;
+}
+
+table.vgt-table {
+  border: none !important;
+}
+
+.vgt-inner-wrap {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+@media (min-width: 768px) {
+  /* md: 768px */
+  h1 {
+    @apply text-4xl;
+  } /* 48px */
+  h2 {
+    @apply text-4xl;
+  } /* 36px */
+  h3 {
+    @apply text-3xl;
+  } /* 30px */
+  h4 {
+    @apply text-2xl;
+  } /* 24px */
+  h5 {
+    @apply text-xl;
+  } /* 20px */
+  h6 {
+    @apply text-lg;
+  } /* 18px */
   .view-more {
     background-position: right 0 top 3px;
     @apply text-sm;
   }
 }
 
-@media (min-width: 1024px) { /* lg: 1024px */
-  h1 { @apply text-5xl; } /* 48px */
-  h2 { @apply text-4xl; } /* 36px */
-  h3 { @apply text-3xl; } /* 30px */
-  h4 { @apply text-2xl; } /* 24px */
-  h5 { @apply text-xl; } /* 20px */
-  h6 { @apply text-lg; } /* 18px */
+@media (min-width: 1024px) {
+  /* lg: 1024px */
+  h1 {
+    @apply text-5xl;
+  } /* 48px */
+  h2 {
+    @apply text-4xl;
+  } /* 36px */
+  h3 {
+    @apply text-3xl;
+  } /* 30px */
+  h4 {
+    @apply text-2xl;
+  } /* 24px */
+  h5 {
+    @apply text-xl;
+  } /* 20px */
+  h6 {
+    @apply text-lg;
+  } /* 18px */
 }
 
-@media (min-width: 1280px) { /* xl: 1280px */
-  h1 { @apply text-5xl; } /* 48px */
-  h2 { @apply text-4xl; } /* 36px */
-  h3 { @apply text-3xl; } /* 30px */
-  h4 { @apply text-2xl; } /* 24px */
-  h5 { @apply text-xl; } /* 20px */
-  h6 { @apply text-lg; } /* 18px */
+@media (min-width: 1280px) {
+  /* xl: 1280px */
+  h1 {
+    @apply text-5xl;
+  } /* 48px */
+  h2 {
+    @apply text-4xl;
+  } /* 36px */
+  h3 {
+    @apply text-3xl;
+  } /* 30px */
+  h4 {
+    @apply text-2xl;
+  } /* 24px */
+  h5 {
+    @apply text-xl;
+  } /* 20px */
+  h6 {
+    @apply text-lg;
+  } /* 18px */
 }
