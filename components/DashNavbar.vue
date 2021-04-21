@@ -27,9 +27,9 @@
             ></span>
             <div class="inline-block text-left text-xs mr-2 pt-1">
               <span class="block text-gray-700 font-bold leading-tight">
-                Oluwadamilare Adedeji
+                {{ user ? user.name : 'Oluwadamilare Adedeji' }}
               </span>
-              <span class="block text-gray-600">damilare@gmail.com</span>
+              <span class="block text-gray-600">{{ user ? user.email : 'damilare@gmail.com' }}</span>
             </div>
             <div
               class="user-menu-drop shadow-hover relative"
@@ -71,6 +71,7 @@ export default {
     ...mapState({
       darkMenu: (state) => state.app.darkMenu,
       title: (state) => state.app.pageTitle,
+      user: (state) => state.auth.user,
     }),
   },
   methods: {
