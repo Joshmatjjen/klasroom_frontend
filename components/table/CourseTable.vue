@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white rounded-xl border border-gray-300 shadow-hover relative">
-    <div class="p-4 md:p-5 lg:p-6 pb-16 md:pb-18 lg:pb-20">
+    <div class="p-4 md:p-5 lg:p-6">
       <vue-good-table
         @on-selected-rows-change="selectionChanged"
         :columns="columns"
@@ -12,9 +12,34 @@
         :search-options="{ enabled: false }"
         styleClass="vgt-table striped"
       >
-        <div slot="selected-row-actions">
+        <!-- <div slot="selected-row-actions">
           <button>Action 1</button>
-        </div>
+        </div> -->
+        <template slot="table-row" slot-scope="props">
+          <span v-if="props.column.field == 'courseTitle'">
+            <div class="flex flex-row max-w-md">
+              <img
+                src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144"
+                alt="My profile"
+                class="course-image mr-3"
+              />
+              <div class="flex flex-col">
+                <span class="text-gray-700 font-bold text-left text-lg">{{
+                  'Introduction to Modern Business'
+                }}</span
+                ><span class="text-gray-700 font-normal text-left text-xs">{{
+                  'Anyone who lived in the time of legends such as Henry Ford, Alexander Graham Bell, Thom..'
+                }}</span>
+              </div>
+            </div>
+          </span>
+          <span v-if="props.column.field == 'price'">
+            <span class="text-gray-700 font-bold">₦{{ props.row.price }}</span>
+          </span>
+          <span v-else>
+            {{ props.formattedRow[props.column.field] }}
+          </span>
+        </template>
       </vue-good-table>
     </div>
     <!-- <div v-if="more" class="absolute text-center bottom-0 mb-5 w-full px-5">
@@ -50,13 +75,12 @@ export default {
     return {
       columns: [
         {
-          label: 'Name',
-          field: 'name',
+          label: 'Course title',
+          field: 'courseTitle',
         },
         {
-          label: 'Age',
-          field: 'age',
-          type: 'number',
+          label: 'Price',
+          field: 'price',
         },
         {
           label: 'Created On',
@@ -83,28 +107,28 @@ export default {
         {
           id: 3,
           name: 'Susan',
-          age: 16,
+          price: 16,
           createdAt: '2011-10-30',
           score: 0.03343,
         },
         {
           id: 4,
           name: 'Chris',
-          age: 55,
+          price: 55,
           createdAt: '2011-10-11',
           score: 0.03343,
         },
         {
           id: 5,
           name: 'Dan',
-          age: 40,
+          price: 40,
           createdAt: '2011-10-21',
           score: 0.03343,
         },
         {
           id: 6,
           name: 'John',
-          age: 20,
+          price: 20,
           createdAt: '2011-10-31',
           score: 0.03343,
         },
@@ -115,17 +139,14 @@ export default {
 </script>
 
 <style scoped>
-.course-stacks {
+.course-image {
   display: inline-block;
-  width: 52px;
-  height: 52px;
+  width: 91px;
+  height: 60px;
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 12px;
   @apply bg-gray-300;
 }
-.vgt-checkbox-col {
-  background: '#ffffff' !important;
-}
+
 @media (max-width: 640px) {
   h4 {
     @apply text-base;

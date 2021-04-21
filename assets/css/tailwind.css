@@ -324,7 +324,35 @@ label.checkbox span.checkmark::after {
 /* Vue Good Table */
 .vgt-table th.line-numbers,
 .vgt-table th.vgt-checkbox-col {
-  background: #ffffff;
+  background: #ffffff !important;
+}
+
+.vgt-table thead th {
+  background: #ffffff !important;
+}
+
+table.vgt-table td {
+  border: none !important;
+}
+
+.vgt-wrap {
+  border: none !important;
+}
+
+.vgt-table th.vgt-checkbox-col {
+  /* border: none !important; */
+}
+.vgt-responsive {
+  border: none !important;
+}
+
+table.vgt-table {
+  border: none !important;
+}
+
+.vgt-inner-wrap {
+  box-shadow: none !important;
+  border: none !important;
 }
 
 @media (min-width: 768px) {
