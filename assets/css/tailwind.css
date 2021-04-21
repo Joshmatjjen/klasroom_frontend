@@ -321,6 +321,12 @@ label.checkbox span.checkmark::after {
   }
 }
 
+/* Vue Good Table */
+.vgt-table th.line-numbers,
+.vgt-table th.vgt-checkbox-col {
+  background: #ffffff;
+}
+
 @media (min-width: 768px) {
   /* md: 768px */
   h1 {

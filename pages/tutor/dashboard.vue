@@ -33,19 +33,7 @@
       <div class="container mx-auto my-10 px-4 lg:px-0">
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-12">
-            <dash-items-section-group
-              title="Courses you started"
-              more="/student/my-courses"
-            >
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                <course-item
-                  v-for="(course, key) in courses"
-                  :key="key"
-                  :course="course"
-                  :session="true"
-                />
-              </div>
-            </dash-items-section-group>
+            <course-table></course-table>
           </div>
         </div>
       </div>

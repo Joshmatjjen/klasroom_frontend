@@ -50,7 +50,7 @@ export default {
   padding: 4px 20px 4px 8px;
   font-size: 12px;
   line-height: 22px;
-  color: #fff;
+  color: #ffffff;
   border-radius: 12px;
   position: relative;
 }

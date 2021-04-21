@@ -130,7 +130,7 @@ export default {
   min-width: 260px;
   z-index: 2001;
   min-height: 100%;
-  background: #fff;
+  background: #ffffff;
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.04);
 }
 
@@ -244,7 +244,7 @@ ul.btn-gray-share > li {
   .sidebar.open {
     position: fixed;
     left: 0;
-    background-color: #fff;
+    background-color: #ffffff;
     height: 100%;
     min-height: 100vh;
     transition: 0.28s;

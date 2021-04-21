@@ -43,11 +43,11 @@ export default {
   props: {
     title: { type: String, required: true },
     items: { type: Array, required: true },
-    done: { type: String, required: true },
-    undone: { type: String, required: true },
-    weekSales: { type: String, required: true },
-    published: { type: String, required: true },
-    webinars: { type: String, required: true },
+    done: { type: String, required: false },
+    undone: { type: String, required: false },
+    weekSales: { type: String, required: false },
+    published: { type: String, required: false },
+    webinars: { type: String, required: false },
     more: { type: String, default: null },
   },
 }
