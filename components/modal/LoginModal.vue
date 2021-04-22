@@ -49,8 +49,8 @@
               aria-label="Close panel"
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
               @click="() => {
-                $store.commit('app/LOGIN_MODAL', null);
                 clearInput()
+                close()
               }"
             >
               <!-- Heroicon name: x -->
@@ -335,10 +335,14 @@ export default {
           Please check your email and click the link in it to 
           complete your registration.`,
       })
-      this.$store.commit('app/LOGIN_MODAL', null)
+      this.close()
     },
     gotoDashboard(type) {
       this.$router.push(`/${type}/dashboard`)
+      this.close()
+    },
+    close() {
+      this.isStudent = false
       this.$store.commit('app/LOGIN_MODAL', null)
     },
     clearInput() {

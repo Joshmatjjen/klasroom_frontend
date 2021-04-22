@@ -57,6 +57,27 @@ export const mutations = {
 // actions
 export const actions = {
 
+  async becomeATutor(vuexContext, userData) {
+    try {
+
+      // console.log('store: ', vuexContext.state.user)
+      const user = vuexContext.state.user
+      const { data: newData } = await this.$axios.$post('/users/tutor', {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        password: userData.password,
+        courseCategories: userData.courseCategories
+      }, {
+        headers: getAccessTokenHeader(user.accessToken)
+      })
+      return newData
+
+    } catch (e) {
+      return false
+    }
+  },
+
   async signUpUser(vuexContext, userData) {
     try {
       if (userData.isStudent && userData.userType === "tutor") {
@@ -89,8 +110,8 @@ export const actions = {
   async loginUser(vuexContext, userData) {
     try {
       const { data } = await this.$axios.$post('/login', userData)
-      console.log('fetch user success: ', data)
-      if (data) {
+      if (data.accessToken) {
+        console.log('fetch user success: ', data)
         const expirationDate = new Date().getTime() + 86400 * 1000 // 24 hrs duration
         vuexContext.commit('SET_TOKEN', data.accessToken)
         vuexContext.commit('FETCH_USER_SUCCESS', data)
@@ -109,8 +130,10 @@ export const actions = {
           expirationDate
         );
         Cookie.set("user", JSON.stringify(data));
+
+        return data
       }
-      return data
+      return false
     } catch (e) {
       // console.log('fetch user failed: ', e)
       return false

@@ -3,6 +3,7 @@ export const state = () => ({
   menu: false,
   darkMenu: false,
   loginModal: null,
+  becomeATutorModal: false,
   forgotPasswordModal: false,
   resetPasswordModal: false,
   modal: false,
@@ -47,6 +48,9 @@ export const mutations = {
   },
   LOGIN_MODAL(state, loginData) {
     state.loginModal = loginData
+  },
+  BECOME_A_TUTOR_MODAL(state, status) {
+    state.becomeATutorModal = status
   },
   FORGOT_PASSWORD_MODAL(state, status) {
     state.forgotPasswordModal = status

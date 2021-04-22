@@ -92,11 +92,8 @@ export default {
       user: (state) => state.auth.user,
       userType: (state) => state.auth.user.isTutor ? "tutor" : "student",
     }),
-  },
-  props: {
-    userDash: {
-      type: String,
-      required: true,
+    userDash() {
+      return this.$route.path.split('/')[1]
     }
   },
   methods: {
@@ -110,7 +107,7 @@ export default {
     },
     toggleUserMenu(e) {
       if (e) e.preventDefault()
-      console.log('this.$router: ', this.userDash)
+      console.log('$route.name: ', this.userDash)
       this.userMenu = !this.userMenu
     },
     logout() {
@@ -121,6 +118,8 @@ export default {
         this.$router.push(`/tutor/dashboard`)
       else if (this.userDash === "student" && this.userType === "student") {
         // Become a tutor
+        this.toggleUserMenu()
+        this.$store.commit('app/BECOME_A_TUTOR_MODAL', true)
       }
       else
         this.$router.push(`/student/dashboard`);
