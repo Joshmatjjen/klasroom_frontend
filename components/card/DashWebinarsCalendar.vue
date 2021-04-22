@@ -85,6 +85,6 @@ export default {
 }
 .vdp-datepicker__calendar .cell.day.selected {
   background: #f99e42;
-  color: #fff;
+  color: #ffffff;
 }
 </style>

@@ -26,7 +26,9 @@ export default {
   /*
    ** Global CSS
    */
-  css: [],
+  css: [
+    // '~/assets/css/global.css'
+  ],
   /*
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
@@ -38,6 +40,7 @@ export default {
     { src: '~plugins/validate', mode: 'client' },
     { src: '~plugins/datepicker', mode: 'client' },
     { src: '~plugins/paystack', mode: 'client' },
+    { src: '~/plugins/vue-good-table', ssr: false },
   ],
   /*
    ** Auto import components
@@ -71,12 +74,11 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: process.env.BASE_URL || 'https://api.klasroom.com/',
-    proxy: true
+    // proxy: true
   },
-  proxy: {
-    '/v1': { target: process.env.BASE_URL || 'https://api.klasroom.com/', pathRewrite: {'^/v1/': ''} }
-  },
+  // proxy: {
+  //   '/v1': { target: process.env.BASE_URL || 'https://api.staging.klasroom.com/', pathRewrite: {'^/v1/': ''} }
+  // },
   /*
    ** Content module configuration
    ** See https://content.nuxtjs.org/configuration
@@ -97,8 +99,9 @@ export default {
     ],
   },
   env: {
-    baseUrl: process.env.BASE_URL || 'https://api.klasroom.com/'
-  }
+    baseUrl: process.env.BASE_URL || 'https://api.staging.klasroom.com/v1/',
+    secret: process.env.SECRET,
+  },
 }
 
 module.exports = {
@@ -109,9 +112,7 @@ module.exports = {
 
   // ....
 
-  modules: [
-      'nuxt-ssr-cache',
-  ],
+  modules: ['nuxt-ssr-cache'],
   cache: {
     // if you're serving multiple host names (with differing
     // results) from the same server, set this option to true.
@@ -123,12 +124,12 @@ module.exports = {
     pages: [
       // these are prefixes of pages that need to be cached
       // if you want to cache all pages, just include '/'
-      '/'
+      '/',
     ],
-    
+
     key(route, context) {
       // custom function to return cache key, when used previous
-      // properties (useHostPrefix, pages) are ignored. return 
+      // properties (useHostPrefix, pages) are ignored. return
       // falsy value to bypass the cache
     },
 
@@ -145,4 +146,3 @@ module.exports = {
     },
   },
 }
-

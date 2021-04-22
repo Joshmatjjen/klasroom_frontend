@@ -45,6 +45,7 @@
     "sweetalert2": "^10.12.5",
     "vee-validate": "^3.4.5",
     "vform": "^1.0.1",
+    "vue-good-table": "^2.21.10",
     "vue-paystack": "^2.0.4",
     "vue2-filters": "^0.11.0",
     "vuejs-datepicker": "^1.6.2",

@@ -8,6 +8,15 @@ const { colors } = require('tailwindcss/defaultTheme')
 module.exports = {
   theme: {
     extend: {
+      strokeWidth: {
+        3: '3',
+        4: '4',
+        5: '5',
+      },
+      inset: {
+        0: 0,
+        20: 20,
+      },
       colors: {
         orange: {
           ...colors.orange,
@@ -28,7 +37,10 @@ module.exports = {
       },
     },
   },
-  variants: {},
+  variants: {
+    flexDirection: ['responsive', 'hover', 'focus'],
+    gridTemplateRows: ['responsive', 'hover', 'focus'],
+  },
   purge: {
     // Learn more on https://tailwindcss.com/docs/controlling-file-size/#removing-unused-css
     enabled: process.env.NODE_ENV === 'production',

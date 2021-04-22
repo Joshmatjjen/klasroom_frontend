@@ -108,6 +108,7 @@ input[type='date'] {
   height: 24px;
   z-index: 0;
 }
+
 .cs-select > select {
   width: calc(100% - 35px);
   padding-top: 10.5px;
@@ -248,7 +249,7 @@ label.checkbox input:checked ~ span.checkmark::after {
   display: block;
 }
 
-label.checkbox span.checkmark::after {
+/* label.checkbox span.checkmark::after {
   left: 5px;
   top: 2.5px;
   width: 6px;
@@ -258,7 +259,7 @@ label.checkbox span.checkmark::after {
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
-}
+} */
 
 .social-icons,
 .social-icons > li {
@@ -296,8 +297,8 @@ label.checkbox span.checkmark::after {
 
 /* Form input */
 
-.form-group {
-}
+/* .form-group {
+} */
 
 .form-group label {
   @apply text-gray-600 mb-2;
@@ -320,6 +321,89 @@ label.checkbox span.checkmark::after {
     max-height: calc(100vh - 170px);
   }
 }
+
+/* Vue Good Table */
+.vgt-table th.line-numbers,
+.vgt-table th.vgt-checkbox-col {
+  background: #ffffff !important;
+}
+
+.vgt-table thead th {
+  background: #ffffff !important;
+  @apply text-sm font-medium outline-none;
+}
+
+table.vgt-table td {
+  border: none !important;
+  @apply text-sm font-medium outline-none align-middle !important;
+}
+
+/* table.vgt-table td:hover {
+  @apply cursor-pointer text-gray-900;
+} */
+
+.vgt-wrap {
+  border: none !important;
+}
+
+.vgt-table th.vgt-checkbox-col {
+  border-right: none !important;
+}
+.vgt-responsive {
+  border: none !important;
+}
+
+table.vgt-table {
+  border: none !important;
+}
+
+.vgt-inner-wrap {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* .vgt-checkbox-col input {
+  background-color: #000000;
+} */
+
+/* Checkbox */
+.vgt-checkbox-col > input {
+  height: 15px;
+  width: 15px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -o-appearance: none;
+  appearance: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  outline: none;
+  transition-duration: 0.3s;
+  cursor: pointer;
+  @apply bg-gray-300;
+}
+
+.vgt-checkbox-col > input:checked {
+  position: relative;
+  border: 1px solid #e2e8f0;
+  @apply bg-orange-500;
+}
+
+.vgt-checkbox-col > input:checked::after {
+  content: '\2713';
+  display: block;
+  text-align: center;
+  font-weight: 300;
+  color: #e2e8f0;
+  position: absolute;
+  top: -0.3rem;
+  left: 0.1rem;
+}
+
+.vgt-checkbox-col > input:active {
+  border: 2px solid #e2e8f0;
+}
+
+/* ------------------------------ Media Queries ----------------------------- */
 
 @media (min-width: 768px) {
   /* md: 768px */

@@ -123,7 +123,7 @@ export default {
   position: absolute;
   background-color: rgb(255, 51, 95);
   border-radius: 7.5px;
-  color: #fff;
+  color: #ffffff;
   font-size: 10px;
   font-weight: 600;
   cursor: pointer;
