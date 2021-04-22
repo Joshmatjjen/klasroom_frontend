@@ -16,6 +16,7 @@ module.exports = {
       },
     ],
     'color-hex-length': 'long',
+    'comment-no-empty': true,
     'declaration-block-trailing-semicolon': null,
     'no-descending-specificity': null,
   },

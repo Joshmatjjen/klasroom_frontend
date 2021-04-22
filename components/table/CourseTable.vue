@@ -61,8 +61,8 @@
 <script>
 export default {
   props: {
-    title: { type: String, required: true },
-    items: { type: Array, required: true },
+    title: { type: String, required: false },
+    items: { type: Array, required: false },
     done: { type: String, required: false },
     undone: { type: String, required: false },
     weekSales: { type: String, required: false },
