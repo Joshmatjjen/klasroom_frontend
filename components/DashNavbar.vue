@@ -1,5 +1,6 @@
 <template>
   <div class="container mx-auto">
+    <div @click="toggleUserMenu" :class="{ hidden: !userMenu }" class="fixed" :style="{ width: '100%', height: '100vh', zIndex: 2 }"></div>
     <nav class="flex items-center justify-between flex-wrap py-4 md:py-6">
       <h5
         class="flex items-center flex-shrink-0 mr-6 ml-4 lg:ml-0 font-extrabold text-gray-700"
@@ -48,9 +49,9 @@
                 >
                   <span class="text-sm">Settings</span>
                 </nuxt-link>
-                <nuxt-link to="/" class="text-gray-700 block py-2">
+                <a @click="logout" class="text-gray-700 block py-2">
                   <span class="text-sm">Sign out</span>
-                </nuxt-link>
+                </a>
               </div>
             </div>
           </a>
@@ -87,6 +88,9 @@ export default {
       if (e) e.preventDefault()
       this.userMenu = !this.userMenu
     },
+    logout() {
+      this.$store.dispatch('auth/logout')
+    }
   },
 }
 </script>

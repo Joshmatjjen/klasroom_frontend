@@ -106,15 +106,19 @@ export const actions = {
     } catch (e) {}
   },
 
-  async logout({ commit }) {
-    try {
-      await this.$axios.get('/logout')
-    } catch (e) {}
+  async logout(vuexContext) {
+    // try {
+    //   await this.$axios.get('/logout')
+    // } catch (e) {}
 
-    Cookie.remove('token')
+    Cookie.remove('jwt')
+    Cookie.remove('expirationDate')
     Cookie.remove('user')
 
-    commit('LOGOUT')
+    vuexContext.commit('LOGOUT');
+    this.$router.push("/")
+
+    return true;
   },
 
   initAuth(vuexContext, req) {
