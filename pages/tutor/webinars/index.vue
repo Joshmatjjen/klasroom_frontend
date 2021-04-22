@@ -31,13 +31,25 @@
       <div
         class="flex flex-row gap-10 place-items-start px-10 border-b-2 border-gray-200"
       >
-        <button class="menu-btn active">
+        <button
+          v-on:click="switcher('btn1')"
+          v-bind:class="{ active: isActive.btn1 }"
+          class="menu-btn"
+        >
           <p class="text-xs text-gray-700">4 Upcoming webinars</p>
         </button>
-        <button class="menu-btn">
+        <button
+          v-on:click="switcher('btn2')"
+          v-bind:class="{ active: isActive.btn2 }"
+          class="menu-btn"
+        >
           <p class="text-xs text-gray-700">Recorded webinars</p>
         </button>
-        <button class="menu-btn">
+        <button
+          v-on:click="switcher('btn3')"
+          v-bind:class="{ active: isActive.btn3 }"
+          class="menu-btn"
+        >
           <p class="text-xs text-gray-700">Draft</p>
         </button>
       </div>
@@ -107,7 +119,38 @@ export default {
       },
     ],
     rows: _.take(webinarCourse, 4),
+    isActive: {
+      btn1: false,
+      btn2: false,
+      btn3: false,
+    },
   }),
+  methods: {
+    switcher: function (value) {
+      switch (value) {
+        case 'btn1':
+          this.isActive.btn1 = true
+          this.isActive.btn2 = false
+          this.isActive.btn3 = false
+          break
+        case 'btn2':
+          this.isActive.btn1 = false
+          this.isActive.btn2 = true
+          this.isActive.btn3 = false
+          break
+        case 'btn3':
+          this.isActive.btn1 = false
+          this.isActive.btn2 = false
+          this.isActive.btn3 = true
+          break
+        default:
+          this.isActive.btn1 = true
+          this.isActive.btn2 = false
+          this.isActive.btn3 = false
+      }
+      // some code to filter users
+    },
+  },
 }
 </script>
 
