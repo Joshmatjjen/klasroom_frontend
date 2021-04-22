@@ -92,6 +92,7 @@ const youLearn = require('@/static/json/courses-you-learn.json')
 
 export default {
   layout: 'dashboard',
+  middleware: ['check-auth', 'auth', 'isTutor'],
   fetch({ store }) {
     store.commit('app/SET_DARK_MENU', true)
   },
