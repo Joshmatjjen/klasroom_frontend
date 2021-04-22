@@ -123,6 +123,7 @@ const courses = require('@/static/json/courses.json')
 
 export default {
   layout: 'dashboard',
+  middleware: ['check-auth', 'auth', 'isTutor'],
   fetch({ store }) {
     store.commit('app/SET_TITLE', 'Dashboard')
   },

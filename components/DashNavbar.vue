@@ -1,5 +1,6 @@
 <template>
   <div class="container mx-auto">
+    <div @click="toggleUserMenu" :class="{ hidden: !userMenu }" class="fixed" :style="{ width: '100%', height: '100vh', zIndex: 2 }"></div>
     <nav class="flex items-center justify-between flex-wrap py-4 md:py-6">
       <h5
         class="flex items-center flex-shrink-0 mr-6 ml-4 lg:ml-0 font-extrabold text-gray-700"
@@ -37,20 +38,37 @@
             >
               <div class="px-4 md:px-5 lg:px-6 py-3">
                 <nuxt-link
-                  to="/student/account"
+                  :to="`/${userDash}/dashboard`"
+                  class="text-gray-700 block py-2"
+                >
+                  <span class="text-sm">Dashboard</span>
+                </nuxt-link>
+                <nuxt-link
+                  :to="`/${userDash}/account`"
                   class="text-gray-700 block py-2"
                 >
                   <span class="text-sm">Account</span>
                 </nuxt-link>
                 <nuxt-link
-                  to="/student/settings"
+                  :to="`/${userDash}/settings`"
                   class="text-gray-700 block py-2"
                 >
                   <span class="text-sm">Settings</span>
                 </nuxt-link>
-                <nuxt-link to="/" class="text-gray-700 block py-2">
+                <a @click="switchDash" class="text-gray-700 block py-2">
+                  <span class="text-sm">
+                    {{ 
+                      userDash === "student" && userType === "tutor" 
+                      ? "Switch to Tutor" 
+                      : userDash === "student" && userType === "student" 
+                      ? "Become a Tutor" 
+                      : "Switch to Student" 
+                    }}
+                  </span>
+                </a>
+                <a @click="logout" class="text-gray-700 block py-2">
                   <span class="text-sm">Sign out</span>
-                </nuxt-link>
+                </a>
               </div>
             </div>
           </a>
@@ -72,7 +90,11 @@ export default {
       darkMenu: (state) => state.app.darkMenu,
       title: (state) => state.app.pageTitle,
       user: (state) => state.auth.user,
+      userType: (state) => state.auth.user.isTutor ? "tutor" : "student",
     }),
+    userDash() {
+      return this.$route.path.split('/')[1]
+    }
   },
   methods: {
     toggleMenu() {
@@ -85,8 +107,23 @@ export default {
     },
     toggleUserMenu(e) {
       if (e) e.preventDefault()
+      console.log('$route.name: ', this.userDash)
       this.userMenu = !this.userMenu
     },
+    logout() {
+      this.$store.dispatch('auth/logout')
+    },
+    switchDash() {
+      if (this.userDash === "student" && this.userType === "tutor")
+        this.$router.push(`/tutor/dashboard`)
+      else if (this.userDash === "student" && this.userType === "student") {
+        // Become a tutor
+        this.toggleUserMenu()
+        this.$store.commit('app/BECOME_A_TUTOR_MODAL', true)
+      }
+      else
+        this.$router.push(`/student/dashboard`);
+    }
   },
 }
 </script>
