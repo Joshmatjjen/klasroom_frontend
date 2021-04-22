@@ -158,6 +158,10 @@ export const actions = {
     Cookie.remove('expirationDate')
     Cookie.remove('user')
 
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("tokenExpiration");
+
     vuexContext.commit('LOGOUT');
     this.$router.push("/")
 
