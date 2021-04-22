@@ -120,7 +120,7 @@
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="onLogin"
+                      @click="(e) => onLogin(e, showLogin.userType)"
                     >
                       Sign in
                     </button>
@@ -283,19 +283,23 @@ export default {
         }
       }).catch(e => console.log('e: ', e));
     },
-    onLogin(e) {
+    onLogin(e, userType) {
       if (e) e.preventDefault()
       this.loading = true
       const data = {
         ...this.loginForm
       }
       this.$store.dispatch("auth/loginUser", {
-        ...data
+        ...data,
+        userType
       })
       .then((res) => {
         this.loading = false
         if (res) {
-          this.gotoStudentDash()
+          if (res.isTutor && userType === 'tutor')
+            this.gotoDashboard('tutor');
+          else
+            this.gotoDashboard('student');
         }
       }).catch(e => console.log('e: ', e));
     },
@@ -308,8 +312,8 @@ export default {
       })
       this.$store.commit('app/LOGIN_MODAL', null)
     },
-    gotoStudentDash() {
-      this.$router.push('/student/dashboard')
+    gotoDashboard(type) {
+      this.$router.push(`/${type}/dashboard`)
       this.$store.commit('app/LOGIN_MODAL', null)
     },
     clearInput() {
