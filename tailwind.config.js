@@ -13,6 +13,10 @@ module.exports = {
         4: '4',
         5: '5',
       },
+      inset: {
+        0: 0,
+        20: 20,
+      },
       colors: {
         orange: {
           ...colors.orange,

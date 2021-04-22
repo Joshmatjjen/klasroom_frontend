@@ -1,15 +1,27 @@
 <template>
   <div class="bg-white rounded-xl border border-gray-300 shadow-hover relative">
-    <div class="p-4 md:p-5 lg:p-6">
+    <div
+      class="fixed"
+      :class="{ hidden: !opt }"
+      :style="{
+        width: '100%',
+        height: '100vh',
+        zIndex: 2,
+        marginTop: '-22rem',
+        marginLeft: '-130px',
+      }"
+      @click="toggleMenu"
+    ></div>
+    <div class="p-4 md:p-5 lg:p-6 overflow-x-auto">
       <vue-good-table
         :columns="columns"
         :rows="rows"
-        row-style-class="vgt-checkbox-col"
+        row-style-class="vgt-checkbox-col table-row"
         :select-options="{
           enabled: true,
         }"
         :search-options="{ enabled: false }"
-        styleClass="vgt-table striped"
+        styleClass="vgt-table vgt-wrap striped sortable"
       >
         <!-- <div slot="selected-row-actions">
           <button>Action 1</button>
@@ -32,10 +44,68 @@
               </div>
             </div>
           </span>
-          <span v-if="props.column.field == 'price'">
+          <span v-else-if="props.column.field == 'price'">
             <span class="text-gray-700 font-semibold"
               >₦{{ props.row.price }}</span
             >
+          </span>
+          <span v-else-if="props.column.field == 'createdAt'">
+            <div class="flex flex-row gap-4 items-center justify-end relative">
+              <span class="text-gray-700 font-normal text-left text-xs pr-10">{{
+                props.row.createdAt
+              }}</span>
+              <span
+                @click="toggleMenu(props.row.id)"
+                class="absolute text-gray-700 cursor-pointer hover:text-gray-900 font-extrabold text-left text-md"
+                >&#xFE19;</span
+              >
+              <div
+                :class="{
+                  hidden: opt && props.row.id === optId ? false : true,
+                }"
+                class="pop-up flex flex-col items-start p-2 justify-around pop-up absolute top-0 mt-5 border-gray-500 bg-white rounded-lg h-32 w-32 shadow-lg"
+                :style="{ zIndex: 3 }"
+              >
+                <a
+                  href="#"
+                  class="pop-up-item lg:mr-4 md:text-gray-700 text-sm font-normal hover:text-gray-900 md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                >
+                  <p>Edit webinar</p>
+                </a>
+                <a
+                  href="#"
+                  class="pop-up-item lg:mr-4 md:text-gray-700 text-sm font-normal hover:text-gray-900 md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                >
+                  <p>Delete</p>
+                </a>
+                <a
+                  href="#"
+                  class="pop-up-item lg:mr-4 md:text-gray-700 text-sm font-normal hover:text-gray-900 md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                >
+                  <p>Share</p>
+                </a>
+                <a
+                  href="#"
+                  class="pop-up-item lg:mr-4 md:text-gray-700 text-sm font-normal hover:text-gray-900 md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                >
+                  <p>Preview</p>
+                </a>
+                <!-- <a
+                href="#"
+                class="pop-up-item lg:mr-4 md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                @click="(e) => toggleLogin(e, 'student')"
+              >
+                Become a student
+              </a> -->
+                <!-- <a
+                href="#"
+                class="pop-up-item lg:mr-4 md:text-gray-700 text-sm md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                @click="(e) => toggleRegister(e, 'tutor')"
+              >
+                <p>Become a tutor</p>
+              </a> -->
+              </div>
+            </div>
           </span>
           <span v-else>
             {{ props.formattedRow[props.column.field] }}
@@ -68,70 +138,16 @@ export default {
     // more: { type: String, default: null },
   },
   name: 'webinar-table',
-  // data() {
-  //   return {
-  //     columns: [
-  //       {
-  //         label: 'Course title',
-  //         field: 'courseTitle',
-  //       },
-  //       {
-  //         label: 'Price',
-  //         field: 'price',
-  //       },
-  //       {
-  //         label: 'Created On',
-  //         field: 'createdAt',
-  //         type: 'date',
-  //         dateInputFormat: 'yyyy-MM-dd',
-  //         dateOutputFormat: 'MMM do yy',
-  //       },
-  //       {
-  //         label: 'Percent',
-  //         field: 'score',
-  //         type: 'percentage',
-  //       },
-  //     ],
-  //     rows: [
-  //       { id: 1, name: 'John', age: 20, createdAt: '', score: 0.03343 },
-  //       {
-  //         id: 2,
-  //         name: 'Jane',
-  //         age: 24,
-  //         createdAt: '2011-10-31',
-  //         score: 0.03343,
-  //       },
-  //       {
-  //         id: 3,
-  //         name: 'Susan',
-  //         price: 16,
-  //         createdAt: '2011-10-30',
-  //         score: 0.03343,
-  //       },
-  //       {
-  //         id: 4,
-  //         name: 'Chris',
-  //         price: 55,
-  //         createdAt: '2011-10-11',
-  //         score: 0.03343,
-  //       },
-  //       {
-  //         id: 5,
-  //         name: 'Dan',
-  //         price: 40,
-  //         createdAt: '2011-10-21',
-  //         score: 0.03343,
-  //       },
-  //       {
-  //         id: 6,
-  //         name: 'John',
-  //         price: 20,
-  //         createdAt: '2011-10-31',
-  //         score: 0.03343,
-  //       },
-  //     ],
-  //   }
-  // },
+  data: () => ({
+    opt: false,
+    optId: null,
+  }),
+  methods: {
+    toggleMenu(optId) {
+      this.opt = !this.opt
+      if (optId) this.optId = optId
+    },
+  },
 }
 </script>
 
@@ -143,6 +159,14 @@ export default {
   @apply bg-gray-300;
 
   /* border: 1px solid rgba(0, 0, 0, 0.1); */
+}
+
+.pop-up {
+  border-width: 0.1rem;
+}
+.vgt-wrap {
+  min-width: 60rem;
+  overflow-x: scroll;
 }
 
 @media (max-width: 640px) {

@@ -330,13 +330,17 @@ label.checkbox input:checked ~ span.checkmark::after {
 
 .vgt-table thead th {
   background: #ffffff !important;
-  @apply text-xs font-medium outline-none;
+  @apply text-sm font-medium outline-none;
 }
 
 table.vgt-table td {
   border: none !important;
-  @apply text-xs font-medium outline-none align-middle !important;
+  @apply text-sm font-medium outline-none align-middle !important;
 }
+
+/* table.vgt-table td:hover {
+  @apply cursor-pointer text-gray-900;
+} */
 
 .vgt-wrap {
   border: none !important;
