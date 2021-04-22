@@ -1,5 +1,5 @@
 import Cookie from 'js-cookie'
-import { cookieFromRequest } from '~/utils'
+import { cookieFromRequest, getAccessTokenHeader } from '~/utils'
 
 // state
 export const state = () => ({
@@ -59,6 +59,26 @@ export const actions = {
 
   async signUpUser(vuexContext, userData) {
     try {
+      if (userData.isStudent && userData.userType === "tutor") {
+        const { data } = await this.$axios.$post('/login', {
+          userIdentity: userData.email,
+          password: userData.password,
+          userType: 'student'
+        })
+
+        console.log('fetch old user success: ', data)
+
+        const { data: newData } = await this.$axios.$post('/users/tutor', {
+          name: data.name,
+          email: userData.email,
+          phone: data.phone,
+          password: userData.password,
+          courseCategories: userData.courseCategories
+        }, {
+          headers: getAccessTokenHeader(data.accessToken)
+        })
+        return newData
+      }
       const { data } = await this.$axios.$post(userData.userType === "student" ? '/users' : '/users/tutor', userData)
       return data
     } catch (e) {

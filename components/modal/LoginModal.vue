@@ -85,6 +85,8 @@
                 {{
                   isLogin
                     ? 'Sign into your account'
+                    : isStudent && !isLogin 
+                    ? `Become a Tutor`
                     : `Create a ${showLogin.userType} account`
                 }}
               </h2>
@@ -139,7 +141,7 @@
               </form>
               <!-- Sign up form -->
               <form v-else id="signup-form">
-                <div class="form-group mb-5">
+                <div v-if="!isStudent" class="form-group mb-5">
                   <label for="input-name">Name</label>
                   <div>
                     <input
@@ -163,7 +165,7 @@
                     />
                   </div>
                 </div>
-                <div class="form-group mb-5">
+                <div v-if="!isStudent" class="form-group mb-5">
                   <label for="input-email">Phone</label>
                   <div>
                     <input
@@ -215,6 +217,27 @@
                     </button>
                   </span>
                 </div>
+                <div v-if="showLogin.userType === 'tutor'">
+                  <hr class="mt-4 mb-4" />
+                  <div v-if="!isStudent" class="text-center">
+                    <a
+                      href="#"
+                      class="text-sm leading-5 text-gray-700"
+                      @click="isStudent = true"
+                    >
+                      Already a Student?
+                    </a>
+                  </div>
+                  <div v-if="isStudent" class="text-center">
+                    <a
+                      href="#"
+                      class="text-sm leading-5 text-gray-700"
+                      @click="isStudent = false"
+                    >
+                      Not a Student?
+                    </a>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
@@ -232,6 +255,7 @@ export default {
   data: () => ({
     isLogin: true,
     loading: false,
+    isStudent: false,
     signupForm: {
       name: "",
       email: "",
@@ -273,7 +297,8 @@ export default {
       }
       this.$store.dispatch("auth/signUpUser", {
         ...data,
-        userType
+        userType,
+        isStudent: this.isStudent
       })
       .then((res) => {
         this.loading = false

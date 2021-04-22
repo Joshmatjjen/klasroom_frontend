@@ -47,3 +47,17 @@ export const reference = () => {
     text += possible.charAt(Math.floor(Math.random() * possible.length))
   return 'KLA-' + text
 }
+
+export const getAuthHeader = (authToken) => {
+  return {
+    "Content-Type": "application/json",
+    Authorization: `${authToken}`,
+  };
+}
+
+export const getAccessTokenHeader = (accessToken) => {
+  return {
+    "Content-Type": "application/json",
+    "Access-Token": `${accessToken}`,
+  };
+}
