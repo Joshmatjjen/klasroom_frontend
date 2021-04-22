@@ -33,7 +33,7 @@
       <div class="container mx-auto my-10 px-4 lg:px-0">
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-12">
-            <course-table></course-table>
+            <webinar-table :columns="columns" :rows="rows" />
           </div>
         </div>
       </div>
@@ -120,6 +120,7 @@
 import Vue from 'vue'
 
 const courses = require('@/static/json/courses.json')
+const webinarCourse = require('@/static/json/webinar-course.json')
 
 export default {
   layout: 'dashboard',
@@ -129,6 +130,32 @@ export default {
   data: () => ({
     courses: _.take(courses, 4),
     undoneTasks: _.take(courses, 3),
+    columns: [
+      {
+        label: 'Course title',
+        field: 'courseTitle',
+      },
+      {
+        label: 'Price',
+        field: 'price',
+      },
+      {
+        label: 'Sales',
+        field: 'sales',
+      },
+      {
+        label: 'Webinar Type',
+        field: 'webinarType',
+      },
+      {
+        label: 'Created On',
+        field: 'createdAt',
+        type: 'date',
+        dateInputFormat: 'yyyy-MM-dd',
+        dateOutputFormat: 'MMM do yy',
+      },
+    ],
+    rows: _.take(webinarCourse, 4),
   }),
 }
 </script>

@@ -330,11 +330,12 @@ label.checkbox input:checked ~ span.checkmark::after {
 
 .vgt-table thead th {
   background: #ffffff !important;
-  @apply text-sm font-medium outline-none;
+  @apply text-xs font-medium outline-none;
 }
 
 table.vgt-table td {
   border: none !important;
+  @apply text-xs font-medium outline-none align-middle !important;
 }
 
 .vgt-wrap {
