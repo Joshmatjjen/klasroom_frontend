@@ -2,8 +2,8 @@
   <div class="layout">
     <sidebar />
     <div class="content-wrapper dashboard">
-      <dash-navbar-mobile v-if="$device.isMobile" />
-      <dash-navbar v-else />
+      <dash-navbar-mobile v-if="$device.isMobile" :userDash="$router.history.current.path.split('/')[0]" />
+      <dash-navbar v-else :userDash="$router.history.current.path.split('/')[1]" />
       <div class="container mx-auto px-0 mt-8 mb-5">
         <Nuxt />
         <dash-footer />

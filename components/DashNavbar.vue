@@ -38,17 +38,34 @@
             >
               <div class="px-4 md:px-5 lg:px-6 py-3">
                 <nuxt-link
-                  to="/student/account"
+                  :to="`/${userDash}/dashboard`"
+                  class="text-gray-700 block py-2"
+                >
+                  <span class="text-sm">Dashboard</span>
+                </nuxt-link>
+                <nuxt-link
+                  :to="`/${userDash}/account`"
                   class="text-gray-700 block py-2"
                 >
                   <span class="text-sm">Account</span>
                 </nuxt-link>
                 <nuxt-link
-                  to="/student/settings"
+                  :to="`/${userDash}/settings`"
                   class="text-gray-700 block py-2"
                 >
                   <span class="text-sm">Settings</span>
                 </nuxt-link>
+                <a @click="switchDash" class="text-gray-700 block py-2">
+                  <span class="text-sm">
+                    {{ 
+                      userDash === "student" && userType === "tutor" 
+                      ? "Switch to Tutor" 
+                      : userDash === "student" && userType === "student" 
+                      ? "Become a Tutor" 
+                      : "Switch to Student" 
+                    }}
+                  </span>
+                </a>
                 <a @click="logout" class="text-gray-700 block py-2">
                   <span class="text-sm">Sign out</span>
                 </a>
@@ -73,7 +90,14 @@ export default {
       darkMenu: (state) => state.app.darkMenu,
       title: (state) => state.app.pageTitle,
       user: (state) => state.auth.user,
+      userType: (state) => state.auth.user.isTutor ? "tutor" : "student",
     }),
+  },
+  props: {
+    userDash: {
+      type: String,
+      required: true,
+    }
   },
   methods: {
     toggleMenu() {
@@ -86,10 +110,20 @@ export default {
     },
     toggleUserMenu(e) {
       if (e) e.preventDefault()
+      console.log('this.$router: ', this.userDash)
       this.userMenu = !this.userMenu
     },
     logout() {
       this.$store.dispatch('auth/logout')
+    },
+    switchDash() {
+      if (this.userDash === "student" && this.userType === "tutor")
+        this.$router.push(`/tutor/dashboard`)
+      else if (this.userDash === "student" && this.userType === "student") {
+        // Become a tutor
+      }
+      else
+        this.$router.push(`/student/dashboard`);
     }
   },
 }
