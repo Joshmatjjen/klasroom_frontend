@@ -125,6 +125,7 @@
                       @click="(e) => onLogin(e, showLogin.userType)"
                     >
                       Sign in
+                      <loader v-if="loading" color="white" />
                     </button>
                   </span>
                 </div>
