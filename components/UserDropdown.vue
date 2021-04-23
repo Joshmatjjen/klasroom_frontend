@@ -25,40 +25,38 @@
         class="user-menu-drop shadow-hover relative"
         :class="{ hidden: !userMenu }"
       >
-        <div class="px-4 md:px-5 lg:px-6 py-3">
-          <nuxt-link
-            :to="userDash ? `/${userDash}/dashboard` : '/student/dashboard'"
-            class="text-gray-700 block py-2"
-          >
-            <span class="text-sm">Dashboard</span>
-          </nuxt-link>
-          <nuxt-link
-            :to="userDash ? `/${userDash}/account` : '/student/account'"
-            class="text-gray-700 block py-2"
-          >
-            <span class="text-sm">Account</span>
-          </nuxt-link>
-          <nuxt-link
-            :to="userDash ? `/${userDash}/settings` : '/student/settings'"
-            class="text-gray-700 block py-2"
-          >
-            <span class="text-sm">Settings</span>
-          </nuxt-link>
-          <a v-if="userDash" @click="switchDash" class="text-gray-700 block py-2">
-            <span class="text-sm">
-              {{ 
-                userDash === "student" && userType === "tutor" 
-                ? "Switch to Tutor" 
-                : userDash === "student" && userType === "student" 
-                ? "Become a Tutor" 
-                : "Switch to Student" 
-              }}
-            </span>
-          </a>
-          <a href="#" @click.prevent="logout" class="text-gray-700 block py-2">
-            <span class="text-sm">Sign out</span>
-          </a>
-        </div>
+        <nuxt-link
+          :to="userDash ? `/` : '/student/dashboard'"
+          class="user-menu-drop-item text-gray-700 block py-3 px-4 md:px-5 lg:px-6 hover:bg-gray-200"
+        >
+          <span class="text-sm">{{ userDash ? 'Home' : 'Dashboard' }}</span>
+        </nuxt-link>
+        <nuxt-link
+          :to="userDash ? `/${userDash}/account` : '/student/account'"
+          class="user-menu-drop-item text-gray-700 block py-3 px-4 md:px-5 lg:px-6 hover:bg-gray-200"
+        >
+          <span class="text-sm">Account</span>
+        </nuxt-link>
+        <nuxt-link
+          :to="userDash ? `/${userDash}/settings` : '/student/settings'"
+          class="user-menu-drop-item text-gray-700 block py-3 px-4 md:px-5 lg:px-6 hover:bg-gray-200"
+        >
+          <span class="text-sm">Settings</span>
+        </nuxt-link>
+        <a v-if="userDash" @click.prevent="switchDash" class="user-menu-drop-item text-gray-700 block py-3 px-4 md:px-5 lg:px-6 hover:bg-gray-200">
+          <span class="text-sm">
+            {{ 
+              userDash === "student" && userType === "tutor" 
+              ? "Switch to Tutor" 
+              : userDash === "student" && userType === "student" 
+              ? "Become a Tutor" 
+              : "Switch to Student" 
+            }}
+          </span>
+        </a>
+        <a href="#" @click.prevent="logout" class="user-menu-drop-item text-gray-700 block py-3 px-4 md:px-5 lg:px-6 hover:bg-gray-200">
+          <span class="text-sm">Sign out</span>
+        </a>
       </div>
     </a>
   </div>
@@ -157,6 +155,14 @@ export default {
   min-width: 220px;
   @apply absolute w-full right-0;
   @apply bg-white rounded-xl border border-gray-300;
+}
+.user-menu-drop-item:first-child {
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+}
+.user-menu-drop-item:last-child {
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
 }
 .user-avatar {
   border-radius: 7.5px;

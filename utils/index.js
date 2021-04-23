@@ -61,3 +61,10 @@ export const getAccessTokenHeader = (accessToken) => {
     "Access-Token": `${accessToken}`,
   };
 }
+
+export const getAuthFileHeader = (authToken) => {
+  return {
+    "Content-Type": "multipart/form-data",
+    Authorization: `Bearer ${authToken}`,
+  };
+}

@@ -9,16 +9,18 @@ export default ({ $axios, app, store, redirect, route }) => {
   $axios.onRequest((request) => {
     request.baseURL = process.env.baseUrl
 
-    request.headers.common['Secret'] = process.env.secret
+    request.headers['Secret'] = process.env.secret
+    request.headers["Content-Type"] = "application/json"
 
     let token = store.getters['auth/token']
     // console.log('Axios token:', token)
     if (token) {
-      request.headers.common.Authorization = `Bearer ${token}`
+      request.headers.Authorization = `Bearer ${token}`
     } else {
-      delete request.headers.common.Authorization
+      delete request.headers.Authorization
     }
 
+    // console.log('Current token: ', request.headers)
     // console.log('route url: ', route.fullPath)
     // console.log('request.url: ', request.url)
     // console.log('is Local: ', local)
