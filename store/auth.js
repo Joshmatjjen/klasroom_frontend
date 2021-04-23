@@ -1,5 +1,5 @@
 import Cookie from 'js-cookie'
-import { cookieFromRequest, getAccessTokenHeader } from '~/utils'
+import { cookieFromRequest, getAccessTokenHeader, getAuthHeader } from '~/utils'
 
 // state
 export const state = () => ({
@@ -83,6 +83,8 @@ export const actions = {
       console.log("start validation: ", userData)
       const { data } = await this.$axios.$post(`/validatetoken?token_type=${userData.type}`, {
         token: userData.token,
+      }, {
+        headers: getAuthHeader('')
       })
       console.log("data: ", data)
       return data
@@ -97,6 +99,8 @@ export const actions = {
     try {
       const { data } = await this.$axios.$post(`/resettoken`, {
         email: userData.email,
+      }, {
+        headers: getAuthHeader('')
       })
       console.log("data: ", data)
       return data
@@ -112,6 +116,8 @@ export const actions = {
       const { data } = await this.$axios.$post(`/resetpassword`, {
         password: userData.password,
         token: userData.token
+      }, {
+        headers: getAuthHeader('')
       })
       console.log("data: ", data)
       return data
@@ -129,6 +135,8 @@ export const actions = {
           userIdentity: userData.email,
           password: userData.password,
           userType: 'student'
+        }, {
+          headers: getAuthHeader('')
         })
 
         console.log('fetch old user success: ', data)
@@ -144,7 +152,9 @@ export const actions = {
         })
         return newData
       }
-      const { data } = await this.$axios.$post(userData.userType === "student" ? '/users' : '/users/tutor', userData)
+      const { data } = await this.$axios.$post(userData.userType === "student" ? '/users' : '/users/tutor', userData, {
+        headers: getAuthHeader('')
+      })
       return data
     } catch (e) {
       return false
@@ -153,7 +163,9 @@ export const actions = {
 
   async loginUser(vuexContext, userData) {
     try {
-      const { data } = await this.$axios.$post('/login', userData)
+      const { data } = await this.$axios.$post('/login', userData, {
+        headers: getAuthHeader('')
+      })
       if (data.accessToken) {
         console.log('fetch user success: ', data)
         const expirationDate = new Date().getTime() + 86400 * 1000 // 24 hrs duration
