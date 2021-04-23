@@ -12,7 +12,7 @@
       }"
       @click="toggleMenu"
     ></div>
-    <div class="p-4 md:p-5 lg:p-6 overflow-x-auto">
+    <div class="p-1 md:p-5 lg:p-6 overflow-x-auto">
       <vue-good-table
         :columns="columns"
         :rows="rows"
@@ -99,7 +99,7 @@
             <div class="flex flex-row gap-4 items-center justify-end relative">
               <span
                 @click.capture.stop="toggleMenu(props.row.id)"
-                class="absolute z-50 bottom-0 -mb-1 right-0 -mr-4 text-gray-600 cursor-pointer hover:text-gray-900 font-extrabold text-left text-lg"
+                class="absolute z-50 bottom-0 -mb-1 right-0 -mr-2 text-gray-600 cursor-pointer hover:text-gray-900 font-extrabold text-left text-lg"
                 >&#xFE19;</span
               >
               <div

@@ -23,6 +23,21 @@
             label="Attendants"
             more="/student/webinars"
           />
+          <dash-item-metrics
+            title="4 webinars"
+            label="Upcoming"
+            more="/student/webinars"
+          />
+          <dash-item-metrics
+            title="13 webinars"
+            label="Saved"
+            more="/student/webinars"
+          />
+          <dash-item-metrics
+            title="20 webinars"
+            label="Attended"
+            more="/student/webinars"
+          />
         </div>
       </div>
     </section>
@@ -36,21 +51,21 @@
           v-bind:class="{ active: isWebinars.upcoming }"
           class="menu-btn"
         >
-          <p class="text-xs text-gray-700">Upcoming webinars</p>
+          <p class="text-xs text-gray-700">My upcoming webinars</p>
         </button>
         <button
           v-on:click="switcher('recorded')"
           v-bind:class="{ active: isWebinars.recorded }"
           class="menu-btn"
         >
-          <p class="text-xs text-gray-700">Recorded webinars</p>
+          <p class="text-xs text-gray-700">My recorded webinars</p>
         </button>
         <button
           v-on:click="switcher('draft')"
           v-bind:class="{ active: isWebinars.draft }"
           class="menu-btn"
         >
-          <p class="text-xs text-gray-700">Draft</p>
+          <p class="text-xs text-gray-700">My draft</p>
         </button>
       </div>
     </section>
@@ -98,6 +113,37 @@
       <div class="container mx-auto my-10 px-4 lg:px-0">
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-12">
+            <dash-items-section-group
+              title="Upcoming Websinars"
+              more="/student/my-webinars"
+            >
+              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                <webinar-item
+                  v-for="(webinar, key) in webinars"
+                  :key="key"
+                  :webinar="webinar"
+                  :session="true"
+                />
+              </div>
+            </dash-items-section-group>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-orange-100">
+      <div class="container mx-auto my-10 px-4 lg:px-0">
+        <div class="md:grid grid-cols-3 gap-5 space-y-4 md:space-y-0">
+          <dash-webinars-calendar class="col-span-2" />
+          <dash-pre-recorded-webinars :items="undoneTasks" />
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container mx-auto my-10 px-4 lg:px-0">
+        <div class="grid grid-cols-12 gap-4">
+          <div class="col-span-12">
             <dash-items-section-group title="Previously Attended Webinars">
               <dash-previously-attended-webinars />
             </dash-items-section-group>
@@ -112,6 +158,7 @@
 import Vue from 'vue'
 
 const courses = require('@/static/json/courses.json')
+const webinars = require('@/static/json/webinars.json')
 const webinarCourse = require('@/static/json/webinar-course.json')
 const webinarRecorded = require('@/static/json/webinar-recorded.json')
 const webinarDraft = require('@/static/json/webinar-draft.json')
@@ -124,6 +171,7 @@ export default {
   },
   data: () => ({
     courses: _.take(courses, 4),
+    webinars: _.take(webinars, 4),
     undoneTasks: _.take(courses, 3),
     // Upcoming
     columnsUpcoming: [
