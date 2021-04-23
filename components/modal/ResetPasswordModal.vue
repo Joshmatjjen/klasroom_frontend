@@ -83,8 +83,10 @@
                   <div>
                     <input
                       id="input-code"
+                      type="text"
                       class="form-input"
                       placeholder="Enter code that was sent to your email"
+                      v-model="form.token"
                     />
                   </div>
                 </div>
@@ -93,12 +95,14 @@
                   <div>
                     <input
                       id="input-password"
+                      type="password"
                       class="form-input"
                       placeholder="Enter your password here"
+                      v-model="form.password"
                     />
                   </div>
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                   <label for="input-re_password">New Password</label>
                   <div>
                     <input
@@ -107,7 +111,7 @@
                       placeholder="Repeat password"
                     />
                   </div>
-                </div>
+                </div> -->
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
                     <button
@@ -145,7 +149,8 @@ import { mapState } from 'vuex'
 export default {
   data: () => ({
     form: {
-      email: '',
+      password: '',
+      token: ''
     },
   }),
   computed: {
@@ -154,19 +159,47 @@ export default {
     }),
   },
   methods: {
-    proceed(e) {
+    resetPassword(e) {
       if (e) e.preventDefault()
+      this.loading = true
+
+      this.$store.dispatch("auth/resetPassword", {
+        ...this.form,
+      })
+      .then((res) => {
+        this.loading = false
+        if (res) {
+          this.clearInput()
+          this.showSuccess()
+        }
+      }).catch(e => console.log('e: ', e));
+    },
+    showSuccess() {
       this.$store.commit('app/NOTICE_MODAL', {
         title: 'Congratulations!',
-        html: `Your password has been changed successfully. 
+        text: `Your password has been changed successfully. 
           Please log in to your account to proceed.`,
+        confirmCallback: () => {
+          this.$store.commit('app/LOGIN_MODAL', {
+            status: true,
+            type: 'login',
+            userType: 'student',
+          });
+          this.$store.commit('app/NOTICE_MODAL', false)
+        }
       })
       this.$store.commit('app/RESET_PASSWORD_MODAL', false)
     },
     forgotPassword() {
       this.$store.commit('app/FORGOT_PASSWORD_MODAL', true)
       this.$store.commit('app/RESET_PASSWORD_MODAL', false)
-    }
+    },
+    clearInput() {
+      this.form = {
+        password: "",
+        token: ''
+      }
+    },
   },
 }
 </script>
