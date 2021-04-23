@@ -11,7 +11,7 @@
         <div class="ml-auto mr-24" @click="toggleMenu">
           <NavSearchBox />
         </div>
-        <div
+        <!-- <div
           class="mt-8 md:mt-0 mb-6 md:mb-0 lg:border-l border-gray-400 lg:pl-6"
         >
           <div class="notification mr-3">
@@ -72,7 +72,17 @@
               </div>
             </div>
           </a>
-        </div>
+        </div> -->
+        <user-dropdown 
+          :userDash="userDash"
+          :userType="userType"
+          :userMenu="userMenu"
+          :user="user"
+          :toggleUserMenu="toggleUserMenu" 
+          :logout="logout"
+          :switchDash="switchDash"
+        >
+        </user-dropdown>
       </div>
     </nav>
   </div>
@@ -80,7 +90,9 @@
 
 <script>
 import { mapState } from 'vuex'
+import UserDropdown from './UserDropdown.vue'
 export default {
+  components: { UserDropdown },
   data: () => ({
     open: false,
     userMenu: false,
@@ -107,7 +119,6 @@ export default {
     },
     toggleUserMenu(e) {
       if (e) e.preventDefault()
-      console.log('$route.name: ', this.userDash)
       this.userMenu = !this.userMenu
     },
     logout() {

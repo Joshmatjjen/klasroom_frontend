@@ -1,5 +1,6 @@
 <template>
   <div :class="{ 'bg-orange-100': darkMenu }">
+    <div @click="toggleUserMenu" :class="{ hidden: !userMenu }" class="fixed" :style="{ width: '100%', height: '100vh', zIndex: 2 }"></div>
     <div @click="() => toggleOpt('all')" :class="{ hidden: !loginOpt && !signUpOpt }" class="fixed" :style="{ width: '100%', height: '100vh', zIndex: 2 }"></div>
     <div class="container mx-auto">
       <nav class="flex items-center justify-between flex-wrap py-4 md:py-6">
@@ -51,7 +52,16 @@
               Blog
             </nuxt-link>
           </div>
-          <div class="mt-8 md:mt-0 mb-6 md:mb-0 flex flex-row relative">
+          <div v-if="user" class="mt-8 md:mt-0 mb-6 md:mb-0 flex flex-row relative">
+            <user-dropdown 
+              :userMenu="userMenu"
+              :user="user"
+              :toggleUserMenu="toggleUserMenu" 
+              :logout="logout"
+            >
+            </user-dropdown>
+          </div>
+          <div v-else class="mt-8 md:mt-0 mb-6 md:mb-0 flex flex-row relative">
             <!-- <a
               href="#"
               class="btn lg:mr-4 bg-blue-400 text-white md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
@@ -62,7 +72,7 @@
             <a
               href="#"
               class="btn btn-primary lg:mt-0 lg:mr-4 flex flex-row"
-              @click="() => toggleOpt('login')"
+              @click.prevent="() => toggleOpt('login')"
             >
               <p>Log In</p>
               <svg
@@ -101,7 +111,7 @@
             <a
               href="#"
               class="btn btn-primary lg:mt-0 flex flex-row"
-              @click="() => toggleOpt('signup')"
+              @click.prevent="() => toggleOpt('signup')"
             >
               <p>Sign Up</p>
               <svg
@@ -151,10 +161,12 @@ export default {
     open: false,
     signUpOpt: false,
     loginOpt: false,
+    userMenu: false,
   }),
   computed: {
     ...mapState({
       darkMenu: (state) => state.app.darkMenu,
+      user: (state) => state.auth.user,
     }),
   },
   methods: {
@@ -188,6 +200,13 @@ export default {
       }
       else if (type === 'signup') this.signUpOpt = !this.signUpOpt
       else if (type === 'login') this.loginOpt = !this.loginOpt
+    },
+    toggleUserMenu(e) {
+      if (e) e.preventDefault()
+      this.userMenu = !this.userMenu
+    },
+    logout() {
+      this.$store.dispatch('auth/logout')
     },
   },
 }
