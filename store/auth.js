@@ -107,6 +107,21 @@ export const actions = {
     }
   },
 
+  async resetPassword(vuexContext, userData) {
+    try {
+      const { data } = await this.$axios.$post(`/resetpassword`, {
+        password: userData.password,
+        token: userData.token
+      })
+      console.log("data: ", data)
+      return data
+
+    } catch (e) {
+      console.log("error validation: ", e)
+      return false
+    }
+  },
+
   async signUpUser(vuexContext, userData) {
     try {
       if (userData.isStudent && userData.userType === "tutor") {

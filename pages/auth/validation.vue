@@ -4,6 +4,7 @@
 
 <script>
 export default {
+  middleware: ['check-auth', 'isAuth'],
   created() {
     const token = this.$route.query.token
     if (token) {

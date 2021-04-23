@@ -11,7 +11,7 @@
           <img src="~/static/close.svg" />
         </button>
         <div class="px-4 lg:col-span-1 text-left lg:text-center">
-          <router-link :to="{ name: 'student-dashboard' }">
+          <router-link to="/">
             <img
               src="~/static/logo.svg"
               alt="Casava.co"

@@ -131,7 +131,7 @@
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="proceed"
+                      @click="resetPassword"
                     >
                       Set new password
                       <loader v-if="loading" color="white" />
@@ -160,7 +160,7 @@
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="(e) => onSignUp(e, showModal.userType)"
+                      @click="confirmEmail"
                     >
                       Sign In
                       <loader v-if="loading" color="white" />
@@ -212,6 +212,7 @@ export default {
 
       this.$store.dispatch("auth/resetPassword", {
         ...this.signupForm,
+        token: this.showModal.token
       })
       .then((res) => {
         this.loading = false
@@ -227,7 +228,7 @@ export default {
       this.loading = true
 
       this.$store.dispatch("auth/loginUser", {
-        ...this.signupForm,
+        password: this.signupForm.password,
         email: this.showModal.email
       })
       .then((res) => {
@@ -244,8 +245,15 @@ export default {
         title: 'All done!',
         text: `Your password has been changed successfully. 
           Please log in to your account to proceed.`,
+        confirmCallback: () => {
+          this.$store.commit('app/LOGIN_MODAL', {
+            status: true,
+            type: 'login',
+            userType: 'student',
+          });
+        }
       })
-      this.$store.commit('app/VALIDATION_MODAL', null)
+      this.$store.commit('app/NOTICE_MODAL', false)
     },
     showSuccess2() {
       this.$router.push(`/student/dashboard`)
