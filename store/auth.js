@@ -78,6 +78,35 @@ export const actions = {
     }
   },
 
+  async validateToken(vuexContext, userData) {
+    try {
+      console.log("start validation: ", userData)
+      const { data } = await this.$axios.$post(`/validatetoken?token_type=${userData.type}`, {
+        token: userData.token,
+      })
+      console.log("data: ", data)
+      return data
+
+    } catch (e) {
+      console.log("error validation: ", e)
+      return false
+    }
+  }, 
+
+  async forgetPassword(vuexContext, userData) {
+    try {
+      const { data } = await this.$axios.$post(`/resettoken`, {
+        email: userData.email,
+      })
+      console.log("data: ", data)
+      return data
+
+    } catch (e) {
+      console.log("error validation: ", e)
+      return false
+    }
+  },
+
   async signUpUser(vuexContext, userData) {
     try {
       if (userData.isStudent && userData.userType === "tutor") {

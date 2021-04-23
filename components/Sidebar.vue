@@ -25,7 +25,7 @@
           <ul class="relative h-full" @click="toggleNav">
             <li class="nav-item">
               <router-link
-                :to="{ name: 'student-dashboard' }"
+                :to="{ name: `${userDash}-dashboard` }"
                 class="nav-link nav-home"
                 active-class="active"
                 exact
@@ -35,7 +35,7 @@
             </li>
             <li class="nav-item">
               <router-link
-                :to="{ name: 'student-courses' }"
+                :to="{ name: `${userDash}-courses` }"
                 class="nav-link nav-courses"
                 active-class="active"
                 exact
@@ -45,7 +45,7 @@
             </li>
             <li class="nav-item">
               <router-link
-                :to="{ name: 'student-webinars' }"
+                :to="{ name: `${userDash}-webinars` }"
                 class="nav-link nav-webinars"
                 active-class="active"
                 exact
@@ -55,7 +55,7 @@
             </li>
             <li class="nav-item">
               <router-link
-                :to="{ name: 'student-chat' }"
+                :to="{ name: `${userDash}-chat` }"
                 class="nav-link nav-chat"
                 active-class="active"
                 exact
@@ -65,7 +65,7 @@
             </li>
             <li class="nav-item">
               <router-link
-                :to="{ name: 'student-faqs' }"
+                :to="{ name: `${userDash}-faqs` }"
                 class="nav-link nav-faqs"
                 active-class="active"
                 exact
@@ -93,17 +93,28 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 export default {
   data: () => ({
     appName: process.env.appName,
   }),
 
-  computed: mapGetters({
-    menu: 'app/menu',
-    user: 'auth/user',
-  }),
+  // computed: mapGetters({
+  //   menu: 'app/menu',
+  //   user: 'auth/user',
+  // }),
+
+  computed: {
+    ...mapState({
+      menu: (state) => state.app.menu,
+      user: (state) => state.auth.user,
+      userType: (state) => state.auth.user && state.auth.user.isTutor ? "tutor" : "student",
+    }),
+    userDash() {
+      return this.$route.path.split('/')[1]
+    }
+  },
 
   methods: {
     toggleNav(e) {

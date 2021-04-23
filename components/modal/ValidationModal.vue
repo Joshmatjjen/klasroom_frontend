@@ -49,7 +49,7 @@
               aria-label="Close panel"
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
               @click="() => {
-                $store.commit('app/BECOME_A_TUTOR_MODAL', false);
+                $store.commit('app/VALIDATION_MODAL', null);
                 clearInput()
               }"
             >
@@ -72,16 +72,75 @@
           </div>
   
           <div class="block">
-            <div class="mt-3 sm:mt-0 sm:ml-0">
+            <div v-if="showModal.isValidating" class="mt-3 sm:mt-0 sm:ml-0">
               <h2
                 id="modal-headline"
                 class="text-xl sm:text-4xl leading-none font-bold text-center text-gray-800"
               > 
-                Become a Tutor
+                Please Wait...
+              </h2>
+              <div class="flex justify-center items-center" style="height: 150px;">
+                <svg :style="{width: '100px', height: '30px'}" :class="`animate-spin h-5 ml-2 rounded-full border-2 text-blue-500 border-orange-400 stroke-current stroke-2`" viewBox="0 0 50 50">
+                  <circle
+                    className="path"
+                    cx="25"
+                    cy="25"
+                    r="20"
+                    fill="none"
+                  ></circle>
+                </svg>
+              </div>
+            </div>
+            <div v-else class="mt-3 sm:mt-0 sm:ml-0">
+              <h2
+                id="modal-headline"
+                class="text-xl sm:text-4xl leading-none font-bold text-center text-gray-800"
+              > 
+                {{showModal.type === "reset" ? "Reset password" : "Sign into your account"}}
               </h2>
               <hr class="mt-8 mb-5" />
+
+              <!-- Forgot password form -->
+              <form v-if="showModal.type === 'reset'" id="forgot-form">
+                <div class="form-group mb-5">
+                  <label for="input-password">New Password</label>
+                  <div>
+                    <input
+                      id="input-password"
+                      type="password"
+                      class="form-input"
+                      placeholder="Enter your password here"
+                      v-model="signupForm.password"
+                    />
+                  </div>
+                </div>
+                <!-- <div class="form-group">
+                  <label for="input-re_password">New Password</label>
+                  <div>
+                    <input
+                      id="input-re_password"
+                      class="form-input"
+                      type="password"
+                      placeholder="Repeat password"
+                      v-model="signupForm.password"
+                    />
+                  </div>
+                </div> -->
+                <div class="flex text-center pt-8 pb-4 sm:pb-4">
+                  <span class="flex mx-auto">
+                    <button
+                      type="button"
+                      class="btn btn-primary shadow"
+                      @click="proceed"
+                    >
+                      Set new password
+                      <loader v-if="loading" color="white" />
+                    </button>
+                  </span>
+                </div>
+              </form>
               
-              <form id="signup-form">
+              <form v-else id="signup-form">
 
                 <div class="form-group mb-5">
                   <label for="input-password">Password</label>
@@ -95,22 +154,7 @@
                     />
                   </div>
                 </div>
-                <div class="form-group">
-                  <label for="input-courseCategories">Course Categories</label>
-                  <div>
-                    <select
-                      id="input-password"
-                      multiple
-                      class="form-input"
-                      v-model="signupForm.courseCategories"
-                    >
-                      <option disabled value="">Select Course Categories</option>
-                      <option value="Programming">Programming</option>
-                      <option value="Business">Business</option>
-                      <option value="Finance">Finance</option>
-                    </select>
-                  </div>
-                </div>
+                
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
                     <button
@@ -118,7 +162,7 @@
                       class="btn btn-primary shadow"
                       @click="(e) => onSignUp(e, showModal.userType)"
                     >
-                      Submit
+                      Sign In
                       <loader v-if="loading" color="white" />
                     </button>
                   </span>
@@ -139,7 +183,6 @@ import { mapState } from 'vuex'
 
 export default {
   data: () => ({
-    isLogin: true,
     loading: false,
     signupForm: {
       password: "",
@@ -148,7 +191,7 @@ export default {
   }),
   computed: {
     ...mapState({
-      showModal: (state) => state.app.becomeATutorModal,
+      showModal: (state) => state.app.validationModal,
     }),
   },
   // watch: {
@@ -161,40 +204,64 @@ export default {
   //     immediate: true,
   //   },
   // },
+  
   methods: {
-    onSignUp(e, userType) {
+    resetPassword(e) {
       if (e) e.preventDefault()
       this.loading = true
-      const data = {
-        ...this.signupForm
-      }
-      this.$store.dispatch("auth/becomeATutor", {
-        ...data,
-        userType
+
+      this.$store.dispatch("auth/resetPassword", {
+        ...this.signupForm,
       })
       .then((res) => {
         this.loading = false
         if (res) {
           this.clearInput()
-          this.showSuccess()
+          this.showSuccess1()
+        }
+      }).catch(e => console.log('e: ', e));
+    },
+
+    confirmEmail(e) {
+      if (e) e.preventDefault()
+      this.loading = true
+
+      this.$store.dispatch("auth/loginUser", {
+        ...this.signupForm,
+        email: this.showModal.email
+      })
+      .then((res) => {
+        this.loading = false
+        if (res) {
+          this.clearInput()
+          this.showSuccess2()
         }
       }).catch(e => console.log('e: ', e));
     },
     
-    showSuccess() {
+    showSuccess1() {
       this.$store.commit('app/NOTICE_MODAL', {
         title: 'All done!',
-        text: `You have successfully become a tutor. 
-          You can now switch to tutor dashboard.`,
+        text: `Your password has been changed successfully. 
+          Please log in to your account to proceed.`,
       })
-      this.$store.commit('app/BECOME_A_TUTOR_MODAL', false)
+      this.$store.commit('app/VALIDATION_MODAL', null)
+    },
+    showSuccess2() {
+      this.$router.push(`/student/dashboard`)
+      // this.$store.commit('app/NOTICE_MODAL', {
+      //   title: 'All done!',
+      //   text: `You have successfully confirm your email. 
+      //     Sign in with you email.`,
+      // })
+      this.$store.commit('app/VALIDATION_MODAL', null)
     },
     clearInput() {
       this.signupForm = {
         password: "",
-        courseCategories: ""
       }
-    }
+    },
+    
   },
 }
 </script>

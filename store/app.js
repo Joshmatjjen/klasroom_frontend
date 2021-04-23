@@ -4,6 +4,7 @@ export const state = () => ({
   darkMenu: false,
   loginModal: null,
   becomeATutorModal: false,
+  validationModal: null,
   forgotPasswordModal: false,
   resetPasswordModal: false,
   modal: false,
@@ -30,6 +31,7 @@ export const getters = {
   categories: (state) => state.categories,
   banks: (state) => state.banks,
   accounts: (state) => state.accounts,
+  validationModal: (state) => state.validationModal,
 }
 
 // mutations
@@ -51,6 +53,9 @@ export const mutations = {
   },
   BECOME_A_TUTOR_MODAL(state, status) {
     state.becomeATutorModal = status
+  },
+  VALIDATION_MODAL(state, data) {
+    state.validationModal = data
   },
   FORGOT_PASSWORD_MODAL(state, status) {
     state.forgotPasswordModal = status

@@ -119,6 +119,16 @@
                     </button>
                   </span>
                 </div>
+                <hr class="mt-4 mb-4" />
+                <div class="text-center">
+                  <a
+                    href="#"
+                    class="text-sm leading-5 text-gray-700"
+                    @click.prevent="forgotPassword"
+                  >
+                    Didn't get the message?
+                  </a>
+                </div>
               </form>
             </div>
           </div>
@@ -153,6 +163,10 @@ export default {
       })
       this.$store.commit('app/RESET_PASSWORD_MODAL', false)
     },
+    forgotPassword() {
+      this.$store.commit('app/FORGOT_PASSWORD_MODAL', true)
+      this.$store.commit('app/RESET_PASSWORD_MODAL', false)
+    }
   },
 }
 </script>

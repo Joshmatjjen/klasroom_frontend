@@ -101,7 +101,9 @@ export default ({ $axios, app, store, redirect, route }) => {
   $axios.onResponse((res) => {
     const { status, data } = res;
     console.log('new data: ', data)
-    if (status === 200 && data.message === "Check your email for confirmation link before proceeding") {
+    if (status === 200
+      && (data.message === "Check your email for confirmation link before proceeding"
+        || data.message === "A text message was sent to the email associated with your account.")) {
 
       Swal.fire({
         position: 'top-end',
@@ -111,7 +113,7 @@ export default ({ $axios, app, store, redirect, route }) => {
         allowOutsideClick: false,
         showConfirmButton: false,
         showCloseButton: true,
-        timer: 5000,
+        timer: 6000,
       }).then(() => {
         redirect({ name: 'login' })
       })
