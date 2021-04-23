@@ -24,7 +24,10 @@
         styleClass="vgt-table vgt-wrap vgt-right-align striped"
       >
         <template slot="table-row" slot-scope="props">
-          <span v-if="props.column.field == 'courseTitle'">
+          <span
+            v-if="props.column.field == 'webinarTitle'"
+            class="flex flex-row justify-between"
+          >
             <div class="flex flex-row max-w-md">
               <img
                 src="/card/upcoming-webinar.png"
@@ -40,6 +43,29 @@
                 }}</span>
               </div>
             </div>
+            <!-- Draft for webinar Start -->
+            <div
+              v-if="onDraft && props.column.field == 'webinarTitle'"
+              class="flex flex-row gap-5 items-center justify-end relative"
+            >
+              <div class="bg-gray-300 w-16 h-5 rounded-xl"></div>
+              <div class="bg-gray-300 w-16 h-5 rounded-xl"></div>
+              <div class="bg-gray-300 w-16 h-5 rounded-xl"></div>
+            </div>
+            <span
+              v-if="onDraft && props.column.field == 'webinarTitle'"
+              class="flex flex-row gap-10"
+            >
+              <div
+                class="flex flex-row gap-4 items-center justify-end relative"
+              >
+                <div class="btn btn-light btn-sm lg:mt-0 cursor-pointer">
+                  Keep editing
+                </div>
+                <img src="/delete.svg" class="cursor-pointer" />
+              </div>
+            </span>
+            <!-- Draft for webinar End -->
           </span>
           <span v-else-if="props.column.field == 'price'">
             <span class="text-gray-700 font-semibold"
@@ -47,13 +73,17 @@
             >
           </span>
           <span v-else-if="props.column.field == 'rating'">
-            <rating :grade="props.row.rating" />
+            <rating :grade="props.row.rating" :viewOnly="true" />
           </span>
 
           <span v-else>
             {{ props.formattedRow[props.column.field] }}
           </span>
-          <span v-if="props.column.field == 'date'">
+          <span
+            v-if="
+              props.column.field == 'date' || props.column.field == 'heldOn'
+            "
+          >
             <div class="flex flex-row gap-4 items-center justify-end relative">
               <span
                 @click.capture.stop="toggleMenu(props.row.id)"
@@ -119,6 +149,7 @@ export default {
     title: { type: String, required: false },
     columns: { type: Array, required: false },
     rows: { type: Array, required: false },
+    onDraft: { type: Boolean, required: false },
     // more: { type: String, default: null },
   },
   name: 'webinar-table',

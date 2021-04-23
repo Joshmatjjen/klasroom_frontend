@@ -6,7 +6,7 @@
         :key="key"
         :class="{ active: star <= stars }"
         class="star"
-        @click="rate(star)"
+        @click="viewOnly ? null : rate(star)"
       >
         <img v-if="star <= stars" src="/rating/star-yellow.svg" />
         <img v-else src="/rating/star-grey.svg" />
@@ -27,6 +27,7 @@ export default {
     grade: { type: Number, required: true },
     maxStars: { type: Number, default: 5 },
     hasCounter: { type: Boolean, default: false },
+    viewOnly: { type: Boolean, default: true },
   },
   data() {
     return {

@@ -84,7 +84,11 @@
       <div v-if="isWebinars.draft" class="container mx-auto my-10 px-4 lg:px-0">
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-12">
-            <webinar-table :columns="columns" :rows="rows" />
+            <webinar-table
+              :columns="columnsDraft"
+              :rows="rowsDraft"
+              :onDraft="true"
+            />
           </div>
         </div>
       </div>
@@ -110,6 +114,7 @@ import Vue from 'vue'
 const courses = require('@/static/json/courses.json')
 const webinarCourse = require('@/static/json/webinar-course.json')
 const webinarRecorded = require('@/static/json/webinar-recorded.json')
+const webinarDraft = require('@/static/json/webinar-draft.json')
 
 export default {
   layout: 'dashboard',
@@ -123,8 +128,8 @@ export default {
     // Upcoming
     columnsUpcoming: [
       {
-        label: 'Course title',
-        field: 'courseTitle',
+        label: 'Webinar title',
+        field: 'webinarTitle',
       },
       {
         label: 'Price',
@@ -150,8 +155,8 @@ export default {
     // Recorded
     columnsRecorded: [
       {
-        label: 'Course title',
-        field: 'courseTitle',
+        label: 'Webinar title',
+        field: 'webinarTitle',
       },
       {
         label: 'Price',
@@ -178,32 +183,13 @@ export default {
       },
     ],
     rowsRecorded: _.take(webinarRecorded, 4),
-    // columnsUpcoming: [
-    //   {
-    //     label: 'Course title',
-    //     field: 'courseTitle',
-    //   },
-    //   {
-    //     label: 'Price',
-    //     field: 'price',
-    //   },
-    //   {
-    //     label: 'Sales',
-    //     field: 'sales',
-    //   },
-    //   {
-    //     label: 'Webinar Type',
-    //     field: 'webinarType',
-    //   },
-    //   {
-    //     label: 'Created On',
-    //     field: 'createdAt',
-    //     type: 'date',
-    //     dateInputFormat: 'yyyy-MM-dd',
-    //     dateOutputFormat: 'MMM do yy',
-    //   },
-    // ],
-    // rowsUpcoming: _.take(webinarRecorded, 4),
+    columnsDraft: [
+      {
+        label: 'Webinal title',
+        field: 'webinarTitle',
+      },
+    ],
+    rowsDraft: _.take(webinarDraft, 4),
 
     isWebinars: {
       upcoming: true,
