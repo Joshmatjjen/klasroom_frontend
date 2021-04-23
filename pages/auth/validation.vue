@@ -17,8 +17,8 @@ export default {
           this.$store.commit('app/VALIDATION_MODAL', {token, type: 'new_email', isValidating: false, email: res.email })
         }
         else 
-          // this.$store.commit('app/VALIDATION_MODAL', null)
-          this.$store.commit('app/VALIDATION_MODAL', {token, type: 'new_email', isValidating: false })
+          this.$store.commit('app/VALIDATION_MODAL', null)
+          // this.$store.commit('app/VALIDATION_MODAL', {token, type: 'new_email', isValidating: false })
       }).catch(e => console.log('e: ', e));
     }
     else this.$router.push("/")

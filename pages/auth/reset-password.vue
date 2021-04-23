@@ -17,8 +17,8 @@ export default {
           this.$store.commit('app/VALIDATION_MODAL', {token, type: 'reset', isValidating: false })
         }
         else 
-          // this.$store.commit('app/VALIDATION_MODAL', null)
-          this.$store.commit('app/VALIDATION_MODAL', {token, type: 'reset', isValidating: false })
+          this.$store.commit('app/VALIDATION_MODAL', null)
+          // this.$store.commit('app/VALIDATION_MODAL', {token, type: 'reset', isValidating: false })
       }).catch(e => console.log('e: ', e));
     }
     else this.$router.push("/")
