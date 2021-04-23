@@ -47,19 +47,19 @@
               >
                 <a
                   href="#"
-                  class="pop-up-item hover:bg-gray-300 bor md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                  class="pop-up-item hover:bg-gray-200 md:bg-transparent block md:inline-block mb-5 md:mb-0"
                 >
                   <p>Create a meeting for later</p>
                 </a>
                 <a
                   href="#"
-                  class="pop-up-item hover:bg-gray-300 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                  class="pop-up-item hover:bg-gray-200 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
                 >
                   <p>Start an instant meeting</p>
                 </a>
                 <a
                   href="#"
-                  class="pop-up-item hover:bg-gray-300 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                  class="pop-up-item hover:bg-gray-200 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
                 >
                   <p>Schedule a meeting</p>
                 </a>

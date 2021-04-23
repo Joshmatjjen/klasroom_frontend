@@ -22,24 +22,24 @@
       </div>
       <div class="menu-scroll">
         <nav class="h-full">
-          <span v-if="userDash === 'student' && $route.name !== 'student-webinars-new'" class="flex justify-center mb-10">
+          <span v-if="$route.name !== `${userDash}-webinars-new`" class="flex justify-center" :class="userDash === 'tutor' ? 'mb-3' : 'mb-10'">
             <nuxt-link
-              to="/student/webinars/new"
-              class="btn btn-primary shadow px-2"
+              :to="`/${userDash}/webinars/new`"
+              class="btn btn-primary"
+              style="padding-left: 1rem; padding-right: 1rem;"
             >
               <!-- <img src="/icon/camera.svg" class="inline h-5 mr-2" /> -->
               New Meeting or Webinar
             </nuxt-link>
           </span>
           <span v-if="userDash === 'tutor'" class="flex justify-center mb-10">
-            <button
-              type="button"
-              class="btn btn-primary shadow"
-              @click.prevent="toggleMeetingOpt"
+            <nuxt-link
+              :to="`/${userDash}/courses/create`"
+              class="btn btn-primary"
             >
               <!-- <img src="/icon/camera.svg" class="inline h-5 mr-2" /> -->
-              New Course or Webinar
-            </button>
+              New Course
+            </nuxt-link>
           </span>
           <ul class="relative h-full" @click="toggleNav">
             
