@@ -30,10 +30,22 @@
           >
             <div class="flex flex-row max-w-md">
               <img
+                v-if="!onDraft"
                 src="/card/upcoming-webinar.png"
                 alt="My profile"
                 class="course-image mr-3"
               />
+              <div
+                v-if="onDraft"
+                class="course-image mr-3"
+                :style="{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }"
+              >
+                <img src="/icon/empty-pics-icon.svg" alt="My profile" />
+              </div>
               <div class="flex flex-col">
                 <span class="text-gray-700 font-semibold text-left text-md">{{
                   props.row.title
