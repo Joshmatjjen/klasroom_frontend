@@ -32,22 +32,22 @@
         class="flex flex-row gap-10 place-items-start px-10 border-b-2 border-gray-200"
       >
         <button
-          v-on:click="switcher('btn1')"
-          v-bind:class="{ active: isActive.btn1 }"
+          v-on:click="switcher('upcoming')"
+          v-bind:class="{ active: isWebinars.upcoming }"
           class="menu-btn"
         >
           <p class="text-xs text-gray-700">Upcoming webinars</p>
         </button>
         <button
-          v-on:click="switcher('btn2')"
-          v-bind:class="{ active: isActive.btn2 }"
+          v-on:click="switcher('recorded')"
+          v-bind:class="{ active: isWebinars.recorded }"
           class="menu-btn"
         >
           <p class="text-xs text-gray-700">Recorded webinars</p>
         </button>
         <button
-          v-on:click="switcher('btn3')"
-          v-bind:class="{ active: isActive.btn3 }"
+          v-on:click="switcher('draft')"
+          v-bind:class="{ active: isWebinars.draft }"
           class="menu-btn"
         >
           <p class="text-xs text-gray-700">Draft</p>
@@ -56,7 +56,32 @@
     </section>
 
     <section>
-      <div class="container mx-auto my-10 px-4 lg:px-0">
+      <!-- Upcoming -->
+      <div
+        v-if="isWebinars.upcoming"
+        class="container mx-auto my-10 px-4 lg:px-0"
+      >
+        <div class="grid grid-cols-12 gap-4">
+          <div class="col-span-12">
+            <webinar-table :columns="columnsUpcoming" :rows="rowsUpcoming" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Recorded -->
+      <div
+        v-if="isWebinars.recorded"
+        class="container mx-auto my-10 px-4 lg:px-0"
+      >
+        <div class="grid grid-cols-12 gap-4">
+          <div class="col-span-12">
+            <webinar-table :columns="columnsRecorded" :rows="rowsRecorded" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Draft -->
+      <div v-if="isWebinars.draft" class="container mx-auto my-10 px-4 lg:px-0">
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-12">
             <webinar-table :columns="columns" :rows="rows" />
@@ -84,6 +109,7 @@ import Vue from 'vue'
 
 const courses = require('@/static/json/courses.json')
 const webinarCourse = require('@/static/json/webinar-course.json')
+const webinarRecorded = require('@/static/json/webinar-recorded.json')
 
 export default {
   layout: 'dashboard',
@@ -94,7 +120,8 @@ export default {
   data: () => ({
     courses: _.take(courses, 4),
     undoneTasks: _.take(courses, 3),
-    columns: [
+    // Upcoming
+    columnsUpcoming: [
       {
         label: 'Course title',
         field: 'courseTitle',
@@ -112,42 +139,100 @@ export default {
         field: 'webinarType',
       },
       {
-        label: 'Created On',
-        field: 'createdAt',
+        label: 'Date',
+        field: 'date',
         type: 'date',
         dateInputFormat: 'yyyy-MM-dd',
         dateOutputFormat: 'MMM do yy',
       },
     ],
-    rows: _.take(webinarCourse, 4),
-    isActive: {
-      btn1: false,
-      btn2: false,
-      btn3: false,
+    rowsUpcoming: _.take(webinarCourse, 4),
+    // Recorded
+    columnsRecorded: [
+      {
+        label: 'Course title',
+        field: 'courseTitle',
+      },
+      {
+        label: 'Price',
+        field: 'price',
+      },
+      {
+        label: 'Sales',
+        field: 'sales',
+      },
+      {
+        label: 'Attendees',
+        field: 'attendees',
+      },
+      {
+        label: 'Rating',
+        field: 'rating',
+      },
+      {
+        label: 'Held On',
+        field: 'heldOn',
+        type: 'date',
+        dateInputFormat: 'yyyy-MM-dd',
+        dateOutputFormat: 'MMM do yy',
+      },
+    ],
+    rowsRecorded: _.take(webinarRecorded, 4),
+    // columnsUpcoming: [
+    //   {
+    //     label: 'Course title',
+    //     field: 'courseTitle',
+    //   },
+    //   {
+    //     label: 'Price',
+    //     field: 'price',
+    //   },
+    //   {
+    //     label: 'Sales',
+    //     field: 'sales',
+    //   },
+    //   {
+    //     label: 'Webinar Type',
+    //     field: 'webinarType',
+    //   },
+    //   {
+    //     label: 'Created On',
+    //     field: 'createdAt',
+    //     type: 'date',
+    //     dateInputFormat: 'yyyy-MM-dd',
+    //     dateOutputFormat: 'MMM do yy',
+    //   },
+    // ],
+    // rowsUpcoming: _.take(webinarRecorded, 4),
+
+    isWebinars: {
+      upcoming: true,
+      recorded: false,
+      draft: false,
     },
   }),
   methods: {
     switcher: function (value) {
       switch (value) {
-        case 'btn1':
-          this.isActive.btn1 = true
-          this.isActive.btn2 = false
-          this.isActive.btn3 = false
+        case 'upcoming':
+          this.isWebinars.upcoming = true
+          this.isWebinars.recorded = false
+          this.isWebinars.draft = false
           break
-        case 'btn2':
-          this.isActive.btn1 = false
-          this.isActive.btn2 = true
-          this.isActive.btn3 = false
+        case 'recorded':
+          this.isWebinars.upcoming = false
+          this.isWebinars.recorded = true
+          this.isWebinars.draft = false
           break
-        case 'btn3':
-          this.isActive.btn1 = false
-          this.isActive.btn2 = false
-          this.isActive.btn3 = true
+        case 'draft':
+          this.isWebinars.upcoming = false
+          this.isWebinars.recorded = false
+          this.isWebinars.draft = true
           break
         default:
-          this.isActive.btn1 = true
-          this.isActive.btn2 = false
-          this.isActive.btn3 = false
+          this.isWebinars.upcoming = true
+          this.isWebinars.recorded = false
+          this.isWebinars.draft = false
       }
       // some code to filter users
     },

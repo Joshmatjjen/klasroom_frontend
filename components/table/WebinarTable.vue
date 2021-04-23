@@ -21,7 +21,7 @@
           enabled: true,
         }"
         :search-options="{ enabled: false }"
-        styleClass="vgt-table vgt-wrap striped"
+        styleClass="vgt-table vgt-wrap vgt-right-align striped"
       >
         <template slot="table-row" slot-scope="props">
           <span v-if="props.column.field == 'courseTitle'">
@@ -46,14 +46,18 @@
               >₦{{ props.row.price }}</span
             >
           </span>
-          <span v-else-if="props.column.field == 'createdAt'">
+          <span v-else-if="props.column.field == 'rating'">
+            <rating :grade="props.row.rating" />
+          </span>
+
+          <span v-else>
+            {{ props.formattedRow[props.column.field] }}
+          </span>
+          <span v-if="props.column.field == 'date'">
             <div class="flex flex-row gap-4 items-center justify-end relative">
-              <span class="text-gray-700 font-normal text-left text-xs pr-10">{{
-                props.row.createdAt
-              }}</span>
               <span
-                @click="toggleMenu(props.row.id)"
-                class="absolute text-gray-700 cursor-pointer hover:text-gray-900 font-extrabold text-left text-md"
+                @click.capture.stop="toggleMenu(props.row.id)"
+                class="absolute z-50 bottom-0 -mb-1 right-0 -mr-4 text-gray-600 cursor-pointer hover:text-gray-900 font-extrabold text-left text-lg"
                 >&#xFE19;</span
               >
               <div
@@ -87,25 +91,8 @@
                 >
                   <p>Preview</p>
                 </a>
-                <!-- <a
-                href="#"
-                class="pop-up-item lg:mr-4 md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                @click="(e) => toggleLogin(e, 'student')"
-              >
-                Become a student
-              </a> -->
-                <!-- <a
-                href="#"
-                class="pop-up-item lg:mr-4 md:text-gray-700 text-sm md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                @click="(e) => toggleRegister(e, 'tutor')"
-              >
-                <p>Become a tutor</p>
-              </a> -->
               </div>
             </div>
-          </span>
-          <span v-else>
-            {{ props.formattedRow[props.column.field] }}
           </span>
         </template>
       </vue-good-table>
@@ -163,7 +150,13 @@ export default {
 }
 .vgt-wrap {
   min-width: 60rem;
-  overflow-x: scroll;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin: 0.5rem;
+}
+.vgt-right-align > span {
+  /* pr-10 */
+  @apply text-gray-700 font-normal text-left text-xs pr-5;
 }
 
 @media (max-width: 640px) {
