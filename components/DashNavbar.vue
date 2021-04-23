@@ -90,7 +90,7 @@ export default {
       darkMenu: (state) => state.app.darkMenu,
       title: (state) => state.app.pageTitle,
       user: (state) => state.auth.user,
-      userType: (state) => state.auth.user.isTutor ? "tutor" : "student",
+      userType: (state) => state.auth.user && state.auth.user.isTutor ? "tutor" : "student",
     }),
     userDash() {
       return this.$route.path.split('/')[1]

@@ -82,6 +82,7 @@
     </div>
     <login-modal />
     <become-a-tutor-modal />
+    <validation-modal />
     <forgot-password-modal />
     <reset-password-modal />
     <purchase-modal />

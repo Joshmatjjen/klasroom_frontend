@@ -72,7 +72,7 @@ export default {
       // menu: (state) => state.app.menu,
       title: (state) => state.app.pageTitle,
       user: (state) => state.auth.user,
-      userType: (state) => state.auth.user.isTutor ? "tutor" : "student",
+      userType: (state) => state.auth.user && state.auth.user.isTutor ? "tutor" : "student",
     }),
   },
   props: {

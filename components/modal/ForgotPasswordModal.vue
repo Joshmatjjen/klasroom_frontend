@@ -48,7 +48,7 @@
             <button
               aria-label="Close panel"
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
-              @click="$store.commit('app/FORGOT_PASSWORD_MODAL', false)"
+              @click="close"
             >
               <!-- Heroicon name: x -->
               <svg
@@ -84,7 +84,9 @@
                     <input
                       id="input-email"
                       class="form-input"
+                      type="email"
                       placeholder="Enter your email here"
+                      v-model="form.email"
                     />
                   </div>
                 </div>
@@ -117,6 +119,7 @@ export default {
     form: {
       email: '',
     },
+    loading: false,
   }),
   computed: {
     ...mapState({
@@ -126,9 +129,23 @@ export default {
   methods: {
     proceed(e) {
       if (e) e.preventDefault()
-      this.$store.commit('app/RESET_PASSWORD_MODAL', true)
-      this.$store.commit('app/FORGOT_PASSWORD_MODAL', false)
+      this.$store.dispatch("auth/forgetPassword", {
+        ...this.form,
+      })
+      .then((res) => {
+        this.loading = false
+        if (res) {
+          this.$store.commit('app/RESET_PASSWORD_MODAL', this.form.email)
+          this.$store.commit('app/FORGOT_PASSWORD_MODAL', false)
+        }
+      }).catch(e => console.log('e: ', e));
     },
+    close() {
+      this.$store.commit('app/FORGOT_PASSWORD_MODAL', false);
+      this.form = {
+        email: '',
+      }
+    }
   },
 }
 </script>

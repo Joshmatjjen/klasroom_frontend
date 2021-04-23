@@ -351,7 +351,7 @@ export default {
         email: "",
         phone: "",
         password: "",
-        courseCategories: ""
+        courseCategories: []
       }
 
       this.loginForm = {
