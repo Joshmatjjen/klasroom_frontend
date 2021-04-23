@@ -21,11 +21,8 @@
           enabled: true,
         }"
         :search-options="{ enabled: false }"
-        styleClass="vgt-table vgt-wrap striped sortable"
+        styleClass="vgt-table vgt-wrap striped"
       >
-        <!-- <div slot="selected-row-actions">
-          <button>Action 1</button>
-        </div> -->
         <template slot="table-row" slot-scope="props">
           <span v-if="props.column.field == 'courseTitle'">
             <div class="flex flex-row max-w-md">

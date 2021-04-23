@@ -36,7 +36,7 @@
           v-bind:class="{ active: isActive.btn1 }"
           class="menu-btn"
         >
-          <p class="text-xs text-gray-700">4 Upcoming webinars</p>
+          <p class="text-xs text-gray-700">Upcoming webinars</p>
         </button>
         <button
           v-on:click="switcher('btn2')"
