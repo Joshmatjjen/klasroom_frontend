@@ -29,7 +29,7 @@
       </div>
     </section>
 
-    <section>
+    <!-- <section>
       <div class="container mx-auto my-10 px-4 lg:px-0">
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-12">
@@ -37,7 +37,7 @@
           </div>
         </div>
       </div>
-    </section>
+    </section> -->
 
     <section class="bg-orange-100">
       <div class="container mx-auto my-10 px-4 lg:px-0">

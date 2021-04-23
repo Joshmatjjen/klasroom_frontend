@@ -12,7 +12,7 @@
       }"
       @click="toggleMenu"
     ></div>
-    <div class="p-4 md:p-5 lg:p-6 overflow-x-auto">
+    <div class="p-1 md:p-5 lg:p-6 overflow-x-auto">
       <vue-good-table
         :columns="columns"
         :rows="rows"
@@ -21,19 +21,31 @@
           enabled: true,
         }"
         :search-options="{ enabled: false }"
-        styleClass="vgt-table vgt-wrap striped sortable"
+        styleClass="vgt-table vgt-wrap vgt-right-align striped"
       >
-        <!-- <div slot="selected-row-actions">
-          <button>Action 1</button>
-        </div> -->
         <template slot="table-row" slot-scope="props">
-          <span v-if="props.column.field == 'courseTitle'">
+          <span
+            v-if="props.column.field == 'webinarTitle'"
+            class="flex flex-row justify-between"
+          >
             <div class="flex flex-row max-w-md">
               <img
+                v-if="!onDraft"
                 src="/card/upcoming-webinar.png"
                 alt="My profile"
                 class="course-image mr-3"
               />
+              <div
+                v-if="onDraft"
+                class="course-image mr-3"
+                :style="{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }"
+              >
+                <img src="/icon/empty-pics-icon.svg" alt="My profile" />
+              </div>
               <div class="flex flex-col">
                 <span class="text-gray-700 font-semibold text-left text-md">{{
                   props.row.title
@@ -43,20 +55,51 @@
                 }}</span>
               </div>
             </div>
+            <!-- Draft for webinar Start -->
+            <div
+              v-if="onDraft && props.column.field == 'webinarTitle'"
+              class="flex flex-row gap-5 items-center justify-end relative"
+            >
+              <div class="bg-gray-300 w-16 h-5 rounded-xl"></div>
+              <div class="bg-gray-300 w-16 h-5 rounded-xl"></div>
+              <div class="bg-gray-300 w-16 h-5 rounded-xl"></div>
+            </div>
+            <span
+              v-if="onDraft && props.column.field == 'webinarTitle'"
+              class="flex flex-row gap-10"
+            >
+              <div
+                class="flex flex-row gap-4 items-center justify-end relative"
+              >
+                <div class="btn btn-light btn-sm lg:mt-0 cursor-pointer">
+                  Keep editing
+                </div>
+                <img src="/delete.svg" class="cursor-pointer" />
+              </div>
+            </span>
+            <!-- Draft for webinar End -->
           </span>
           <span v-else-if="props.column.field == 'price'">
             <span class="text-gray-700 font-semibold"
               >₦{{ props.row.price }}</span
             >
           </span>
-          <span v-else-if="props.column.field == 'createdAt'">
+          <span v-else-if="props.column.field == 'rating'">
+            <rating :grade="props.row.rating" :viewOnly="true" />
+          </span>
+
+          <span v-else>
+            {{ props.formattedRow[props.column.field] }}
+          </span>
+          <span
+            v-if="
+              props.column.field == 'date' || props.column.field == 'heldOn'
+            "
+          >
             <div class="flex flex-row gap-4 items-center justify-end relative">
-              <span class="text-gray-700 font-normal text-left text-xs pr-10">{{
-                props.row.createdAt
-              }}</span>
               <span
-                @click="toggleMenu(props.row.id)"
-                class="absolute text-gray-700 cursor-pointer hover:text-gray-900 font-extrabold text-left text-md"
+                @click.capture.stop="toggleMenu(props.row.id)"
+                class="absolute z-50 bottom-0 -mb-1 right-0 -mr-2 text-gray-600 cursor-pointer hover:text-gray-900 font-extrabold text-left text-lg"
                 >&#xFE19;</span
               >
               <div
@@ -90,25 +133,8 @@
                 >
                   <p>Preview</p>
                 </a>
-                <!-- <a
-                href="#"
-                class="pop-up-item lg:mr-4 md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                @click="(e) => toggleLogin(e, 'student')"
-              >
-                Become a student
-              </a> -->
-                <!-- <a
-                href="#"
-                class="pop-up-item lg:mr-4 md:text-gray-700 text-sm md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                @click="(e) => toggleRegister(e, 'tutor')"
-              >
-                <p>Become a tutor</p>
-              </a> -->
               </div>
             </div>
-          </span>
-          <span v-else>
-            {{ props.formattedRow[props.column.field] }}
           </span>
         </template>
       </vue-good-table>
@@ -135,6 +161,7 @@ export default {
     title: { type: String, required: false },
     columns: { type: Array, required: false },
     rows: { type: Array, required: false },
+    onDraft: { type: Boolean, required: false },
     // more: { type: String, default: null },
   },
   name: 'webinar-table',
@@ -166,7 +193,13 @@ export default {
 }
 .vgt-wrap {
   min-width: 60rem;
-  overflow-x: scroll;
+  overflow-x: auto;
+  overflow-y: hidden;
+  margin: 0.5rem;
+}
+.vgt-right-align > span {
+  /* pr-10 */
+  @apply text-gray-700 font-normal text-left text-xs pr-5;
 }
 
 @media (max-width: 640px) {
