@@ -4,20 +4,22 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 export default ({ $axios, app, store, redirect, route }) => {
   $axios.setBaseURL(process.env.baseUrl)
+  // console.log('Axios token:', $axios.defaults.headers)
+  // delete $axios.defaults.headers.common["Authorization"];
 
   // Request interceptor
   $axios.onRequest((request) => {
     request.baseURL = process.env.baseUrl
 
-    request.headers['Secret'] = process.env.secret
-    request.headers["Content-Type"] = "application/json"
+    request.headers.common['Secret'] = process.env.secret
+    request.headers.common["Content-Type"] = "application/json"
 
     let token = store.getters['auth/token']
     // console.log('Axios token:', token)
     if (token) {
-      request.headers.Authorization = `Bearer ${token}`
+      request.headers.common.Authorization = `Bearer ${token}`
     } else {
-      delete request.headers.Authorization
+      delete request.headers.common.Authorization
     }
 
     // console.log('Current token: ', request.headers)
