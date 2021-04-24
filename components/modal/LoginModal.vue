@@ -49,8 +49,8 @@
               aria-label="Close panel"
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
               @click="() => {
-                $store.commit('app/LOGIN_MODAL', null);
                 clearInput()
+                close()
               }"
             >
               <!-- Heroicon name: x -->
@@ -85,6 +85,8 @@
                 {{
                   isLogin
                     ? 'Sign into your account'
+                    : isStudent && !isLogin 
+                    ? `Become a Tutor`
                     : `Create a ${showLogin.userType} account`
                 }}
               </h2>
@@ -120,7 +122,7 @@
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="onLogin"
+                      @click="(e) => onLogin(e, showLogin.userType)"
                     >
                       Sign in
                     </button>
@@ -139,7 +141,7 @@
               </form>
               <!-- Sign up form -->
               <form v-else id="signup-form">
-                <div class="form-group mb-5">
+                <div v-if="!isStudent" class="form-group mb-5">
                   <label for="input-name">Name</label>
                   <div>
                     <input
@@ -163,7 +165,7 @@
                     />
                   </div>
                 </div>
-                <div class="form-group mb-5">
+                <div v-if="!isStudent" class="form-group mb-5">
                   <label for="input-email">Phone</label>
                   <div>
                     <input
@@ -215,6 +217,27 @@
                     </button>
                   </span>
                 </div>
+                <div v-if="showLogin.userType === 'tutor'">
+                  <hr class="mt-4 mb-4" />
+                  <div v-if="!isStudent" class="text-center">
+                    <a
+                      href="#"
+                      class="text-sm leading-5 text-gray-700"
+                      @click="isStudent = true"
+                    >
+                      Already a Student?
+                    </a>
+                  </div>
+                  <div v-if="isStudent" class="text-center">
+                    <a
+                      href="#"
+                      class="text-sm leading-5 text-gray-700"
+                      @click="isStudent = false"
+                    >
+                      Not a Student?
+                    </a>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
@@ -232,6 +255,7 @@ export default {
   data: () => ({
     isLogin: true,
     loading: false,
+    isStudent: false,
     signupForm: {
       name: "",
       email: "",
@@ -273,7 +297,8 @@ export default {
       }
       this.$store.dispatch("auth/signUpUser", {
         ...data,
-        userType
+        userType,
+        isStudent: this.isStudent
       })
       .then((res) => {
         this.loading = false
@@ -283,19 +308,23 @@ export default {
         }
       }).catch(e => console.log('e: ', e));
     },
-    onLogin(e) {
+    onLogin(e, userType) {
       if (e) e.preventDefault()
       this.loading = true
       const data = {
         ...this.loginForm
       }
       this.$store.dispatch("auth/loginUser", {
-        ...data
+        ...data,
+        userType
       })
       .then((res) => {
         this.loading = false
         if (res) {
-          this.gotoStudentDash()
+          if (res.isTutor && userType === 'tutor')
+            this.gotoDashboard('tutor');
+          else
+            this.gotoDashboard('student');
         }
       }).catch(e => console.log('e: ', e));
     },
@@ -306,10 +335,14 @@ export default {
           Please check your email and click the link in it to 
           complete your registration.`,
       })
-      this.$store.commit('app/LOGIN_MODAL', null)
+      this.close()
     },
-    gotoStudentDash() {
-      this.$router.push('/student/dashboard')
+    gotoDashboard(type) {
+      this.$router.push(`/${type}/dashboard`)
+      this.close()
+    },
+    close() {
+      this.isStudent = false
       this.$store.commit('app/LOGIN_MODAL', null)
     },
     clearInput() {
@@ -318,7 +351,7 @@ export default {
         email: "",
         phone: "",
         password: "",
-        courseCategories: ""
+        courseCategories: []
       }
 
       this.loginForm = {

@@ -3,9 +3,9 @@
     Tailwind UI components require Tailwind CSS v1.8 and the @tailwindcss/ui plugin.
     Read the documentation to get started: https://tailwindui.com/documentation
   -->
-  <div v-if="show" class="fixed z-10 inset-0 overflow-y-auto">
+  <div v-if="showModal" class="fixed z-10 inset-0 overflow-y-auto">
     <div
-      class="flex items-start justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+      class="flex items-start justify-center min-h-screen pt-4 px-4 pb-4 lg:pb-20 text-center sm:block sm:p-0"
     >
       <!--
         Background overlay, show/hide based on modal state.
@@ -48,7 +48,10 @@
             <button
               aria-label="Close panel"
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
-              @click="close"
+              @click="() => {
+                $store.commit('app/BECOME_A_TUTOR_MODAL', false);
+                clearInput()
+              }"
             >
               <!-- Heroicon name: x -->
               <svg
@@ -67,27 +70,45 @@
               </svg>
             </button>
           </div>
+  
           <div class="block">
-            <div class="mt-3 sm:mt-5 sm:ml-0">
+            <div class="mt-3 sm:mt-0 sm:ml-0">
               <h2
                 id="modal-headline"
                 class="text-xl sm:text-4xl leading-none font-bold text-center text-gray-800"
-              >
-                Forgot password
+              > 
+                Become a Tutor
               </h2>
               <hr class="mt-8 mb-5" />
-              <!-- Forgot password form -->
-              <form id="forgot-form">
-                <div class="form-group">
-                  <label for="input-email">Email address</label>
+              
+              <form id="signup-form">
+
+                <div class="form-group mb-5">
+                  <label for="input-password">Password</label>
                   <div>
                     <input
-                      id="input-email"
+                      id="input-password"
+                      type="password"
                       class="form-input"
-                      type="email"
-                      placeholder="Enter your email here"
-                      v-model="form.email"
+                      placeholder="Enter your password here"
+                      v-model="signupForm.password"
                     />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="input-courseCategories">Course Categories</label>
+                  <div>
+                    <select
+                      id="input-password"
+                      multiple
+                      class="form-input"
+                      v-model="signupForm.courseCategories"
+                    >
+                      <option disabled value="">Select Course Categories</option>
+                      <option value="Programming">Programming</option>
+                      <option value="Business">Business</option>
+                      <option value="Finance">Finance</option>
+                    </select>
                   </div>
                 </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
@@ -95,12 +116,14 @@
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="proceed"
+                      @click="(e) => onSignUp(e, showModal.userType)"
                     >
-                      Request password reset
+                      Submit
+                      <loader v-if="loading" color="white" />
                     </button>
                   </span>
                 </div>
+                
               </form>
             </div>
           </div>
@@ -116,34 +139,60 @@ import { mapState } from 'vuex'
 
 export default {
   data: () => ({
-    form: {
-      email: '',
-    },
+    isLogin: true,
     loading: false,
+    signupForm: {
+      password: "",
+      courseCategories: []
+    },
   }),
   computed: {
     ...mapState({
-      show: (state) => state.app.forgotPasswordModal,
+      showModal: (state) => state.app.becomeATutorModal,
     }),
   },
+  // watch: {
+  //   showModal: {
+  //     handler(value) {
+  //       // console.log('showModal', value)
+  //       // console.log('secret: ', process.env.secret)
+  //       if (value) this.isLogin = value.type !== 'register'
+  //     },
+  //     immediate: true,
+  //   },
+  // },
   methods: {
-    proceed(e) {
+    onSignUp(e, userType) {
       if (e) e.preventDefault()
-      this.$store.dispatch("auth/forgetPassword", {
-        ...this.form,
+      this.loading = true
+      const data = {
+        ...this.signupForm
+      }
+      this.$store.dispatch("auth/becomeATutor", {
+        ...data,
+        userType
       })
       .then((res) => {
         this.loading = false
         if (res) {
-          this.$store.commit('app/RESET_PASSWORD_MODAL', this.form.email)
-          this.$store.commit('app/FORGOT_PASSWORD_MODAL', false)
+          this.clearInput()
+          this.showSuccess()
         }
       }).catch(e => console.log('e: ', e));
     },
-    close() {
-      this.$store.commit('app/FORGOT_PASSWORD_MODAL', false);
-      this.form = {
-        email: '',
+    
+    showSuccess() {
+      this.$store.commit('app/NOTICE_MODAL', {
+        title: 'All done!',
+        text: `You have successfully become a tutor. 
+          You can now switch to tutor dashboard.`,
+      })
+      this.$store.commit('app/BECOME_A_TUTOR_MODAL', false)
+    },
+    clearInput() {
+      this.signupForm = {
+        password: "",
+        courseCategories: ""
       }
     }
   },

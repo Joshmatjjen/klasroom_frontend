@@ -3,9 +3,9 @@
     Tailwind UI components require Tailwind CSS v1.8 and the @tailwindcss/ui plugin.
     Read the documentation to get started: https://tailwindui.com/documentation
   -->
-  <div v-if="show" class="fixed z-10 inset-0 overflow-y-auto">
+  <div v-if="showModal" class="fixed z-10 inset-0 overflow-y-auto">
     <div
-      class="flex items-start justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
+      class="flex items-start justify-center min-h-screen pt-4 px-4 pb-4 lg:pb-20 text-center sm:block sm:p-0"
     >
       <!--
         Background overlay, show/hide based on modal state.
@@ -48,7 +48,10 @@
             <button
               aria-label="Close panel"
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
-              @click="$store.commit('app/RESET_PASSWORD_MODAL', false)"
+              @click="() => {
+                $store.commit('app/VALIDATION_MODAL', null);
+                clearInput()
+              }"
             >
               <!-- Heroicon name: x -->
               <svg
@@ -67,29 +70,38 @@
               </svg>
             </button>
           </div>
+  
           <div class="block">
-            <div class="mt-3 sm:mt-5 sm:ml-0">
+            <div v-if="showModal.isValidating" class="mt-3 sm:mt-0 sm:ml-0">
               <h2
                 id="modal-headline"
                 class="text-xl sm:text-4xl leading-none font-bold text-center text-gray-800"
-              >
-                Reset password
+              > 
+                Please Wait...
+              </h2>
+              <div class="flex justify-center items-center" style="height: 150px;">
+                <svg :style="{width: '100px', height: '30px'}" :class="`animate-spin h-5 ml-2 rounded-full border-2 text-blue-500 border-orange-400 stroke-current stroke-2`" viewBox="0 0 50 50">
+                  <circle
+                    className="path"
+                    cx="25"
+                    cy="25"
+                    r="20"
+                    fill="none"
+                  ></circle>
+                </svg>
+              </div>
+            </div>
+            <div v-else class="mt-3 sm:mt-0 sm:ml-0">
+              <h2
+                id="modal-headline"
+                class="text-xl sm:text-4xl leading-none font-bold text-center text-gray-800"
+              > 
+                {{showModal.type === "reset" ? "Reset password" : "Sign into your account"}}
               </h2>
               <hr class="mt-8 mb-5" />
+
               <!-- Forgot password form -->
-              <form id="forgot-form">
-                <div class="form-group mb-5">
-                  <label for="input-code">Enter Code</label>
-                  <div>
-                    <input
-                      id="input-code"
-                      type="text"
-                      class="form-input"
-                      placeholder="Enter code that was sent to your email"
-                      v-model="form.token"
-                    />
-                  </div>
-                </div>
+              <form v-if="showModal.type === 'reset'" id="forgot-form">
                 <div class="form-group mb-5">
                   <label for="input-password">New Password</label>
                   <div>
@@ -98,7 +110,7 @@
                       type="password"
                       class="form-input"
                       placeholder="Enter your password here"
-                      v-model="form.password"
+                      v-model="signupForm.password"
                     />
                   </div>
                 </div>
@@ -108,7 +120,9 @@
                     <input
                       id="input-re_password"
                       class="form-input"
+                      type="password"
                       placeholder="Repeat password"
+                      v-model="signupForm.password"
                     />
                   </div>
                 </div> -->
@@ -117,22 +131,43 @@
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="proceed"
+                      @click="resetPassword"
                     >
                       Set new password
+                      <loader v-if="loading" color="white" />
                     </button>
                   </span>
                 </div>
-                <hr class="mt-4 mb-4" />
-                <div class="text-center">
-                  <a
-                    href="#"
-                    class="text-sm leading-5 text-gray-700"
-                    @click.prevent="forgotPassword"
-                  >
-                    Didn't get the message?
-                  </a>
+              </form>
+              
+              <form v-else id="signup-form">
+
+                <div class="form-group mb-5">
+                  <label for="input-password">Password</label>
+                  <div>
+                    <input
+                      id="input-password"
+                      type="password"
+                      class="form-input"
+                      placeholder="Enter your password here"
+                      v-model="signupForm.password"
+                    />
+                  </div>
                 </div>
+                
+                <div class="flex text-center pt-8 pb-4 sm:pb-4">
+                  <span class="flex mx-auto">
+                    <button
+                      type="button"
+                      class="btn btn-primary shadow"
+                      @click="confirmEmail"
+                    >
+                      Sign In
+                      <loader v-if="loading" color="white" />
+                    </button>
+                  </span>
+                </div>
+                
               </form>
             </div>
           </div>
@@ -148,35 +183,66 @@ import { mapState } from 'vuex'
 
 export default {
   data: () => ({
-    form: {
-      password: '',
-      token: ''
+    loading: false,
+    signupForm: {
+      password: "",
+      courseCategories: []
     },
   }),
   computed: {
     ...mapState({
-      show: (state) => state.app.resetPasswordModal,
+      showModal: (state) => state.app.validationModal,
     }),
   },
+  // watch: {
+  //   showModal: {
+  //     handler(value) {
+  //       // console.log('showModal', value)
+  //       // console.log('secret: ', process.env.secret)
+  //       if (value) this.isLogin = value.type !== 'register'
+  //     },
+  //     immediate: true,
+  //   },
+  // },
+  
   methods: {
     resetPassword(e) {
       if (e) e.preventDefault()
       this.loading = true
 
       this.$store.dispatch("auth/resetPassword", {
-        ...this.form,
+        ...this.signupForm,
+        token: this.showModal.token
       })
       .then((res) => {
         this.loading = false
         if (res) {
           this.clearInput()
-          this.showSuccess()
+          this.showSuccess1()
         }
       }).catch(e => console.log('e: ', e));
     },
-    showSuccess() {
+
+    confirmEmail(e) {
+      if (e) e.preventDefault()
+      this.loading = true
+
+      this.$store.dispatch("auth/loginUser", {
+        password: this.signupForm.password,
+        email: this.showModal.email
+      })
+      .then((res) => {
+        this.loading = false
+        if (res) {
+          this.clearInput()
+          this.showSuccess2()
+        }
+      }).catch(e => console.log('e: ', e));
+    },
+    
+    showSuccess1() {
       this.$store.commit('app/NOTICE_MODAL', {
-        title: 'Congratulations!',
+        title: 'All done!',
         text: `Your password has been changed successfully. 
           Please log in to your account to proceed.`,
         confirmCallback: () => {
@@ -185,21 +251,25 @@ export default {
             type: 'login',
             userType: 'student',
           });
-          this.$store.commit('app/NOTICE_MODAL', false)
         }
       })
-      this.$store.commit('app/RESET_PASSWORD_MODAL', false)
+      this.$store.commit('app/NOTICE_MODAL', false)
     },
-    forgotPassword() {
-      this.$store.commit('app/FORGOT_PASSWORD_MODAL', true)
-      this.$store.commit('app/RESET_PASSWORD_MODAL', false)
+    showSuccess2() {
+      this.$router.push(`/student/dashboard`)
+      // this.$store.commit('app/NOTICE_MODAL', {
+      //   title: 'All done!',
+      //   text: `You have successfully confirm your email. 
+      //     Sign in with you email.`,
+      // })
+      this.$store.commit('app/VALIDATION_MODAL', null)
     },
     clearInput() {
-      this.form = {
+      this.signupForm = {
         password: "",
-        token: ''
       }
     },
+    
   },
 }
 </script>

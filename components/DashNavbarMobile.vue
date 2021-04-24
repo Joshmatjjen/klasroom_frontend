@@ -1,5 +1,6 @@
 <template>
   <div class="container px-4">
+    <div @click="toggleUserMenu" :class="{ hidden: !userMenu }" class="fixed" :style="{ width: '100%', height: '100vh', zIndex: 2 }"></div>
     <nav class="flex flex-col pt-3">
       <div class="flex flex-row">
         <button class="flex items-center h-9 pr-3" @click="toggleSidebar">
@@ -27,18 +28,24 @@
             :class="{ hidden: !userMenu }"
           >
             <div class="px-4 md:px-5 lg:px-6 py-3">
-              <nuxt-link to="/student/account" class="text-gray-700 block py-2">
+              <nuxt-link
+                :to="`/${userDash}/dashboard`"
+                class="text-gray-700 block py-2"
+              >
+                <span class="text-sm">Dashboard</span>
+              </nuxt-link>
+              <nuxt-link :to="`/${userDash}/account`" class="text-gray-700 block py-2">
                 <span class="text-sm">Account</span>
               </nuxt-link>
               <nuxt-link
-                to="/student/settings"
+                :to="`/${userDash}/settings`"
                 class="text-gray-700 block py-2"
               >
                 <span class="text-sm">Settings</span>
               </nuxt-link>
-              <nuxt-link to="/" class="text-gray-700 block py-2">
+              <a @click="logout" class="text-gray-700 block py-2">
                 <span class="text-sm">Sign out</span>
-              </nuxt-link>
+              </a>
             </div>
           </div>
         </a>
@@ -64,7 +71,15 @@ export default {
     ...mapState({
       // menu: (state) => state.app.menu,
       title: (state) => state.app.pageTitle,
+      user: (state) => state.auth.user,
+      userType: (state) => state.auth.user && state.auth.user.isTutor ? "tutor" : "student",
     }),
+  },
+  props: {
+    userDash: {
+      type: String,
+      required: true,
+    }
   },
   methods: {
     toggleSidebar(e) {
@@ -84,6 +99,9 @@ export default {
       if (e) e.preventDefault()
       this.userMenu = !this.userMenu
     },
+    logout() {
+      this.$store.dispatch('auth/logout')
+    }
   },
 }
 </script>

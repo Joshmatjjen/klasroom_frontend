@@ -27,6 +27,7 @@ const webinars = require('@/static/json/webinars.json')
 
 export default {
   layout: 'dashboard',
+  middleware: ['check-auth', 'auth', 'isTutor'],
   fetch({ store }) {
     store.commit('app/SET_TITLE', 'Upcoming Webinars')
   },

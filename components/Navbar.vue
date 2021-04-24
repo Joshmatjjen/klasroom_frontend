@@ -1,5 +1,7 @@
 <template>
   <div :class="{ 'bg-orange-100': darkMenu }">
+    <div @click="toggleUserMenu" :class="{ hidden: !userMenu }" class="fixed" :style="{ width: '100%', height: '100vh', zIndex: 2 }"></div>
+    <div @click="() => toggleOpt('all')" :class="{ hidden: !loginOpt && !signUpOpt }" class="fixed" :style="{ width: '100%', height: '100vh', zIndex: 2 }"></div>
     <div class="container mx-auto">
       <nav class="flex items-center justify-between flex-wrap py-4 md:py-6">
         <nuxt-link
@@ -50,18 +52,66 @@
               Blog
             </nuxt-link>
           </div>
-          <div class="mt-8 md:mt-0 mb-6 md:mb-0 flex flex-row relative">
-            <a
+          <div v-if="user" class="mt-8 md:mt-0 mb-6 md:mb-0 flex flex-row relative">
+            <user-dropdown 
+              :userMenu="userMenu"
+              :user="user"
+              :toggleUserMenu="toggleUserMenu" 
+              :logout="logout"
+            >
+            </user-dropdown>
+          </div>
+          <div v-else class="mt-8 md:mt-0 mb-6 md:mb-0 flex flex-row relative">
+            <!-- <a
               href="#"
               class="btn lg:mr-4 bg-blue-400 text-white md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
               @click="(e) => toggleLogin(e, 'student')"
             >
               Log In
+            </a> -->
+            <a
+              href="#"
+              class="btn btn-primary lg:mt-0 lg:mr-4 flex flex-row"
+              @click.prevent="() => toggleOpt('login')"
+            >
+              <p>Log In</p>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5 ml-1"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                />
+              </svg>
             </a>
+            <div
+              :class="{ hidden: !loginOpt }"
+              class="pop-up absolute bg-white border-1 left-0 rounded-lg h-52 w-64 shadow-lg"
+              :style="{ zIndex: 2 }"
+            >
+              <a
+                href="#"
+                class="pop-up-item lg:mr-4 md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                @click="(e) => toggleLogin(e, 'student')"
+              >
+                Student Login
+              </a>
+              <a
+                href="#"
+                class="pop-up-item lg:mr-4 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                @click="(e) => toggleLogin(e, 'tutor')"
+              >
+                <p>Tutor Login</p>
+              </a>
+            </div>
             <a
               href="#"
               class="btn btn-primary lg:mt-0 flex flex-row"
-              @click="toggleSignUpOpt"
+              @click.prevent="() => toggleOpt('signup')"
             >
               <p>Sign Up</p>
               <svg
@@ -78,23 +128,23 @@
               </svg>
             </a>
             <div
-              :class="{ hidden: !opt }"
-              class="pop-up absolute bg-white border-1 rounded-lg h-52 w-64 shadow-lg"
+              :class="{ hidden: !signUpOpt }"
+              class="pop-up absolute bg-white border-1 right-0 rounded-lg h-52 w-64 shadow-lg"
               :style="{ zIndex: 2 }"
             >
               <a
                 href="#"
                 class="pop-up-item lg:mr-4 md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                @click="(e) => toggleLogin(e, 'student')"
+                @click="(e) => toggleRegister(e, 'student')"
               >
-                Become a student
+                Become a Student
               </a>
               <a
                 href="#"
                 class="pop-up-item lg:mr-4 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
                 @click="(e) => toggleRegister(e, 'tutor')"
               >
-                <p>Become a tutor</p>
+                <p>Become a Tutor</p>
               </a>
             </div>
           </div>
@@ -109,11 +159,14 @@ import { mapState } from 'vuex'
 export default {
   data: () => ({
     open: false,
-    opt: false,
+    signUpOpt: false,
+    loginOpt: false,
+    userMenu: false,
   }),
   computed: {
     ...mapState({
       darkMenu: (state) => state.app.darkMenu,
+      user: (state) => state.auth.user,
     }),
   },
   methods: {
@@ -122,7 +175,7 @@ export default {
     },
     toggleLogin(e, userType) {
       if (e) e.preventDefault()
-      this.opt = false
+      this.toggleOpt('all')
       this.open = false
       this.$store.commit('app/LOGIN_MODAL', {
         status: true,
@@ -132,7 +185,7 @@ export default {
     },
     toggleRegister(e, userType) {
       if (e) e.preventDefault()
-      this.opt = false
+      this.toggleOpt('all')
       this.open = false
       this.$store.commit('app/LOGIN_MODAL', {
         status: true,
@@ -140,8 +193,20 @@ export default {
         userType,
       })
     },
-    toggleSignUpOpt() {
-      this.opt = !this.opt
+    toggleOpt(type) {
+      if (type === 'all') {
+        this.signUpOpt = false
+        this.loginOpt = false  
+      }
+      else if (type === 'signup') this.signUpOpt = !this.signUpOpt
+      else if (type === 'login') this.loginOpt = !this.loginOpt
+    },
+    toggleUserMenu(e) {
+      if (e) e.preventDefault()
+      this.userMenu = !this.userMenu
+    },
+    logout() {
+      this.$store.dispatch('auth/logout')
     },
   },
 }

@@ -1,6 +1,8 @@
 <template>
-  <div class="bg-white rounded-xl border border-gray-300 shadow-hover relative">
-    <div class="px-4 md:px-5 lg:px-6 py-5">
+  <div
+    class="bg-white rounded-xl border border-gray-300 shadow-hover relative overflow-x-auto"
+  >
+    <div class="px-4 md:px-5 lg:px-6 py-5 min-w-500 overflow-x-auto">
       <div class="grid grid-cols-12 gap-8">
         <div />
         <div class="title text-left col-span-5">Webinar title</div>
@@ -15,8 +17,10 @@
         class="row-item"
       >
         <div class="grid grid-cols-12 mb-2">
-          <span class="item-image"></span>
-          <div class="text-left col-span-5 my-auto">
+          <span
+            class="item-image col-span-2 md:col-span-2 lg:col-span-1 my-auto"
+          ></span>
+          <div class="text-left col-span-4 md:col-span-4 lg:col-span-5 my-auto">
             <p class="text-sm text-gray-700 font-bold">
               Logo Design Masterclass
             </p>
@@ -47,7 +51,7 @@ export default {}
 .item-image {
   height: 48px;
   width: 73.5px;
-  @apply bg-gray-300;
+  @apply bg-gray-300 pr-10;
 }
 @media (max-width: 640px) {
   h4 {

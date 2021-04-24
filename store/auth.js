@@ -1,5 +1,5 @@
 import Cookie from 'js-cookie'
-import { cookieFromRequest } from '~/utils'
+import { cookieFromRequest, getAccessTokenHeader } from '~/utils'
 
 // state
 export const state = () => ({
@@ -57,8 +57,93 @@ export const mutations = {
 // actions
 export const actions = {
 
+  async becomeATutor(vuexContext, userData) {
+    try {
+
+      // console.log('store: ', vuexContext.state.user)
+      const user = vuexContext.state.user
+      const { data: newData } = await this.$axios.$post('/users/tutor', {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        password: userData.password,
+        courseCategories: userData.courseCategories
+      }, {
+        headers: getAccessTokenHeader(user.accessToken)
+      })
+      return newData
+
+    } catch (e) {
+      return false
+    }
+  },
+
+  async validateToken(vuexContext, userData) {
+    try {
+      console.log("start validation: ", userData)
+      const { data } = await this.$axios.$post(`/validatetoken?token_type=${userData.type}`, {
+        token: userData.token,
+      })
+      console.log("data: ", data)
+      return data
+
+    } catch (e) {
+      console.log("error validation: ", e)
+      return false
+    }
+  }, 
+
+  async forgetPassword(vuexContext, userData) {
+    try {
+      const { data } = await this.$axios.$post(`/resettoken`, {
+        email: userData.email,
+      })
+      console.log("data: ", data)
+      return data
+
+    } catch (e) {
+      console.log("error validation: ", e)
+      return false
+    }
+  },
+
+  async resetPassword(vuexContext, userData) {
+    try {
+      const { data } = await this.$axios.$post(`/resetpassword`, {
+        password: userData.password,
+        token: userData.token
+      })
+      console.log("data: ", data)
+      return data
+
+    } catch (e) {
+      console.log("error validation: ", e)
+      return false
+    }
+  },
+
   async signUpUser(vuexContext, userData) {
     try {
+      if (userData.isStudent && userData.userType === "tutor") {
+        const { data } = await this.$axios.$post('/login', {
+          userIdentity: userData.email,
+          password: userData.password,
+          userType: 'student'
+        })
+
+        console.log('fetch old user success: ', data)
+
+        const { data: newData } = await this.$axios.$post('/users/tutor', {
+          name: data.name,
+          email: userData.email,
+          phone: data.phone,
+          password: userData.password,
+          courseCategories: userData.courseCategories
+        }, {
+          headers: getAccessTokenHeader(data.accessToken)
+        })
+        return newData
+      }
       const { data } = await this.$axios.$post(userData.userType === "student" ? '/users' : '/users/tutor', userData)
       return data
     } catch (e) {
@@ -69,8 +154,8 @@ export const actions = {
   async loginUser(vuexContext, userData) {
     try {
       const { data } = await this.$axios.$post('/login', userData)
-      console.log('fetch user success: ', data)
-      if (data) {
+      if (data.accessToken) {
+        console.log('fetch user success: ', data)
         const expirationDate = new Date().getTime() + 86400 * 1000 // 24 hrs duration
         vuexContext.commit('SET_TOKEN', data.accessToken)
         vuexContext.commit('FETCH_USER_SUCCESS', data)
@@ -89,8 +174,10 @@ export const actions = {
           expirationDate
         );
         Cookie.set("user", JSON.stringify(data));
+
+        return data
       }
-      return data
+      return false
     } catch (e) {
       // console.log('fetch user failed: ', e)
       return false
@@ -106,15 +193,23 @@ export const actions = {
     } catch (e) {}
   },
 
-  async logout({ commit }) {
-    try {
-      await this.$axios.get('/logout')
-    } catch (e) {}
+  async logout(vuexContext) {
+    // try {
+    //   await this.$axios.get('/logout')
+    // } catch (e) {}
 
-    Cookie.remove('token')
+    Cookie.remove('jwt')
+    Cookie.remove('expirationDate')
     Cookie.remove('user')
 
-    commit('LOGOUT')
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("tokenExpiration");
+
+    vuexContext.commit('LOGOUT');
+    this.$router.push("/")
+
+    return true;
   },
 
   initAuth(vuexContext, req) {
