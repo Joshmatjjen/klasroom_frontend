@@ -83,8 +83,6 @@ export const actions = {
       console.log("start validation: ", userData)
       const { data } = await this.$axios.$post(`/validatetoken?token_type=${userData.type}`, {
         token: userData.token,
-      }, {
-        headers: getAuthHeader('')
       })
       console.log("data: ", data)
       return data
@@ -99,8 +97,6 @@ export const actions = {
     try {
       const { data } = await this.$axios.$post(`/resettoken`, {
         email: userData.email,
-      }, {
-        headers: getAuthHeader('')
       })
       console.log("data: ", data)
       return data
@@ -116,8 +112,6 @@ export const actions = {
       const { data } = await this.$axios.$post(`/resetpassword`, {
         password: userData.password,
         token: userData.token
-      }, {
-        headers: getAuthHeader('')
       })
       console.log("data: ", data)
       return data
@@ -135,11 +129,9 @@ export const actions = {
           userIdentity: userData.email,
           password: userData.password,
           userType: 'student'
-        }, {
-          headers: getAuthHeader('')
         })
 
-        console.log('fetch old user success: ', data)
+        // console.log('fetch old user success: ', data)
 
         const { data: newData } = await this.$axios.$post('/users/tutor', {
           name: data.name,
@@ -152,9 +144,7 @@ export const actions = {
         })
         return newData
       }
-      const { data } = await this.$axios.$post(userData.userType === "student" ? '/users' : '/users/tutor', userData, {
-        headers: getAuthHeader('')
-      })
+      const { data } = await this.$axios.$post(userData.userType === "student" ? '/users' : '/users/tutor', userData)
       return data
     } catch (e) {
       return false
@@ -163,11 +153,9 @@ export const actions = {
 
   async loginUser(vuexContext, userData) {
     try {
-      const { data } = await this.$axios.$post('/login', userData, {
-        headers: getAuthHeader('')
-      })
+      const { data } = await this.$axios.$post('/login', userData)
       if (data.accessToken) {
-        console.log('fetch user success: ', data)
+        // console.log('fetch user success: ', data)
         const expirationDate = new Date().getTime() + 86400 * 1000 // 24 hrs duration
         vuexContext.commit('SET_TOKEN', data.accessToken)
         vuexContext.commit('FETCH_USER_SUCCESS', data)
