@@ -117,9 +117,10 @@
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="proceed"
+                      @click="resetPassword"
                     >
                       Set new password
+                      <loader v-if="loading" color="white" />
                     </button>
                   </span>
                 </div>
@@ -152,6 +153,7 @@ export default {
       password: '',
       token: ''
     },
+    loading: false,
   }),
   computed: {
     ...mapState({
