@@ -143,6 +143,19 @@
               <form v-else id="signup-form">
 
                 <div class="form-group mb-5">
+                  <label for="input-email">Email</label>
+                  <div>
+                    <input
+                      id="input-email"
+                      type="email"
+                      class="form-input"
+                      placeholder="Enter your email here"
+                      v-model="signupForm.email"
+                    />
+                  </div>
+                </div>
+
+                <div class="form-group mb-5">
                   <label for="input-password">Password</label>
                   <div>
                     <input
@@ -186,6 +199,7 @@ export default {
     loading: false,
     signupForm: {
       password: "",
+      email: "",
       courseCategories: []
     },
   }),
@@ -229,7 +243,7 @@ export default {
 
       this.$store.dispatch("auth/loginUser", {
         password: this.signupForm.password,
-        email: this.showModal.email
+        userIdentity: this.signupForm.email
       })
       .then((res) => {
         this.loading = false
@@ -251,9 +265,10 @@ export default {
             type: 'login',
             userType: 'student',
           });
+          this.$store.commit('app/NOTICE_MODAL', false)
         }
       })
-      this.$store.commit('app/NOTICE_MODAL', false)
+      this.$store.commit('app/VALIDATION_MODAL', null)
     },
     showSuccess2() {
       this.$router.push(`/student/dashboard`)
