@@ -1,51 +1,63 @@
 <template>
-  <nuxt-link
-    :to="view_route"
-    class="block bg-white rounded-lg border border-gray-300 shadow-hover relative md:pb-12"
+  <div
+    class="container flex flex-row bg-white rounded-lg border border-gray-300 shadow-hover mb-5"
   >
-    <div class="absolute mt-3 ml-3">
-      <span class="top-tag">Course</span>
-    </div>
-    <div class="item-img">
-      <img class="block min-w-full" src="/card/course.jpg" />
-    </div>
-    <div class="p-3 md:p-6">
-      <p class="text-sm md:text-md text-gray-900 font-semibold mb-0">
-        {{ course.name }}
-      </p>
-      <p class="text-xs md:text-sm text-gray-700 mt-2 md:mt-0">
-        {{ course.author }}
-      </p>
-    </div>
-    <div class="md:absolute grid md:grid-cols-2 w-full bottom-0 mb-5">
-      <div class="pl-3 md:pl-5">
-        <rating :grade="3" />
+    <div class="flex flex-row w-full p-4">
+      <img class="h-full rounded-lg" src="/avatar.jpg" />
+      <div class="pl-3 md:pl-5 flex flex-col justify-around">
+        <p class="text-xs font-bold text-gray-700">
+          {{ owner ? owner.name : user.name }}
+        </p>
+        <p class="text-xs font-light text-gray-500">
+          {{ owner ? 'You' : user.email }}
+        </p>
       </div>
+    </div>
+    <div v-if="owner">
       <div
-        class="text-xs md:text-sm text-gray-700 md:text-right pl-3 md:pl-0 md:pr-5"
+        class="bg-green-600 rounded-3xl text-xs md:text-sm text-white md:text-right px-3 py-1 md:m-5"
       >
-        56 ratings
+        Owner
       </div>
     </div>
-  </nuxt-link>
+    <div v-if="user">
+      <div
+        class="flex flex-row rounded-3xl text-xs md:text-sm text-white md:text-right md:m-5"
+      >
+        <button class="flex items-center mr-5">
+          <img class="w-6 h-6" src="/icon/edit.svg" />
+        </button>
+        <button class="items-center">
+          <img class="w-6 h-6" src="/icon/delete.svg" />
+        </button>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
-    course: { type: Object, required: true },
-    session: { type: Boolean, default: false },
+    owner: { type: Object, default: null },
+    user: { type: Object, default: null },
   },
-  computed: {
-    view_route() {
-      const slug = _.get(this.course, 'slug', '')
-      return this.session ? '/student/courses/view/' + slug : '/courses/' + slug
-    },
-  },
+  // computed: {
+  //   view_route() {
+  //     const slug = _.get(this.course, 'slug', '')
+  //     return this.session ? '/student/courses/view/' + slug : '/courses/' + slug
+  //   },
+  // },
 }
 </script>
 
 <style scoped>
+.container {
+  height: 4.5rem;
+}
+.action-icon {
+  width: 1.3rem;
+  height: 1.3rem;
+}
 .top-tag {
   background-color: rgba(0, 0, 0, 0.25);
   padding: 4px 20px 4px 8px;

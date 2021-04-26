@@ -131,43 +131,17 @@
                       >
                         <div class="px-4 md:px-5 lg:px-6 py-4">
                           <!-- Webinar name -->
-                          <div class="form-group mb-5">
-                            <label for="input-name">Webinar name</label>
-                            <div>
-                              <input
-                                id="input-name"
-                                type="text"
-                                class="form-input"
-                                placeholder="Enter course name here"
-                                v-model="createWebinar.name"
-                              />
-                            </div>
-                          </div>
-                          <!-- Webinar subtitle -->
-                          <div class="form-group mb-5">
-                            <label for="input-name">Webinar subtitle</label>
-                            <div>
-                              <input
-                                id="input-name"
-                                type="text"
-                                class="form-input"
-                                placeholder="Enter course subtitle here"
-                                v-model="createWebinar.subtitle"
-                              />
-                            </div>
-                          </div>
-                          <div class="form-group mb-5">
-                            <label for="input-name">Webinar introduction</label>
-                            <div>
-                              <input
-                                id="input-name"
-                                type="text"
-                                class="form-input"
-                                placeholder="Enter course introduction here"
-                                v-model="createWebinar.introduction"
-                              />
-                            </div>
-                          </div>
+                          <user-chip :owner="{ name: 'Joy Adeleke' }" />
+                          <user-chip
+                            :user="{
+                              name: 'Somto Agu',
+                              email: 'somtoagu@gmail.com',
+                            }"
+                          />
+                          <hr class="my-5" />
+                          <p class="text-sm font-bold text-gray-700 mb-3">
+                            Add new tutor
+                          </p>
                           <div class="flex flex-row gap-10">
                             <div class="form-group flex-1 mb-5">
                               <label for="input-name">Tutor name</label>
@@ -204,6 +178,10 @@
                               </div>
                             </div>
                           </div>
+                          <p class="text-xs text-gray-700">
+                            An invitation email will be sent to the tutor's
+                            email address including their unique link
+                          </p>
                         </div>
                       </div>
                     </dash-items-section-group>
@@ -211,11 +189,10 @@
                 </div>
               </div>
             </section>
-            <div
+            <!-- <div
               class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
             >
               <div class="px-4 md:px-5 lg:px-6 py-4">
-                <!-- Player -->
                 <div class="mb-5 lg:mb-20">
                   <p class="text-sm font-bold text-gray-700 mb-3">
                     Account Details
@@ -276,7 +253,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
 
           <div class="col-span-full lg:col-span-5 xl:col-span-4">
@@ -348,11 +325,13 @@
 
 <script>
 import Vue from 'vue'
+import UserChip from '~/components/chip/UserChip.vue'
 
 const courses = require('@/static/json/courses.json')
 const webinars = require('@/static/json/webinars.json')
 
 export default {
+  components: { UserChip },
   layout: 'dashboard',
   middleware: ['check-auth', 'auth', 'isTutor'],
   fetch({ store }) {
