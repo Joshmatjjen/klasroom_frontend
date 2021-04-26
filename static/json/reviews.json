@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Really great course for beginners!",
+        "author": "Sandra Eze",
+        "desc": "You’ll understand what money is all about, how it derives its value and its origins. You will also learn about different types of currencies currently in existene and what differentiates them.",
+        "rating": 3,
+        "date": "12 Sep. 2020"
+    },
+    {
+        "name": "Really great course for beginners!",
+        "author": "Sandra Eze",
+        "desc": "You’ll understand what money is all about, how it derives its value and its origins. You will also learn about different types of currencies currently in existene and what differentiates them.",
+        "rating": 4,
+        "date": "12 Sep. 2020"
+    },
+    {
+        "name": "Really great course for beginners!",
+        "author": "Sandra Eze",
+        "desc": "You’ll understand what money is all about, how it derives its value and its origins. You will also learn about different types of currencies currently in existene and what differentiates them.",
+        "rating": 5,
+        "date": "12 Sep. 2020"
+    }
+]

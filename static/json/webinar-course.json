@@ -1,0 +1,40 @@
+[{
+    "id": 1,
+    "title": "The great course for beginners!",
+    "author": "Sandra Eze",
+    "desc": "You’ll understand what money is all about, how it derives its value and its origins....",
+    "price": "2,500",
+    "sales": 322,
+    "webinarType": "Free plan",
+    "date": "2020-10-31"
+  },
+  {
+    "id": 2,
+    "title": "View great course for beginners!",
+    "author": "Sandra Eze",
+    "desc": "You’ll understand what money is all about, how it derives its value and its origins....",
+    "price": "2,500",
+    "sales": 400,
+    "webinarType": "Free plan",
+    "date": "2020-10-31"
+  },
+  {
+    "id": 3,
+    "title": "Really great course for beginners!",
+    "desc": "You’ll understand what money is all about, how it derives its value and its origins....",
+    "price": "2,500",
+    "sales": 2345,
+    "webinarType": "Free plan",
+    "date": "2020-10-31"
+  },
+  {
+    "id": 4,
+    "title": "Really great course for beginners!",
+    "author": "Sandra Eze",
+    "desc": "You’ll understand what money is all about, how it derives its value and its origins....",
+    "price": "2,500",
+    "sales": 235,
+    "webinarType": "Free plan",
+    "date": "2020-10-31"
+  }
+]

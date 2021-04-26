@@ -1,0 +1,22 @@
+[
+    {
+        "name": "Busines and Finance",
+        "desc": "Starting your business or seeking funding? Let’s get you sorted",
+        "slug": "busines-and-finance"
+    },
+    {
+        "name": "Software Development",
+        "desc": "Programming concepts for beginners and advanced learners",
+        "slug": "software-development"
+    },
+    {
+        "name": "Writing",
+        "desc": "Say it like you mean it, learn from the best writers",
+        "slug": "writing"
+    },
+    {
+        "name": "Design",
+        "desc": "Hone your visual process and learn design fundamentals.",
+        "slug": "design"
+    }
+]

@@ -1,0 +1,44 @@
+[{
+    "id": 1,
+    "title": "Really great course for beginners!",
+    "author": "Sandra Eze",
+    "desc": "You’ll understand what money is all about, how it derives its value and its origins....",
+    "price": "2,500",
+    "sales": 322,
+    "attendees": 764,
+    "rating": 4.5,
+    "heldOn": "2020-10-31"
+  },
+  {
+    "id": 2,
+    "title": "Really great course for beginners!",
+    "author": "Sandra Eze",
+    "desc": "You’ll understand what money is all about, how it derives its value and its origins....",
+    "price": "2,500",
+    "sales": 400,
+    "attendees": 764,
+    "rating": 4.5,
+    "heldOn": "2020-10-31"
+  },
+  {
+    "id": 3,
+    "title": "Really great course for beginners!",
+    "desc": "You’ll understand what money is all about, how it derives its value and its origins....",
+    "price": "2,500",
+    "sales": 2345,
+    "attendees": 764,
+    "rating": 3,
+    "heldOn": "2020-10-31"
+  },
+  {
+    "id": 4,
+    "title": "Really great course for beginners!",
+    "author": "Sandra Eze",
+    "desc": "You’ll understand what money is all about, how it derives its value and its origins....",
+    "price": "2,500",
+    "sales": 235,
+    "attendees": 764,
+    "rating": 5,
+    "heldOn": "2020-10-31"
+  }
+]
