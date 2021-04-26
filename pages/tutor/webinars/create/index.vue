@@ -3,6 +3,7 @@
     <section class="bg-orange-100">
       <div class="container mx-auto px-4 lg:px-0">
         <div class="grid grid-cols-12 gap-5">
+          <!-- Left Add Image -->
           <div class="col-span-full lg:col-span-7 xl:col-span-8">
             <section>
               <div
@@ -125,6 +126,7 @@
               <div class="container mx-auto my-10 px-4 lg:px-0">
                 <div class="grid grid-cols-12 gap-4">
                   <div class="col-span-12">
+                    <!-- Tutor -->
                     <dash-items-section-group title="Tutor">
                       <div
                         class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
@@ -150,7 +152,7 @@
                                   id="input-name"
                                   type="text"
                                   class="form-input"
-                                  placeholder="Enter course name here"
+                                  placeholder="Enter tutor name here"
                                   v-model="createWebinar.name"
                                 />
                               </div>
@@ -163,7 +165,68 @@
                                   id="input-name"
                                   type="text"
                                   class="form-input"
-                                  placeholder="Enter course name here"
+                                  placeholder="Enter tutor name here"
+                                  v-model="createWebinar.name"
+                                />
+                              </div>
+                            </div>
+                            <div class="flex flex-col justify-end mb-5">
+                              <div></div>
+                              <div
+                                type="button"
+                                class="btn btn-primary align-middle text-center hover"
+                              >
+                                Add
+                              </div>
+                            </div>
+                          </div>
+                          <p class="text-xs text-gray-700">
+                            An invitation email will be sent to the tutor's
+                            email address including their unique link
+                          </p>
+                        </div>
+                      </div>
+                    </dash-items-section-group>
+
+                    <div class="mb-8"></div>
+                    <!-- Moderator -->
+                    <dash-items-section-group title="Moderators">
+                      <div
+                        class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
+                      >
+                        <div class="px-4 md:px-5 lg:px-6 py-4">
+                          <user-chip
+                            :user="{
+                              name: 'Forza Speciale',
+                              email: 'adeyemi20@gmail.com',
+                            }"
+                          />
+                          <hr class="my-5" />
+                          <p class="text-sm font-bold text-gray-700 mb-3">
+                            Add new moderator
+                          </p>
+                          <div class="flex flex-row gap-10">
+                            <div class="form-group flex-1 mb-5">
+                              <label for="input-name">Moderator name</label>
+                              <div>
+                                <input
+                                  id="input-name"
+                                  type="text"
+                                  class="form-input"
+                                  placeholder="Enter moderator name here"
+                                  v-model="createWebinar.name"
+                                />
+                              </div>
+                            </div>
+
+                            <div class="form-group flex-1 mb-5">
+                              <label for="input-name">Email</label>
+                              <div>
+                                <input
+                                  id="input-name"
+                                  type="text"
+                                  class="form-input"
+                                  placeholder="Enter moderator email here"
                                   v-model="createWebinar.name"
                                 />
                               </div>
@@ -179,7 +242,7 @@
                             </div>
                           </div>
                           <p class="text-xs text-gray-700">
-                            An invitation email will be sent to the tutor's
+                            An invitation email will be sent to the moderator's
                             email address including their unique link
                           </p>
                         </div>
@@ -255,7 +318,7 @@
               </div>
             </div> -->
           </div>
-
+          <!-- Right Add Image -->
           <div class="col-span-full lg:col-span-5 xl:col-span-4">
             <div
               class="bg-white rounded-xl border border-gray-300 shadow-hover relative min-h-full"
@@ -278,43 +341,96 @@
               </div>
               <div class="px-4 md:px-5 lg:px-6 py-4">
                 <ul class="text-gray-700">
-                  <li class="text-center">
-                    <h5 class="font-bold mb-2">Amina Bello</h5>
-                    <p class="text-sm text-gray-700">
-                      Registered 12th Oct. 2020
+                  <li class="text-left">
+                    <h5 class="font-bold mb-2">
+                      The Cryptocurrency Masterclass
+                    </h5>
+                    <p class="text-xs text-gray-700">
+                      Everything you need to know about Cryptocurrency and ways
+                      you can profit from it.
                     </p>
                   </li>
                   <li>
                     <hr class="my-5" />
                     <label class="checkbox" @click="$router.push('/')">
-                      <span class="text-sm">Sign out</span>
+                      <span class="text-sm">Preview webinar</span>
                       <input type="checkbox" value="intermediate" disabled />
                       <span class="checkmark"></span>
                     </label>
                   </li>
-                  <li>
+                  <hr class="my-5" />
+                  <li class="flex flex-row justify-between">
                     <label
                       class="checkbox"
                       @click="$router.push('/student/dashboard')"
                     >
-                      <span class="text-sm">Change password</span>
+                      <span class="text-sm">Tutor link: https://klasro..</span>
                       <input type="checkbox" value="intermediate" disabled />
                       <span class="checkmark"></span>
                     </label>
+                    <div class="flex items-center mr-5 mb-3 cursor-pointer">
+                      <img class="w-6 h-4" src="/icon/copy.svg" />
+                      <span class="text-xs">Copy</span>
+                    </div>
                   </li>
-                  <li class="lg:pb-8">
-                    <hr class="my-5" />
+                  <li class="lg:pb-8 flex flex-row justify-between">
                     <label
                       class="checkbox"
                       @click="$router.push('/student/dashboard')"
                     >
-                      <span class="text-sm">Delete account</span>
+                      <span class="text-sm">Studet link: https://klasro..</span>
                       <input type="checkbox" value="intermediate" disabled />
                       <span class="checkmark"></span>
                     </label>
+                    <div class="flex items-center mr-5 mb-3 cursor-pointer">
+                      <img class="w-6 h-4" src="/icon/copy.svg" />
+                      <span class="text-xs">Copy</span>
+                    </div>
+                  </li>
+                  <li class="lg:pb-8 flex flex-row justify-between relative">
+                    <button
+                      class="btn btn-primary mr-5 flex flex-row justify-between align-middle items-center"
+                      @click.capture.stop="togglePubOptMenu"
+                    >
+                      <span class="text-xs">Publish webinar</span>
+                      <img
+                        class="w-4 h-3 ml-5"
+                        src="/icon/arrow-down-light.svg"
+                      />
+                    </button>
+                    <div
+                      v-if="publishOpt"
+                      class="pop-up flex flex-col gap-5 items-start px-4 py-5 justify-around pop-up absolute top-0 left-0 mt-12 ml-5 border-gray-500 bg-white rounded-lg shadow-lg"
+                      :style="{ zIndex: 3 }"
+                    >
+                      <a
+                        href="#"
+                        class="pop-up-item lg:mr-0 md:text-gray-700 text-left text-sm font-normal hover:text-gray-900 md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                      >
+                        <p>Publish now</p>
+                      </a>
+                      <a
+                        href="#"
+                        class="pop-up-item lg:mr-0 md:text-gray-700 text-sm font-normal hover:text-gray-900 md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                      >
+                        <p>Schedule for later</p>
+                      </a>
+                    </div>
+                    <button class="btn btn-light">
+                      <span class="text-xs">Save </span>
+                    </button>
                   </li>
                 </ul>
               </div>
+            </div>
+          </div>
+
+          <!-- Bottom navigation -->
+          <div class="col-span-full lg:col-span-7 xl:col-span-8">
+            <hr class="my-5" />
+            <div class="flex flex-row justify-between">
+              <button class="btn btn-light btn-sm lg:mt-0">Previous</button>
+              <button class="btn btn-primary btn-sm lg:mt-0">Next</button>
             </div>
           </div>
         </div>
@@ -351,6 +467,7 @@ export default {
       name: '',
       subtitle: '',
     },
+    publishOpt: false,
   }),
   methods: {
     switcher: function (value) {
@@ -386,6 +503,9 @@ export default {
           this.isWebinars.settings = false
       }
       // some code to filter users
+    },
+    togglePubOptMenu() {
+      this.publishOpt = !this.publishOpt
     },
   },
 }
