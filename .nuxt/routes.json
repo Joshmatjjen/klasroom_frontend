@@ -1,0 +1,230 @@
+[
+  {
+    "name": "courses",
+    "path": "/courses",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/courses/index.vue",
+    "chunkName": "pages/courses/index"
+  },
+  {
+    "name": "webinars",
+    "path": "/webinars",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/webinars/index.vue",
+    "chunkName": "pages/webinars/index"
+  },
+  {
+    "name": "auth-reset-password",
+    "path": "/auth/reset-password",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/auth/reset-password.vue",
+    "chunkName": "pages/auth/reset-password"
+  },
+  {
+    "name": "auth-validation",
+    "path": "/auth/validation",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/auth/validation.vue",
+    "chunkName": "pages/auth/validation"
+  },
+  {
+    "name": "student-account",
+    "path": "/student/account",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/account.vue",
+    "chunkName": "pages/student/account"
+  },
+  {
+    "name": "student-chat",
+    "path": "/student/chat",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/chat.vue",
+    "chunkName": "pages/student/chat"
+  },
+  {
+    "name": "student-courses",
+    "path": "/student/courses",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/courses/index.vue",
+    "chunkName": "pages/student/courses/index"
+  },
+  {
+    "name": "student-dashboard",
+    "path": "/student/dashboard",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/dashboard.vue",
+    "chunkName": "pages/student/dashboard"
+  },
+  {
+    "name": "student-faqs",
+    "path": "/student/faqs",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/faqs.vue",
+    "chunkName": "pages/student/faqs"
+  },
+  {
+    "name": "student-my-courses",
+    "path": "/student/my-courses",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/my-courses.vue",
+    "chunkName": "pages/student/my-courses"
+  },
+  {
+    "name": "student-my-webinars",
+    "path": "/student/my-webinars",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/my-webinars.vue",
+    "chunkName": "pages/student/my-webinars"
+  },
+  {
+    "name": "student-saved-courses",
+    "path": "/student/saved-courses",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/saved-courses.vue",
+    "chunkName": "pages/student/saved-courses"
+  },
+  {
+    "name": "student-settings",
+    "path": "/student/settings",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/settings.vue",
+    "chunkName": "pages/student/settings"
+  },
+  {
+    "name": "student-suggested-courses",
+    "path": "/student/suggested-courses",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/suggested-courses.vue",
+    "chunkName": "pages/student/suggested-courses"
+  },
+  {
+    "name": "student-suggested-webinars",
+    "path": "/student/suggested-webinars",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/suggested-webinars.vue",
+    "chunkName": "pages/student/suggested-webinars"
+  },
+  {
+    "name": "student-upcoming-webinars",
+    "path": "/student/upcoming-webinars",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/upcoming-webinars.vue",
+    "chunkName": "pages/student/upcoming-webinars"
+  },
+  {
+    "name": "student-webinars",
+    "path": "/student/webinars",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/webinars/index.vue",
+    "chunkName": "pages/student/webinars/index"
+  },
+  {
+    "name": "tutor-account",
+    "path": "/tutor/account",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/account.vue",
+    "chunkName": "pages/tutor/account"
+  },
+  {
+    "name": "tutor-chat",
+    "path": "/tutor/chat",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/chat.vue",
+    "chunkName": "pages/tutor/chat"
+  },
+  {
+    "name": "tutor-courses",
+    "path": "/tutor/courses",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/courses/index.vue",
+    "chunkName": "pages/tutor/courses/index"
+  },
+  {
+    "name": "tutor-dashboard",
+    "path": "/tutor/dashboard",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/dashboard.vue",
+    "chunkName": "pages/tutor/dashboard"
+  },
+  {
+    "name": "tutor-faqs",
+    "path": "/tutor/faqs",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/faqs.vue",
+    "chunkName": "pages/tutor/faqs"
+  },
+  {
+    "name": "tutor-my-courses",
+    "path": "/tutor/my-courses",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/my-courses.vue",
+    "chunkName": "pages/tutor/my-courses"
+  },
+  {
+    "name": "tutor-my-webinars",
+    "path": "/tutor/my-webinars",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/my-webinars.vue",
+    "chunkName": "pages/tutor/my-webinars"
+  },
+  {
+    "name": "tutor-saved-courses",
+    "path": "/tutor/saved-courses",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/saved-courses.vue",
+    "chunkName": "pages/tutor/saved-courses"
+  },
+  {
+    "name": "tutor-settings",
+    "path": "/tutor/settings",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/settings.vue",
+    "chunkName": "pages/tutor/settings"
+  },
+  {
+    "name": "tutor-suggested-courses",
+    "path": "/tutor/suggested-courses",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/suggested-courses.vue",
+    "chunkName": "pages/tutor/suggested-courses"
+  },
+  {
+    "name": "tutor-suggested-webinars",
+    "path": "/tutor/suggested-webinars",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/suggested-webinars.vue",
+    "chunkName": "pages/tutor/suggested-webinars"
+  },
+  {
+    "name": "tutor-upcoming-webinars",
+    "path": "/tutor/upcoming-webinars",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/upcoming-webinars.vue",
+    "chunkName": "pages/tutor/upcoming-webinars"
+  },
+  {
+    "name": "tutor-webinars",
+    "path": "/tutor/webinars",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/webinars/index.vue",
+    "chunkName": "pages/tutor/webinars/index"
+  },
+  {
+    "name": "student-webinars-new",
+    "path": "/student/webinars/new",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/webinars/new.vue",
+    "chunkName": "pages/student/webinars/new"
+  },
+  {
+    "name": "student-courses-view-slug",
+    "path": "/student/courses/view/:slug?",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/courses/view/_slug.vue",
+    "chunkName": "pages/student/courses/view/_slug"
+  },
+  {
+    "name": "student-webinars-view-slug",
+    "path": "/student/webinars/view/:slug?",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/student/webinars/view/_slug.vue",
+    "chunkName": "pages/student/webinars/view/_slug"
+  },
+  {
+    "name": "tutor-courses-view-slug",
+    "path": "/tutor/courses/view/:slug?",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/courses/view/_slug.vue",
+    "chunkName": "pages/tutor/courses/view/_slug"
+  },
+  {
+    "name": "tutor-webinars-view-slug",
+    "path": "/tutor/webinars/view/:slug?",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/tutor/webinars/view/_slug.vue",
+    "chunkName": "pages/tutor/webinars/view/_slug"
+  },
+  {
+    "name": "courses-slug",
+    "path": "/courses/:slug",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/courses/_slug.vue",
+    "chunkName": "pages/courses/_slug"
+  },
+  {
+    "name": "webinars-slug",
+    "path": "/webinars/:slug",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/webinars/_slug.vue",
+    "chunkName": "pages/webinars/_slug"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "/Users/mac/Documents/Dev/BitMask/klasroom_frontend/pages/index.vue",
+    "chunkName": "pages/index"
+  }
+]

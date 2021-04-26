@@ -1,0 +1,410 @@
+{
+  "CourseViewBanner": {
+    "description": "Auto imported from components/CourseViewBanner.vue"
+  },
+  "LazyCourseViewBanner": {
+    "description": "Auto imported from components/CourseViewBanner.vue"
+  },
+  "CourseViewDetails": {
+    "description": "Auto imported from components/CourseViewDetails.vue"
+  },
+  "LazyCourseViewDetails": {
+    "description": "Auto imported from components/CourseViewDetails.vue"
+  },
+  "DashCourseViewDetails": {
+    "description": "Auto imported from components/DashCourseViewDetails.vue"
+  },
+  "LazyDashCourseViewDetails": {
+    "description": "Auto imported from components/DashCourseViewDetails.vue"
+  },
+  "DashFooter": {
+    "description": "Auto imported from components/DashFooter.vue"
+  },
+  "LazyDashFooter": {
+    "description": "Auto imported from components/DashFooter.vue"
+  },
+  "DashItemsSectionGroup": {
+    "description": "Auto imported from components/DashItemsSectionGroup.vue"
+  },
+  "LazyDashItemsSectionGroup": {
+    "description": "Auto imported from components/DashItemsSectionGroup.vue"
+  },
+  "DashNavbar": {
+    "description": "Auto imported from components/DashNavbar.vue"
+  },
+  "LazyDashNavbar": {
+    "description": "Auto imported from components/DashNavbar.vue"
+  },
+  "DashNavbarMobile": {
+    "description": "Auto imported from components/DashNavbarMobile.vue"
+  },
+  "LazyDashNavbarMobile": {
+    "description": "Auto imported from components/DashNavbarMobile.vue"
+  },
+  "Footer": {
+    "description": "Auto imported from components/Footer.vue"
+  },
+  "LazyFooter": {
+    "description": "Auto imported from components/Footer.vue"
+  },
+  "ItemsSectionGroup": {
+    "description": "Auto imported from components/ItemsSectionGroup.vue"
+  },
+  "LazyItemsSectionGroup": {
+    "description": "Auto imported from components/ItemsSectionGroup.vue"
+  },
+  "NavSearchBox": {
+    "description": "Auto imported from components/NavSearchBox.vue"
+  },
+  "LazyNavSearchBox": {
+    "description": "Auto imported from components/NavSearchBox.vue"
+  },
+  "Navbar": {
+    "description": "Auto imported from components/Navbar.vue"
+  },
+  "LazyNavbar": {
+    "description": "Auto imported from components/Navbar.vue"
+  },
+  "ProgressBar": {
+    "description": "Auto imported from components/ProgressBar.vue"
+  },
+  "LazyProgressBar": {
+    "description": "Auto imported from components/ProgressBar.vue"
+  },
+  "Rating": {
+    "description": "Auto imported from components/Rating.vue"
+  },
+  "LazyRating": {
+    "description": "Auto imported from components/Rating.vue"
+  },
+  "SearchBox": {
+    "description": "Auto imported from components/SearchBox.vue"
+  },
+  "LazySearchBox": {
+    "description": "Auto imported from components/SearchBox.vue"
+  },
+  "Sidebar": {
+    "description": "Auto imported from components/Sidebar.vue"
+  },
+  "LazySidebar": {
+    "description": "Auto imported from components/Sidebar.vue"
+  },
+  "TabsMenu": {
+    "description": "Auto imported from components/TabsMenu.vue"
+  },
+  "LazyTabsMenu": {
+    "description": "Auto imported from components/TabsMenu.vue"
+  },
+  "TagsSlider": {
+    "description": "Auto imported from components/TagsSlider.vue"
+  },
+  "LazyTagsSlider": {
+    "description": "Auto imported from components/TagsSlider.vue"
+  },
+  "TelegramCommunitySection": {
+    "description": "Auto imported from components/TelegramCommunitySection.vue"
+  },
+  "LazyTelegramCommunitySection": {
+    "description": "Auto imported from components/TelegramCommunitySection.vue"
+  },
+  "ToggleSwitch": {
+    "description": "Auto imported from components/ToggleSwitch.vue"
+  },
+  "LazyToggleSwitch": {
+    "description": "Auto imported from components/ToggleSwitch.vue"
+  },
+  "UserDropdown": {
+    "description": "Auto imported from components/UserDropdown.vue"
+  },
+  "LazyUserDropdown": {
+    "description": "Auto imported from components/UserDropdown.vue"
+  },
+  "VideoFrame": {
+    "description": "Auto imported from components/VideoFrame.vue"
+  },
+  "LazyVideoFrame": {
+    "description": "Auto imported from components/VideoFrame.vue"
+  },
+  "WebinarPeople": {
+    "description": "Auto imported from components/WebinarPeople.vue"
+  },
+  "LazyWebinarPeople": {
+    "description": "Auto imported from components/WebinarPeople.vue"
+  },
+  "WebinarPoll": {
+    "description": "Auto imported from components/WebinarPoll.vue"
+  },
+  "LazyWebinarPoll": {
+    "description": "Auto imported from components/WebinarPoll.vue"
+  },
+  "WebinarVideoFrame": {
+    "description": "Auto imported from components/WebinarVideoFrame.vue"
+  },
+  "LazyWebinarVideoFrame": {
+    "description": "Auto imported from components/WebinarVideoFrame.vue"
+  },
+  "WebinarViewBanner": {
+    "description": "Auto imported from components/WebinarViewBanner.vue"
+  },
+  "LazyWebinarViewBanner": {
+    "description": "Auto imported from components/WebinarViewBanner.vue"
+  },
+  "WebinarViewDetails": {
+    "description": "Auto imported from components/WebinarViewDetails.vue"
+  },
+  "LazyWebinarViewDetails": {
+    "description": "Auto imported from components/WebinarViewDetails.vue"
+  },
+  "FilterCourse": {
+    "description": "Auto imported from components/filter/FilterCourse.vue"
+  },
+  "LazyFilterCourse": {
+    "description": "Auto imported from components/filter/FilterCourse.vue"
+  },
+  "FilterWebinar": {
+    "description": "Auto imported from components/filter/FilterWebinar.vue"
+  },
+  "LazyFilterWebinar": {
+    "description": "Auto imported from components/filter/FilterWebinar.vue"
+  },
+  "BecomeTutorOrStudent": {
+    "description": "Auto imported from components/card/BecomeTutorOrStudent.vue"
+  },
+  "LazyBecomeTutorOrStudent": {
+    "description": "Auto imported from components/card/BecomeTutorOrStudent.vue"
+  },
+  "CategoryItem": {
+    "description": "Auto imported from components/card/CategoryItem.vue"
+  },
+  "LazyCategoryItem": {
+    "description": "Auto imported from components/card/CategoryItem.vue"
+  },
+  "CourseItem": {
+    "description": "Auto imported from components/card/CourseItem.vue"
+  },
+  "LazyCourseItem": {
+    "description": "Auto imported from components/card/CourseItem.vue"
+  },
+  "CourseItemWide": {
+    "description": "Auto imported from components/card/CourseItemWide.vue"
+  },
+  "LazyCourseItemWide": {
+    "description": "Auto imported from components/card/CourseItemWide.vue"
+  },
+  "CreateWebinar": {
+    "description": "Auto imported from components/card/CreateWebinar.vue"
+  },
+  "LazyCreateWebinar": {
+    "description": "Auto imported from components/card/CreateWebinar.vue"
+  },
+  "DashItemMetrics": {
+    "description": "Auto imported from components/card/DashItemMetrics.vue"
+  },
+  "LazyDashItemMetrics": {
+    "description": "Auto imported from components/card/DashItemMetrics.vue"
+  },
+  "DashItemsStatus": {
+    "description": "Auto imported from components/card/DashItemsStatus.vue"
+  },
+  "LazyDashItemsStatus": {
+    "description": "Auto imported from components/card/DashItemsStatus.vue"
+  },
+  "DashPreRecordedWebinars": {
+    "description": "Auto imported from components/card/DashPreRecordedWebinars.vue"
+  },
+  "LazyDashPreRecordedWebinars": {
+    "description": "Auto imported from components/card/DashPreRecordedWebinars.vue"
+  },
+  "DashPreviouslyAttendedWebinars": {
+    "description": "Auto imported from components/card/DashPreviouslyAttendedWebinars.vue"
+  },
+  "LazyDashPreviouslyAttendedWebinars": {
+    "description": "Auto imported from components/card/DashPreviouslyAttendedWebinars.vue"
+  },
+  "DashUndoneTasks": {
+    "description": "Auto imported from components/card/DashUndoneTasks.vue"
+  },
+  "LazyDashUndoneTasks": {
+    "description": "Auto imported from components/card/DashUndoneTasks.vue"
+  },
+  "DashWalletStatus": {
+    "description": "Auto imported from components/card/DashWalletStatus.vue"
+  },
+  "LazyDashWalletStatus": {
+    "description": "Auto imported from components/card/DashWalletStatus.vue"
+  },
+  "DashWebinarsCalendar": {
+    "description": "Auto imported from components/card/DashWebinarsCalendar.vue"
+  },
+  "LazyDashWebinarsCalendar": {
+    "description": "Auto imported from components/card/DashWebinarsCalendar.vue"
+  },
+  "IconCardLg": {
+    "description": "Auto imported from components/card/IconCardLg.vue"
+  },
+  "LazyIconCardLg": {
+    "description": "Auto imported from components/card/IconCardLg.vue"
+  },
+  "WebinarItem": {
+    "description": "Auto imported from components/card/WebinarItem.vue"
+  },
+  "LazyWebinarItem": {
+    "description": "Auto imported from components/card/WebinarItem.vue"
+  },
+  "WebinarItemWide": {
+    "description": "Auto imported from components/card/WebinarItemWide.vue"
+  },
+  "LazyWebinarItemWide": {
+    "description": "Auto imported from components/card/WebinarItemWide.vue"
+  },
+  "WebinarsCalendar": {
+    "description": "Auto imported from components/card/WebinarsCalendar.vue"
+  },
+  "LazyWebinarsCalendar": {
+    "description": "Auto imported from components/card/WebinarsCalendar.vue"
+  },
+  "WhyKlasroom": {
+    "description": "Auto imported from components/card/WhyKlasroom.vue"
+  },
+  "LazyWhyKlasroom": {
+    "description": "Auto imported from components/card/WhyKlasroom.vue"
+  },
+  "ChatComplete": {
+    "description": "Auto imported from components/chat/ChatComplete.vue"
+  },
+  "LazyChatComplete": {
+    "description": "Auto imported from components/chat/ChatComplete.vue"
+  },
+  "ChatContacts": {
+    "description": "Auto imported from components/chat/ChatContacts.vue"
+  },
+  "LazyChatContacts": {
+    "description": "Auto imported from components/chat/ChatContacts.vue"
+  },
+  "ChatMembers": {
+    "description": "Auto imported from components/chat/ChatMembers.vue"
+  },
+  "LazyChatMembers": {
+    "description": "Auto imported from components/chat/ChatMembers.vue"
+  },
+  "ChatMessages": {
+    "description": "Auto imported from components/chat/ChatMessages.vue"
+  },
+  "LazyChatMessages": {
+    "description": "Auto imported from components/chat/ChatMessages.vue"
+  },
+  "ChatWindow": {
+    "description": "Auto imported from components/chat/ChatWindow.vue"
+  },
+  "LazyChatWindow": {
+    "description": "Auto imported from components/chat/ChatWindow.vue"
+  },
+  "InputToggleSwitch": {
+    "description": "Auto imported from components/form/InputToggleSwitch.vue"
+  },
+  "LazyInputToggleSwitch": {
+    "description": "Auto imported from components/form/InputToggleSwitch.vue"
+  },
+  "AssignmentList": {
+    "description": "Auto imported from components/list/AssignmentList.vue"
+  },
+  "LazyAssignmentList": {
+    "description": "Auto imported from components/list/AssignmentList.vue"
+  },
+  "AssignmentSubmissionList": {
+    "description": "Auto imported from components/list/AssignmentSubmissionList.vue"
+  },
+  "LazyAssignmentSubmissionList": {
+    "description": "Auto imported from components/list/AssignmentSubmissionList.vue"
+  },
+  "CollapseList": {
+    "description": "Auto imported from components/list/CollapseList.vue"
+  },
+  "LazyCollapseList": {
+    "description": "Auto imported from components/list/CollapseList.vue"
+  },
+  "ListNumberItem": {
+    "description": "Auto imported from components/list/ListNumberItem.vue"
+  },
+  "LazyListNumberItem": {
+    "description": "Auto imported from components/list/ListNumberItem.vue"
+  },
+  "ListReviewItem": {
+    "description": "Auto imported from components/list/ListReviewItem.vue"
+  },
+  "LazyListReviewItem": {
+    "description": "Auto imported from components/list/ListReviewItem.vue"
+  },
+  "ListVideoItem": {
+    "description": "Auto imported from components/list/ListVideoItem.vue"
+  },
+  "LazyListVideoItem": {
+    "description": "Auto imported from components/list/ListVideoItem.vue"
+  },
+  "ResourceList": {
+    "description": "Auto imported from components/list/ResourceList.vue"
+  },
+  "LazyResourceList": {
+    "description": "Auto imported from components/list/ResourceList.vue"
+  },
+  "Loader": {
+    "description": "Auto imported from components/loader/Loader.vue"
+  },
+  "LazyLoader": {
+    "description": "Auto imported from components/loader/Loader.vue"
+  },
+  "ActionModal": {
+    "description": "Auto imported from components/modal/ActionModal.vue"
+  },
+  "LazyActionModal": {
+    "description": "Auto imported from components/modal/ActionModal.vue"
+  },
+  "BecomeATutorModal": {
+    "description": "Auto imported from components/modal/BecomeATutorModal.vue"
+  },
+  "LazyBecomeATutorModal": {
+    "description": "Auto imported from components/modal/BecomeATutorModal.vue"
+  },
+  "ForgotPasswordModal": {
+    "description": "Auto imported from components/modal/ForgotPasswordModal.vue"
+  },
+  "LazyForgotPasswordModal": {
+    "description": "Auto imported from components/modal/ForgotPasswordModal.vue"
+  },
+  "LoginModal": {
+    "description": "Auto imported from components/modal/LoginModal.vue"
+  },
+  "LazyLoginModal": {
+    "description": "Auto imported from components/modal/LoginModal.vue"
+  },
+  "NoticeModal": {
+    "description": "Auto imported from components/modal/NoticeModal.vue"
+  },
+  "LazyNoticeModal": {
+    "description": "Auto imported from components/modal/NoticeModal.vue"
+  },
+  "PurchaseModal": {
+    "description": "Auto imported from components/modal/PurchaseModal.vue"
+  },
+  "LazyPurchaseModal": {
+    "description": "Auto imported from components/modal/PurchaseModal.vue"
+  },
+  "ResetPasswordModal": {
+    "description": "Auto imported from components/modal/ResetPasswordModal.vue"
+  },
+  "LazyResetPasswordModal": {
+    "description": "Auto imported from components/modal/ResetPasswordModal.vue"
+  },
+  "ValidationModal": {
+    "description": "Auto imported from components/modal/ValidationModal.vue"
+  },
+  "LazyValidationModal": {
+    "description": "Auto imported from components/modal/ValidationModal.vue"
+  },
+  "WebinarTable": {
+    "description": "Auto imported from components/table/WebinarTable.vue"
+  },
+  "LazyWebinarTable": {
+    "description": "Auto imported from components/table/WebinarTable.vue"
+  }
+}
