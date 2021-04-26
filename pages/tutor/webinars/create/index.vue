@@ -38,6 +38,7 @@
                 </button>
               </div>
             </section>
+            <!-- Preliminary section -->
             <section>
               <div class="container mx-auto my-10 px-4 lg:px-0">
                 <div class="grid grid-cols-12 gap-4">
@@ -118,6 +119,98 @@
                 </div>
               </div>
             </section>
+
+            <!-- Tutor section-->
+            <section>
+              <div class="container mx-auto my-10 px-4 lg:px-0">
+                <div class="grid grid-cols-12 gap-4">
+                  <div class="col-span-12">
+                    <dash-items-section-group title="Tutor">
+                      <div
+                        class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
+                      >
+                        <div class="px-4 md:px-5 lg:px-6 py-4">
+                          <!-- Webinar name -->
+                          <div class="form-group mb-5">
+                            <label for="input-name">Webinar name</label>
+                            <div>
+                              <input
+                                id="input-name"
+                                type="text"
+                                class="form-input"
+                                placeholder="Enter course name here"
+                                v-model="createWebinar.name"
+                              />
+                            </div>
+                          </div>
+                          <!-- Webinar subtitle -->
+                          <div class="form-group mb-5">
+                            <label for="input-name">Webinar subtitle</label>
+                            <div>
+                              <input
+                                id="input-name"
+                                type="text"
+                                class="form-input"
+                                placeholder="Enter course subtitle here"
+                                v-model="createWebinar.subtitle"
+                              />
+                            </div>
+                          </div>
+                          <div class="form-group mb-5">
+                            <label for="input-name">Webinar introduction</label>
+                            <div>
+                              <input
+                                id="input-name"
+                                type="text"
+                                class="form-input"
+                                placeholder="Enter course introduction here"
+                                v-model="createWebinar.introduction"
+                              />
+                            </div>
+                          </div>
+                          <div class="flex flex-row gap-10">
+                            <div class="form-group flex-1 mb-5">
+                              <label for="input-name">Tutor name</label>
+                              <div>
+                                <input
+                                  id="input-name"
+                                  type="text"
+                                  class="form-input"
+                                  placeholder="Enter course name here"
+                                  v-model="createWebinar.name"
+                                />
+                              </div>
+                            </div>
+
+                            <div class="form-group flex-1 mb-5">
+                              <label for="input-name">Email</label>
+                              <div>
+                                <input
+                                  id="input-name"
+                                  type="text"
+                                  class="form-input"
+                                  placeholder="Enter course name here"
+                                  v-model="createWebinar.name"
+                                />
+                              </div>
+                            </div>
+                            <div class="flex flex-col justify-end mb-5">
+                              <div></div>
+                              <div
+                                type="button"
+                                class="btn btn-primary align-middle text-center"
+                              >
+                                Add
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </dash-items-section-group>
+                  </div>
+                </div>
+              </div>
+            </section>
             <div
               class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
             >
@@ -185,6 +278,7 @@
               </div>
             </div>
           </div>
+
           <div class="col-span-full lg:col-span-5 xl:col-span-4">
             <div
               class="bg-white rounded-xl border border-gray-300 shadow-hover relative min-h-full"
@@ -334,6 +428,10 @@ export default {
   background-repeat: no-repeat;
   padding: 5px 5px 5px 32px;
   line-height: 20px;
+}
+.add-btn {
+  padding: 2px;
+  background: 'red';
 }
 .menu-btn {
   border-top: 5px solid;
