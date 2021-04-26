@@ -1,6 +1,16 @@
 <template>
   <div>
-    <div @click="toggleMeetingOpt" :class="{ hidden: !meetingOpt }" class="fixed" :style="{ width: '100%', height: '100vh', zIndex: 2, marginLeft: '-300px' }"></div>
+    <div
+      @click="toggleMeetingOpt"
+      :class="{ hidden: !meetingOpt }"
+      class="fixed"
+      :style="{
+        width: '100%',
+        height: '100vh',
+        zIndex: 2,
+        marginLeft: '-300px',
+      }"
+    ></div>
     <section class="bg-orange-100">
       <div class="container mx-auto">
         <div class="grid grid-cols-12">
@@ -19,7 +29,7 @@
             <div class="flex text-center pt-8 pb-4 sm:pb-4">
               <span class="flex mr-3">
                 <nuxt-link
-                  to="/student/webinars/create"
+                  to="/tutor/webinars/create"
                   class="btn text-white bg-blue-500 shadow"
                 >
                   <img src="/icon/webinars.svg" class="inline h-5 mr-2" />
@@ -42,7 +52,7 @@
               <input class="search-box" placeholder="Enter code or link" />
               <div
                 :class="{ hidden: !meetingOpt }"
-                class="pop-up absolute bg-white border-1 right-0 rounded-lg h-52 shadow-lg  text-left"
+                class="pop-up absolute bg-white border-1 right-0 rounded-lg h-52 shadow-lg text-left"
                 :style="{ zIndex: 2 }"
               >
                 <a
@@ -95,8 +105,8 @@ export default {
   methods: {
     toggleMeetingOpt() {
       this.meetingOpt = !this.meetingOpt
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -114,7 +124,6 @@ export default {
   min-width: 250px;
   font-size: 14px;
   outline: none;
-  
 }
 .pop-up {
   top: 4rem;

@@ -26,7 +26,7 @@ module.exports = {
       },
       inset: {
         0: 0,
-        20: 20,
+        20: '20rem',
       },
       colors: {
         orange: {

@@ -138,11 +138,16 @@ input[type='date'] {
 
 .btn:hover,
 .btn:focus {
+  cursor: pointer;
   outline: none;
 }
 
 .btn.btn-primary {
   @apply text-white bg-orange-500;
+}
+
+.btn.btn-light {
+  @apply text-black  bg-gray-300;
 }
 
 .btn.btn-primary.shadow {
