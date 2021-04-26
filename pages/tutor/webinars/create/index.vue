@@ -1,152 +1,250 @@
 <template>
-  <div class="min-h-screen mb-24">
+  <div class="min-h-screen mb-12">
     <section class="bg-orange-100">
-      <div class="container mx-auto mb-10 px-4 lg:px-0">
-        <div class="md:grid grid-cols-4 gap-5 space-y-3 md:space-y-0">
-          <dash-item-metrics
-            title="3 webinars"
-            label="Published"
-            more="/student/webinars"
-          />
-          <dash-item-metrics
-            title="34,600"
-            label="Webinar sales"
-            more="/student/webinars"
-          />
-          <dash-item-metrics
-            title="1 webinars"
-            label="Draft"
-            more="/student/webinars"
-          />
-          <dash-item-metrics
-            title="3,540"
-            label="Attendants"
-            more="/student/webinars"
-          />
-          <dash-item-metrics
-            title="4 webinars"
-            label="Upcoming"
-            more="/student/webinars"
-          />
-          <dash-item-metrics
-            title="13 webinars"
-            label="Saved"
-            more="/student/webinars"
-          />
-          <dash-item-metrics
-            title="20 webinars"
-            label="Attended"
-            more="/student/webinars"
-          />
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div
-        class="flex flex-row gap-10 place-items-start px-10 border-b-2 border-gray-200"
-      >
-        <button
-          v-on:click="switcher('upcoming')"
-          v-bind:class="{ active: isWebinars.upcoming }"
-          class="menu-btn"
-        >
-          <p class="text-xs text-gray-700">My upcoming webinars</p>
-        </button>
-        <button
-          v-on:click="switcher('recorded')"
-          v-bind:class="{ active: isWebinars.recorded }"
-          class="menu-btn"
-        >
-          <p class="text-xs text-gray-700">My recorded webinars</p>
-        </button>
-        <button
-          v-on:click="switcher('draft')"
-          v-bind:class="{ active: isWebinars.draft }"
-          class="menu-btn"
-        >
-          <p class="text-xs text-gray-700">My draft</p>
-        </button>
-      </div>
-    </section>
-
-    <section>
-      <!-- Upcoming -->
-      <div
-        v-if="isWebinars.upcoming"
-        class="container mx-auto my-10 px-4 lg:px-0"
-      >
-        <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-12">
-            <webinar-table :columns="columnsUpcoming" :rows="rowsUpcoming" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Recorded -->
-      <div
-        v-if="isWebinars.recorded"
-        class="container mx-auto my-10 px-4 lg:px-0"
-      >
-        <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-12">
-            <webinar-table :columns="columnsRecorded" :rows="rowsRecorded" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Draft -->
-      <div v-if="isWebinars.draft" class="container mx-auto my-10 px-4 lg:px-0">
-        <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-12">
-            <webinar-table
-              :columns="columnsDraft"
-              :rows="rowsDraft"
-              :onDraft="true"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container mx-auto my-10 px-4 lg:px-0">
-        <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-12">
-            <dash-items-section-group
-              title="Upcoming Websinars"
-              more="/student/my-webinars"
-            >
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                <webinar-item
-                  v-for="(webinar, key) in webinars"
-                  :key="key"
-                  :webinar="webinar"
-                  :session="true"
-                />
+      <div class="container mx-auto px-4 lg:px-0">
+        <div class="grid grid-cols-12 gap-5">
+          <div class="col-span-full lg:col-span-7 xl:col-span-8">
+            <section>
+              <div
+                class="flex flex-row gap-10 place-items-start px-5 border-b-2 border-gray-200"
+              >
+                <button
+                  v-on:click="switcher('preliminary')"
+                  v-bind:class="{ active: isWebinars.preliminary }"
+                  class="menu-btn"
+                >
+                  <p class="text-xs text-gray-700">Preliminary</p>
+                </button>
+                <button
+                  v-on:click="switcher('resources')"
+                  v-bind:class="{ active: isWebinars.resources }"
+                  class="menu-btn"
+                >
+                  <p class="text-xs text-gray-700">Resources</p>
+                </button>
+                <button
+                  v-on:click="switcher('polls')"
+                  v-bind:class="{ active: isWebinars.polls }"
+                  class="menu-btn"
+                >
+                  <p class="text-xs text-gray-700">Polls</p>
+                </button>
+                <button
+                  v-on:click="switcher('settings')"
+                  v-bind:class="{ active: isWebinars.settings }"
+                  class="menu-btn"
+                >
+                  <p class="text-xs text-gray-700">Settings</p>
+                </button>
               </div>
-            </dash-items-section-group>
+            </section>
+            <section>
+              <div class="container mx-auto my-10 px-4 lg:px-0">
+                <div class="grid grid-cols-12 gap-4">
+                  <div class="col-span-12">
+                    <dash-items-section-group title="Preliminary">
+                      <div
+                        class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
+                      >
+                        <div class="px-4 md:px-5 lg:px-6 py-4">
+                          <!-- Webinar name -->
+                          <div class="form-group mb-5">
+                            <label for="input-name">Webinar name</label>
+                            <div>
+                              <input
+                                id="input-name"
+                                type="text"
+                                class="form-input"
+                                placeholder="Enter course name here"
+                                v-model="createWebinar.name"
+                              />
+                            </div>
+                          </div>
+                          <!-- Webinar subtitle -->
+                          <div class="form-group mb-5">
+                            <label for="input-name">Webinar subtitle</label>
+                            <div>
+                              <input
+                                id="input-name"
+                                type="text"
+                                class="form-input"
+                                placeholder="Enter course subtitle here"
+                                v-model="createWebinar.subtitle"
+                              />
+                            </div>
+                          </div>
+                          <div class="form-group mb-5">
+                            <label for="input-name">Webinar introduction</label>
+                            <div>
+                              <input
+                                id="input-name"
+                                type="text"
+                                class="form-input"
+                                placeholder="Enter course introduction here"
+                                v-model="createWebinar.introduction"
+                              />
+                            </div>
+                          </div>
+                          <div class="grid grid-cols-2 gap-10">
+                            <div class="form-group mb-5">
+                              <label for="input-name">Webinar date</label>
+                              <div>
+                                <input
+                                  id="input-name"
+                                  type="date"
+                                  class="form-input"
+                                  placeholder="Enter course introduction here"
+                                  v-model="createWebinar.introduction"
+                                />
+                              </div>
+                            </div>
+                            <div class="form-group mb-5">
+                              <label for="input-name">Webinar time</label>
+                              <div>
+                                <input
+                                  id="input-name"
+                                  type="time"
+                                  class="form-input"
+                                  placeholder="Enter course introduction here"
+                                  v-model="createWebinar.introduction"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </dash-items-section-group>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <div
+              class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
+            >
+              <div class="px-4 md:px-5 lg:px-6 py-4">
+                <!-- Player -->
+                <div class="mb-5 lg:mb-20">
+                  <p class="text-sm font-bold text-gray-700 mb-3">
+                    Account Details
+                  </p>
+                  <hr class="mt-4 mb-6" />
+                  <div class="grid grid-cols-12 mb-5">
+                    <div class="col-span-7">
+                      <p class="text-sm font-bold text-gray-700 mb-3">Name</p>
+                      <p class="text-sm text-gray-700">Amina Bello</p>
+                    </div>
+                    <div class="col-span-5 text-right">
+                      <button class="btn btn-light btn-sm">Edit</button>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-12 mb-5">
+                    <div class="col-span-7">
+                      <p class="text-sm font-bold text-gray-700 mb-3">Phone</p>
+                      <p class="text-sm text-gray-700">+234 123 4567</p>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-12 mb-5">
+                    <div class="col-span-7">
+                      <p class="text-sm font-bold text-gray-700 mb-3">Email</p>
+                      <p class="text-sm text-gray-700">damilare@gmail.com</p>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-12">
+                    <div class="col-span-7">
+                      <p class="text-sm font-bold text-gray-700 mb-3">Gender</p>
+                      <p class="text-sm text-gray-700">Female</p>
+                    </div>
+                  </div>
+                  <hr class="mt-4 mb-6" />
+                  <div class="grid grid-cols-12 mb-5">
+                    <div class="col-span-7">
+                      <p class="text-sm font-bold text-gray-700 mb-3">
+                        Password
+                      </p>
+                      <p class="text-sm text-gray-700">*****************</p>
+                    </div>
+                    <div class="col-span-5 text-right">
+                      <button class="btn btn-light btn-sm">Change</button>
+                    </div>
+                  </div>
+                  <hr class="mt-4 mb-6" />
+                  <div class="grid grid-cols-12 mb-5">
+                    <div class="col-span-7">
+                      <p class="text-sm font-bold text-gray-700 mb-3">
+                        Payment
+                      </p>
+                      <p class="text-sm text-gray-700">
+                        Your default payment method is ****1992
+                      </p>
+                    </div>
+                    <div class="col-span-5 text-right">
+                      <button class="btn btn-light btn-sm">Change</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="bg-orange-100">
-      <div class="container mx-auto my-10 px-4 lg:px-0">
-        <div class="md:grid grid-cols-3 gap-5 space-y-4 md:space-y-0">
-          <dash-webinars-calendar class="col-span-2" />
-          <dash-pre-recorded-webinars :items="undoneTasks" />
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container mx-auto my-10 px-4 lg:px-0">
-        <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-12">
-            <dash-items-section-group title="Previously Attended Webinars">
-              <dash-previously-attended-webinars />
-            </dash-items-section-group>
+          <div class="col-span-full lg:col-span-5 xl:col-span-4">
+            <div
+              class="bg-white rounded-xl border border-gray-300 shadow-hover relative min-h-full"
+            >
+              <div class="block mb-2">
+                <div
+                  class="big-avatar h-64 relative rounded-xl overflow-hidden"
+                >
+                  <div class="grid grid-cols-12 place-items-center h-64 py-32">
+                    <div
+                      class="change-picture col-span-12 text-white mx-auto my-auto"
+                    >
+                      <button class="focus:outline-none">Change Picture</button>
+                    </div>
+                  </div>
+                  <div
+                    class="w-full h-full bg-black opacity-50 absolute top-0"
+                  ></div>
+                </div>
+              </div>
+              <div class="px-4 md:px-5 lg:px-6 py-4">
+                <ul class="text-gray-700">
+                  <li class="text-center">
+                    <h5 class="font-bold mb-2">Amina Bello</h5>
+                    <p class="text-sm text-gray-700">
+                      Registered 12th Oct. 2020
+                    </p>
+                  </li>
+                  <li>
+                    <hr class="my-5" />
+                    <label class="checkbox" @click="$router.push('/')">
+                      <span class="text-sm">Sign out</span>
+                      <input type="checkbox" value="intermediate" disabled />
+                      <span class="checkmark"></span>
+                    </label>
+                  </li>
+                  <li>
+                    <label
+                      class="checkbox"
+                      @click="$router.push('/student/dashboard')"
+                    >
+                      <span class="text-sm">Change password</span>
+                      <input type="checkbox" value="intermediate" disabled />
+                      <span class="checkmark"></span>
+                    </label>
+                  </li>
+                  <li class="lg:pb-8">
+                    <hr class="my-5" />
+                    <label
+                      class="checkbox"
+                      @click="$router.push('/student/dashboard')"
+                    >
+                      <span class="text-sm">Delete account</span>
+                      <input type="checkbox" value="intermediate" disabled />
+                      <span class="checkmark"></span>
+                    </label>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -159,114 +257,60 @@ import Vue from 'vue'
 
 const courses = require('@/static/json/courses.json')
 const webinars = require('@/static/json/webinars.json')
-const webinarCourse = require('@/static/json/webinar-course.json')
-const webinarRecorded = require('@/static/json/webinar-recorded.json')
-const webinarDraft = require('@/static/json/webinar-draft.json')
 
 export default {
   layout: 'dashboard',
   middleware: ['check-auth', 'auth', 'isTutor'],
   fetch({ store }) {
-    store.commit('app/SET_TITLE', 'Webinars')
+    store.commit('app/SET_TITLE', 'Create webinar')
   },
   data: () => ({
     courses: _.take(courses, 4),
     webinars: _.take(webinars, 4),
     undoneTasks: _.take(courses, 3),
-    // Upcoming
-    columnsUpcoming: [
-      {
-        label: 'Webinar title',
-        field: 'webinarTitle',
-      },
-      {
-        label: 'Price',
-        field: 'price',
-      },
-      {
-        label: 'Sales',
-        field: 'sales',
-      },
-      {
-        label: 'Webinar Type',
-        field: 'webinarType',
-      },
-      {
-        label: 'Date',
-        field: 'date',
-        type: 'date',
-        dateInputFormat: 'yyyy-MM-dd',
-        dateOutputFormat: 'MMM do yy',
-      },
-    ],
-    rowsUpcoming: _.take(webinarCourse, 4),
-    // Recorded
-    columnsRecorded: [
-      {
-        label: 'Webinar title',
-        field: 'webinarTitle',
-      },
-      {
-        label: 'Price',
-        field: 'price',
-      },
-      {
-        label: 'Sales',
-        field: 'sales',
-      },
-      {
-        label: 'Attendees',
-        field: 'attendees',
-      },
-      {
-        label: 'Rating',
-        field: 'rating',
-      },
-      {
-        label: 'Held On',
-        field: 'heldOn',
-        type: 'date',
-        dateInputFormat: 'yyyy-MM-dd',
-        dateOutputFormat: 'MMM do yy',
-      },
-    ],
-    rowsRecorded: _.take(webinarRecorded, 4),
-    columnsDraft: [
-      {
-        label: 'Webinal title',
-        field: 'webinarTitle',
-      },
-    ],
-    rowsDraft: _.take(webinarDraft, 4),
-
     isWebinars: {
-      upcoming: true,
-      recorded: false,
-      draft: false,
+      preliminary: true,
+      resources: false,
+      polls: false,
+      settings: false,
+    },
+    createWebinar: {
+      name: '',
+      subtitle: '',
     },
   }),
   methods: {
     switcher: function (value) {
       switch (value) {
-        case 'upcoming':
-          this.isWebinars.upcoming = true
-          this.isWebinars.recorded = false
-          this.isWebinars.draft = false
+        case 'preliminary':
+          this.isWebinars.preliminary = true
+          this.isWebinars.resources = false
+          this.isWebinars.polls = false
+          this.isWebinars.settings = false
           break
-        case 'recorded':
-          this.isWebinars.upcoming = false
-          this.isWebinars.recorded = true
-          this.isWebinars.draft = false
+        case 'resources':
+          this.isWebinars.preliminary = false
+          this.isWebinars.resources = true
+          this.isWebinars.polls = false
+          this.isWebinars.settings = false
           break
-        case 'draft':
-          this.isWebinars.upcoming = false
-          this.isWebinars.recorded = false
-          this.isWebinars.draft = true
+        case 'polls':
+          this.isWebinars.preliminary = false
+          this.isWebinars.resources = false
+          this.isWebinars.polls = true
+          this.isWebinars.settings = false
+          break
+        case 'settings':
+          this.isWebinars.preliminary = false
+          this.isWebinars.resources = false
+          this.isWebinars.polls = false
+          this.isWebinars.settings = true
           break
         default:
-          this.isWebinars.upcoming = true
-          this.isWebinars.recorded = false
-          this.isWebinars.draft = false
+          this.isWebinars.preliminary = true
+          this.isWebinars.resources = false
+          this.isWebinars.polls = false
+          this.isWebinars.settings = false
       }
       // some code to filter users
     },
@@ -275,6 +319,22 @@ export default {
 </script>
 
 <style scoped>
+.big-avatar {
+  width: 100%;
+  background-image: url('/webinar-view-bg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  @apply bg-gray-200;
+}
+.change-picture {
+  z-index: 1;
+}
+.change-picture > button {
+  background-image: url('/icon/camera.svg');
+  background-repeat: no-repeat;
+  padding: 5px 5px 5px 32px;
+  line-height: 20px;
+}
 .menu-btn {
   border-top: 5px solid;
   border-bottom: 5px solid;
