@@ -78,7 +78,7 @@ export default ({ $axios, app, store, redirect, route }) => {
       })
     }
 
-    if (status === 400 || status === 409 || status === 404) {
+    if (status === 400 || status === 409 || status === 404 || status === 403) {
 
       Swal.fire({
         position: 'top-end',
@@ -90,14 +90,14 @@ export default ({ $axios, app, store, redirect, route }) => {
         showCloseButton: true,
         timer: 5000,
       }).then(() => {
-        redirect({ name: 'login' })
+        redirect({ name: 'index' })
       })
     }
 
     // no access to route
-    if (status === 403 && store.getters['auth/check']) {
-      redirect({ name: 'dashboard' })
-    }
+    // if (status === 403 && store.getters['auth/check']) {
+    //   redirect({ name: 'dashboard' })
+    // }
 
     return Promise.reject(error)
   })

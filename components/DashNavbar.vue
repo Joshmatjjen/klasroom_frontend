@@ -120,6 +120,7 @@ export default {
     toggleUserMenu(e) {
       if (e) e.preventDefault()
       this.userMenu = !this.userMenu
+      console.log('hide user menu...')
     },
     logout() {
       this.$store.dispatch('auth/logout')
@@ -129,7 +130,8 @@ export default {
         this.$router.push(`/tutor/dashboard`)
       else if (this.userDash === "student" && this.userType === "student") {
         // Become a tutor
-        this.toggleUserMenu()
+        console.log('become a tutor...')
+        // this.toggleUserMenu()
         this.$store.commit('app/BECOME_A_TUTOR_MODAL', true)
       }
       else
