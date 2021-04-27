@@ -12,8 +12,11 @@
       }"
     ></div>
     <section class="bg-orange-100">
-      <div class="container mx-auto">
-        <div class="grid grid-cols-12">
+      <div
+        class="container mx-10 flex items-center align-middle justify-center"
+      >
+        <div class="grid grid-cols-12 gap-10 mt-8 mb-6 lg:mb-40">
+          <!-- Left -->
           <div class="col-span-12 md:col-span-6 px-4 lg:px-0">
             <h1 class="font-bold leading-tight md:mt-20 mt-10 lg:-mr-8">
               <!-- Webinars and courses to up your game 🚀🚀 -->
@@ -78,14 +81,39 @@
               </div>
             </div>
 
-            <div class="mt-8 mb-6 lg:mb-40">
+            <!-- <div class="mt-8 mb-6 lg:mb-40">
               <hr />
+            </div> -->
+          </div>
+          <!-- Right -->
+          <div class="col-span-12 md:col-span-6 px-4 lg:px-0">
+            <div
+              class="col-span-12 grid grid-row-3 grid-flow-col sm:mx-10 lg:mx-12 xl:mx-16 mt-20 items-center"
+            >
+              <div class="flex justify-center">
+                <span
+                  class="text-3xl text-gray-600 hover:text-white h-12 w-12 bg-gray-200 hover:bg-black rounded-full flex align-middle justify-center items-center cursor-pointer"
+                  >&#x3c;</span
+                >
+              </div>
+
+              <price-card
+                :priceData="{
+                  name: 'Basic',
+                  price: '₦2,900',
+                  description: 'Or ₦50,000 billed annualy',
+                  color: 'blue-500',
+                }"
+                :priceInfo="planBasic"
+              />
+              <div class="flex justify-center">
+                <span
+                  class="text-3xl text-gray-600 hover:text-white h-12 w-12 bg-gray-200 hover:bg-black rounded-full flex align-middle justify-center items-center cursor-pointer"
+                  >&#x3e;</span
+                >
+              </div>
             </div>
           </div>
-          <img
-            src="/home-illust.svg"
-            class="lg:absolute lg:top-0 right-0 col-span-12 lg:mt-32 xl:mr-6 lg:-mr-16"
-          />
         </div>
       </div>
     </section>
@@ -100,6 +128,13 @@ export default {
   middleware: ['check-auth', 'auth'],
   data: () => ({
     meetingOpt: false,
+    planBasic: [
+      'Host up to 100 people',
+      '3 hosts',
+      '4 hours limit',
+      'Single host screen sharing',
+      'Create polls',
+    ],
   }),
   fetch({ store }) {
     store.commit('app/SET_TITLE', 'New Meeting or Webinar')
