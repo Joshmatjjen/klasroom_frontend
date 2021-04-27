@@ -13,7 +13,7 @@
     ></div>
     <section class="bg-orange-100">
       <div
-        class="container mx-10 flex items-center align-middle justify-center"
+        class="container mx-auto flex items-center align-middle justify-center"
       >
         <div class="grid grid-cols-12 gap-10 mt-8 mb-6 lg:mb-40">
           <!-- Left -->
@@ -93,22 +93,23 @@
               <div class="flex justify-center">
                 <span
                   class="text-3xl text-gray-600 hover:text-white h-12 w-12 bg-gray-200 hover:bg-black rounded-full flex align-middle justify-center items-center cursor-pointer"
+                  @click="togglePrice(priceSwitch === 0 ? 1 : 0)"
                   >&#x3c;</span
                 >
               </div>
 
               <price-card
-                :priceData="{
-                  name: 'Basic',
-                  price: '₦2,900',
-                  description: 'Or ₦50,000 billed annualy',
-                  color: 'blue-500',
-                }"
-                :priceInfo="planBasic"
+                :priceData="
+                  priceSwitch === 0 ? planBasicData : planCorporateData
+                "
+                :priceInfo="
+                  priceSwitch === 0 ? planBasicInfo : planCorporateInfo
+                "
               />
               <div class="flex justify-center">
                 <span
                   class="text-3xl text-gray-600 hover:text-white h-12 w-12 bg-gray-200 hover:bg-black rounded-full flex align-middle justify-center items-center cursor-pointer"
+                  @click="togglePrice(priceSwitch === 1 ? 0 : 1)"
                   >&#x3e;</span
                 >
               </div>
@@ -128,13 +129,33 @@ export default {
   middleware: ['check-auth', 'auth'],
   data: () => ({
     meetingOpt: false,
-    planBasic: [
+    planBasicData: {
+      name: 'Basic',
+      price: '₦2,900',
+      description: 'Or ₦50,000 billed annualy',
+      color: 'orange-500',
+    },
+    planBasicInfo: [
       'Host up to 100 people',
       '3 hosts',
       '4 hours limit',
       'Single host screen sharing',
       'Create polls',
     ],
+    planCorporateData: {
+      name: 'Corporate',
+      price: '₦9,000',
+      description: 'Or ₦50,000 billed annualy',
+      color: 'blue-500',
+    },
+    planCorporateInfo: [
+      'Host up to 500 people',
+      '8 hosts',
+      'Unlimited streaming time',
+      'Multiple host screen sharing',
+      'Create polls',
+    ],
+    priceSwitch: 0,
   }),
   fetch({ store }) {
     store.commit('app/SET_TITLE', 'New Meeting or Webinar')
@@ -142,6 +163,10 @@ export default {
   methods: {
     toggleMeetingOpt() {
       this.meetingOpt = !this.meetingOpt
+    },
+    togglePrice(priceState) {
+      console.log(priceState)
+      this.priceSwitch = priceState
     },
   },
 }
