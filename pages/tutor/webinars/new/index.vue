@@ -27,52 +27,54 @@
             </h5>
 
             <div class="flex text-center pt-8 pb-4 sm:pb-4">
-              <span class="flex mr-3">
-                <nuxt-link
-                  to="/tutor/webinars/create"
-                  class="btn text-white bg-blue-500 shadow"
-                >
-                  <img src="/icon/webinars.svg" class="inline h-5 mr-2" />
-                  New Webinar
-                </nuxt-link>
-              </span>
-            </div>
+              <div class="flex text-center pt-8 pb-4 sm:pb-4">
+                <span class="flex mr-3">
+                  <nuxt-link
+                    to="/tutor/webinars/create"
+                    class="btn text-white bg-blue-500 shadow"
+                  >
+                    <img src="/icon/webinars.svg" class="inline h-5 mr-2" />
+                    New Webinar
+                  </nuxt-link>
+                </span>
+              </div>
 
-            <div class="flex text-center pt-1 pb-4 sm:pb-4 relative">
-              <span class="flex mr-3">
-                <button
-                  type="button"
-                  class="btn btn-primary shadow"
-                  @click.prevent="toggleMeetingOpt"
+              <div class="flex text-center pt-8 pb-4 sm:pb-4 relative">
+                <span class="flex mr-3">
+                  <button
+                    type="button"
+                    class="btn btn-primary shadow"
+                    @click.prevent="toggleMeetingOpt"
+                  >
+                    <img src="/icon/camera.svg" class="inline h-5 mr-2" />
+                    New Meeting
+                  </button>
+                </span>
+                <!-- <input class="search-box" placeholder="Enter code or link" /> -->
+                <div
+                  :class="{ hidden: !meetingOpt }"
+                  class="pop-up absolute bg-white border-1 right-0 top-0 mt-5 rounded-lg h-52 shadow-lg text-left"
+                  :style="{ zIndex: 2 }"
                 >
-                  <img src="/icon/camera.svg" class="inline h-5 mr-2" />
-                  New Meeting
-                </button>
-              </span>
-              <input class="search-box" placeholder="Enter code or link" />
-              <div
-                :class="{ hidden: !meetingOpt }"
-                class="pop-up absolute bg-white border-1 right-0 rounded-lg h-52 shadow-lg text-left"
-                :style="{ zIndex: 2 }"
-              >
-                <a
-                  href="#"
-                  class="pop-up-item hover:bg-gray-200 md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                >
-                  <p>Create a meeting for later</p>
-                </a>
-                <a
-                  href="#"
-                  class="pop-up-item hover:bg-gray-200 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                >
-                  <p>Start an instant meeting</p>
-                </a>
-                <a
-                  href="#"
-                  class="pop-up-item hover:bg-gray-200 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                >
-                  <p>Schedule a meeting</p>
-                </a>
+                  <a
+                    href="#"
+                    class="pop-up-item hover:bg-gray-200 md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                  >
+                    <p>Create a meeting for later</p>
+                  </a>
+                  <a
+                    href="#"
+                    class="pop-up-item hover:bg-gray-200 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                  >
+                    <p>Start an instant meeting</p>
+                  </a>
+                  <a
+                    href="#"
+                    class="pop-up-item hover:bg-gray-200 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                  >
+                    <p>Schedule a meeting</p>
+                  </a>
+                </div>
               </div>
             </div>
 
