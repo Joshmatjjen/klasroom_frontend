@@ -18,13 +18,21 @@
       {{ desc }}
     </p>
     <nuxt-link
-      v-if="linkUrl"
+      v-if="linkUrl !== '/tutor/courses/create' && linkUrl !== '/student/webinars/create'"
       :to="linkUrl"
       :class="dark ? 'text-white light' : 'text-black'"
       class="view-more text-sm"
     >
       {{ linkText }}
     </nuxt-link>
+    <a
+      v-else
+      :class="dark ? 'text-white light' : 'text-black'"
+      class="view-more text-sm cursor-pointer"
+      @click.prevent="signinCallBackAction"
+    >
+      {{ linkText }}
+    </a>
   </div>
 </template>
 
@@ -39,5 +47,39 @@ export default {
     bg: { type: String, default: 'bg-gray-200' },
     dark: { type: Boolean, default: false },
   },
+  methods: {
+    signinCallBackAction() {
+      if (this.linkUrl === '/tutor/courses/create') {
+
+        if (this.$store.getters["auth/user"])
+          this.$router.push(this.linkUrl);
+
+        else
+          this.$store.commit('app/LOGIN_MODAL', {
+            status: true, 
+            type: 'login', 
+            userType: 'tutor',
+            callback: () => {
+              this.$router.push(this.linkUrl)
+            }
+          });
+      }
+      else {
+        
+        if (this.$store.getters["auth/user"])
+          this.$router.push(this.linkUrl);
+
+        else
+          this.$store.commit('app/LOGIN_MODAL', {
+            status: true, 
+            type: 'login', 
+            userType: 'student',
+            callback: () => {
+              this.$router.push(this.linkUrl)
+            }
+          });
+      }
+    }
+  }
 }
 </script>
