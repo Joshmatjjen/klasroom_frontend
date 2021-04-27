@@ -19,7 +19,7 @@
           </p>
         </div>
         <div class="col-span-12">
-          <button class="btn btn-primary" @click.prevent="(e) => toggleRegister(e, 'student')">
+          <button class="btn btn-primary" @click.prevent="(e) => toggleRegister(e, 'tutor')">
             Create tutor account now
           </button>
         </div>
@@ -37,7 +37,7 @@
           </p>
         </div>
         <div class="col-span-12">
-          <button class="btn btn-primary" @click.prevent="(e) => toggleRegister(e, 'tutor')">
+          <button class="btn btn-primary" @click.prevent="(e) => toggleRegister(e, 'student')">
             Create student account now
           </button>
         </div>
