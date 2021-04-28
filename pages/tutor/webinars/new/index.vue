@@ -87,8 +87,14 @@
           </div>
           <!-- Right -->
           <div class="col-span-12 md:col-span-6 px-4 lg:px-0">
+            <toggle-switch
+              v-model="isAnnually"
+              active="Monthly"
+              inactive="Annually"
+              class="mb-6"
+            />
             <div
-              class="col-span-12 grid grid-row-3 grid-flow-col sm:mx-10 lg:mx-12 xl:mx-16 mt-20 items-center"
+              class="col-span-12 grid grid-row-3 grid-flow-col sm:mx-10 lg:mx-12 xl:mx-16 mt-5 items-center"
             >
               <div class="flex justify-center">
                 <span
@@ -105,6 +111,7 @@
                 :priceInfo="
                   priceSwitch === 0 ? planBasicInfo : planCorporateInfo
                 "
+                :isAnnually="isAnnually"
               />
               <div class="flex justify-center">
                 <span
@@ -126,12 +133,14 @@ import Vue from 'vue'
 
 export default {
   layout: 'dashboard',
-  middleware: ['check-auth', 'auth', 'isTutor'],
+  middleware: ['check-auth', 'auth'],
   data: () => ({
     meetingOpt: false,
+    isAnnually: false,
     planBasicData: {
       name: 'Basic',
-      price: '₦2,900',
+      monthlyPrice: '₦2,900',
+      annualPrice: '₦25,000',
       description: 'Or ₦50,000 billed annualy',
       color: 'orange-500',
     },
@@ -144,7 +153,8 @@ export default {
     ],
     planCorporateData: {
       name: 'Corporate',
-      price: '₦9,000',
+      monthlyPrice: '₦9,000',
+      annualPrice: '₦108,000',
       description: 'Or ₦50,000 billed annualy',
       color: 'blue-500',
     },

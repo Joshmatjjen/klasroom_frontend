@@ -39,220 +39,226 @@
                 </button>
               </div>
             </section>
-            <!-- Preliminary section -->
-            <section>
-              <div class="container mx-auto my-10 px-4 lg:px-0">
-                <div class="grid grid-cols-12 gap-4">
-                  <div class="col-span-12">
-                    <dash-items-section-group title="Preliminary">
-                      <div
-                        class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
-                      >
-                        <div class="px-4 md:px-5 lg:px-6 py-4">
-                          <!-- Webinar name -->
-                          <div class="form-group mb-5">
-                            <label for="input-name">Webinar name</label>
-                            <div>
-                              <input
-                                id="input-name"
-                                type="text"
-                                class="form-input"
-                                placeholder="Enter course name here"
-                                v-model="createWebinar.name"
-                              />
-                            </div>
-                          </div>
-                          <!-- Webinar subtitle -->
-                          <div class="form-group mb-5">
-                            <label for="input-name">Webinar subtitle</label>
-                            <div>
-                              <input
-                                id="input-name"
-                                type="text"
-                                class="form-input"
-                                placeholder="Enter course subtitle here"
-                                v-model="createWebinar.subtitle"
-                              />
-                            </div>
-                          </div>
-                          <div class="form-group mb-5">
-                            <label for="input-name">Webinar introduction</label>
-                            <div>
-                              <input
-                                id="input-name"
-                                type="text"
-                                class="form-input"
-                                placeholder="Enter course introduction here"
-                                v-model="createWebinar.introduction"
-                              />
-                            </div>
-                          </div>
-                          <div class="grid grid-cols-2 gap-10">
+
+            <!-- Preliminary -->
+            <section v-if="isWebinars.preliminary">
+              <!-- Preliminary section -->
+              <section>
+                <div class="container mx-auto my-10 px-4 lg:px-0">
+                  <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-12">
+                      <dash-items-section-group title="Preliminary">
+                        <div
+                          class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
+                        >
+                          <div class="px-4 md:px-5 lg:px-6 py-4">
+                            <!-- Webinar name -->
                             <div class="form-group mb-5">
-                              <label for="input-name">Webinar date</label>
+                              <label for="input-name">Webinar name</label>
                               <div>
                                 <input
                                   id="input-name"
-                                  type="date"
+                                  type="text"
+                                  class="form-input"
+                                  placeholder="Enter course name here"
+                                  v-model="createWebinar.name"
+                                />
+                              </div>
+                            </div>
+                            <!-- Webinar subtitle -->
+                            <div class="form-group mb-5">
+                              <label for="input-name">Webinar subtitle</label>
+                              <div>
+                                <input
+                                  id="input-name"
+                                  type="text"
+                                  class="form-input"
+                                  placeholder="Enter course subtitle here"
+                                  v-model="createWebinar.subtitle"
+                                />
+                              </div>
+                            </div>
+                            <div class="form-group mb-5">
+                              <label for="input-name"
+                                >Webinar introduction</label
+                              >
+                              <div>
+                                <input
+                                  id="input-name"
+                                  type="text"
                                   class="form-input"
                                   placeholder="Enter course introduction here"
                                   v-model="createWebinar.introduction"
                                 />
                               </div>
                             </div>
-                            <div class="form-group mb-5">
-                              <label for="input-name">Webinar time</label>
-                              <div>
-                                <input
-                                  id="input-name"
-                                  type="time"
-                                  class="form-input"
-                                  placeholder="Enter course introduction here"
-                                  v-model="createWebinar.introduction"
-                                />
+                            <div class="grid grid-cols-2 gap-10">
+                              <div class="form-group mb-5">
+                                <label for="input-name">Webinar date</label>
+                                <div>
+                                  <input
+                                    id="input-name"
+                                    type="date"
+                                    class="form-input"
+                                    placeholder="Enter course introduction here"
+                                    v-model="createWebinar.introduction"
+                                  />
+                                </div>
+                              </div>
+                              <div class="form-group mb-5">
+                                <label for="input-name">Webinar time</label>
+                                <div>
+                                  <input
+                                    id="input-name"
+                                    type="time"
+                                    class="form-input"
+                                    placeholder="Enter course introduction here"
+                                    v-model="createWebinar.introduction"
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    </dash-items-section-group>
+                      </dash-items-section-group>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section>
+              </section>
 
-            <!-- Tutor section-->
-            <section>
-              <div class="container mx-auto my-10 px-4 lg:px-0">
-                <div class="grid grid-cols-12 gap-4">
-                  <div class="col-span-12">
-                    <!-- Tutor -->
-                    <dash-items-section-group title="Tutor">
-                      <div
-                        class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
-                      >
-                        <div class="px-4 md:px-5 lg:px-6 py-4">
-                          <!-- Webinar name -->
-                          <user-chip :owner="{ name: 'Joy Adeleke' }" />
-                          <user-chip
-                            :user="{
-                              name: 'Somto Agu',
-                              email: 'somtoagu@gmail.com',
-                            }"
-                          />
-                          <hr class="my-5" />
-                          <p class="text-sm font-bold text-gray-700 mb-3">
-                            Add new tutor
-                          </p>
-                          <div class="flex flex-row gap-10">
-                            <div class="form-group flex-1 mb-5">
-                              <label for="input-name">Tutor name</label>
-                              <div>
-                                <input
-                                  id="input-name"
-                                  type="text"
-                                  class="form-input"
-                                  placeholder="Enter tutor name here"
-                                  v-model="createWebinar.name"
-                                />
+              <!-- Tutor section-->
+              <section>
+                <div class="container mx-auto my-10 px-4 lg:px-0">
+                  <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-12">
+                      <!-- Tutor -->
+                      <dash-items-section-group title="Tutor">
+                        <div
+                          class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
+                        >
+                          <div class="px-4 md:px-5 lg:px-6 py-4">
+                            <!-- Webinar name -->
+                            <user-chip :owner="{ name: 'Joy Adeleke' }" />
+                            <user-chip
+                              :user="{
+                                name: 'Somto Agu',
+                                email: 'somtoagu@gmail.com',
+                              }"
+                            />
+                            <hr class="my-5" />
+                            <p class="text-sm font-bold text-gray-700 mb-3">
+                              Add new tutor
+                            </p>
+                            <div class="flex flex-row gap-10">
+                              <div class="form-group flex-1 mb-5">
+                                <label for="input-name">Tutor name</label>
+                                <div>
+                                  <input
+                                    id="input-name"
+                                    type="text"
+                                    class="form-input"
+                                    placeholder="Enter tutor name here"
+                                    v-model="createWebinar.name"
+                                  />
+                                </div>
                               </div>
-                            </div>
 
-                            <div class="form-group flex-1 mb-5">
-                              <label for="input-name">Email</label>
-                              <div>
-                                <input
-                                  id="input-name"
-                                  type="text"
-                                  class="form-input"
-                                  placeholder="Enter tutor name here"
-                                  v-model="createWebinar.name"
-                                />
+                              <div class="form-group flex-1 mb-5">
+                                <label for="input-name">Email</label>
+                                <div>
+                                  <input
+                                    id="input-name"
+                                    type="text"
+                                    class="form-input"
+                                    placeholder="Enter tutor name here"
+                                    v-model="createWebinar.name"
+                                  />
+                                </div>
+                              </div>
+                              <div class="flex flex-col justify-end mb-5">
+                                <div></div>
+                                <div
+                                  type="button"
+                                  class="btn btn-primary align-middle text-center hover"
+                                >
+                                  Add
+                                </div>
                               </div>
                             </div>
-                            <div class="flex flex-col justify-end mb-5">
-                              <div></div>
-                              <div
-                                type="button"
-                                class="btn btn-primary align-middle text-center hover"
-                              >
-                                Add
-                              </div>
-                            </div>
+                            <p class="text-xs text-gray-700">
+                              An invitation email will be sent to the tutor's
+                              email address including their unique link
+                            </p>
                           </div>
-                          <p class="text-xs text-gray-700">
-                            An invitation email will be sent to the tutor's
-                            email address including their unique link
-                          </p>
                         </div>
-                      </div>
-                    </dash-items-section-group>
+                      </dash-items-section-group>
 
-                    <div class="mb-8"></div>
-                    <!-- Moderator -->
-                    <dash-items-section-group title="Moderators">
-                      <div
-                        class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
-                      >
-                        <div class="px-4 md:px-5 lg:px-6 py-4">
-                          <user-chip
-                            :user="{
-                              name: 'Forza Speciale',
-                              email: 'adeyemi20@gmail.com',
-                            }"
-                          />
-                          <hr class="my-5" />
-                          <p class="text-sm font-bold text-gray-700 mb-3">
-                            Add new moderator
-                          </p>
-                          <div class="flex flex-row gap-10">
-                            <div class="form-group flex-1 mb-5">
-                              <label for="input-name">Moderator name</label>
-                              <div>
-                                <input
-                                  id="input-name"
-                                  type="text"
-                                  class="form-input"
-                                  placeholder="Enter moderator name here"
-                                  v-model="createWebinar.name"
-                                />
+                      <div class="mb-8"></div>
+                      <!-- Moderator -->
+                      <dash-items-section-group title="Moderators">
+                        <div
+                          class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
+                        >
+                          <div class="px-4 md:px-5 lg:px-6 py-4">
+                            <user-chip
+                              :user="{
+                                name: 'Forza Speciale',
+                                email: 'adeyemi20@gmail.com',
+                              }"
+                            />
+                            <hr class="my-5" />
+                            <p class="text-sm font-bold text-gray-700 mb-3">
+                              Add new moderator
+                            </p>
+                            <div class="flex flex-row gap-10">
+                              <div class="form-group flex-1 mb-5">
+                                <label for="input-name">Moderator name</label>
+                                <div>
+                                  <input
+                                    id="input-name"
+                                    type="text"
+                                    class="form-input"
+                                    placeholder="Enter moderator name here"
+                                    v-model="createWebinar.name"
+                                  />
+                                </div>
                               </div>
-                            </div>
 
-                            <div class="form-group flex-1 mb-5">
-                              <label for="input-name">Email</label>
-                              <div>
-                                <input
-                                  id="input-name"
-                                  type="text"
-                                  class="form-input"
-                                  placeholder="Enter moderator email here"
-                                  v-model="createWebinar.name"
-                                />
+                              <div class="form-group flex-1 mb-5">
+                                <label for="input-name">Email</label>
+                                <div>
+                                  <input
+                                    id="input-name"
+                                    type="text"
+                                    class="form-input"
+                                    placeholder="Enter moderator email here"
+                                    v-model="createWebinar.name"
+                                  />
+                                </div>
+                              </div>
+                              <div class="flex flex-col justify-end mb-5">
+                                <div></div>
+                                <div
+                                  type="button"
+                                  class="btn btn-primary align-middle text-center"
+                                >
+                                  Add
+                                </div>
                               </div>
                             </div>
-                            <div class="flex flex-col justify-end mb-5">
-                              <div></div>
-                              <div
-                                type="button"
-                                class="btn btn-primary align-middle text-center"
-                              >
-                                Add
-                              </div>
-                            </div>
+                            <p class="text-xs text-gray-700">
+                              An invitation email will be sent to the
+                              moderator's email address including their unique
+                              link
+                            </p>
                           </div>
-                          <p class="text-xs text-gray-700">
-                            An invitation email will be sent to the moderator's
-                            email address including their unique link
-                          </p>
                         </div>
-                      </div>
-                    </dash-items-section-group>
+                      </dash-items-section-group>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </section>
-            <!-- <div
+              </section>
+              <!-- <div
               class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
             >
               <div class="px-4 md:px-5 lg:px-6 py-4">
@@ -317,6 +323,108 @@
                 </div>
               </div>
             </div> -->
+            </section>
+
+            <!-- Resources -->
+            <section v-if="isWebinars.resources">
+              <!-- Resources section -->
+              <section>
+                <div class="container mx-auto my-10 px-4 lg:px-0">
+                  <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-12">
+                      <dash-items-section-group title="Preliminary">
+                        <div
+                          class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
+                        >
+                          <div class="px-4 md:px-5 lg:px-6 py-4">
+                            <!-- Webinar name -->
+                            <resource-chip
+                              :file="{ filename: 'Lesson_1.mp4' }"
+                            />
+                            <resource-chip
+                              :file="{ filename: 'tradingpatterns.zip' }"
+                            />
+                            <div
+                              class="container flex flex-row bg-white rounded-lg border border-gray-300 shadow-hover mb-5"
+                            >
+                              <div
+                                class="flex flex-row justify-center items-center w-full p-4"
+                              >
+                                <div>
+                                  <svg
+                                    width="24"
+                                    height="24"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M9.375 7.44601H11.107V15.3749C11.107 15.478 11.1914 15.5624 11.2945 15.5624H12.7008C12.8039 15.5624 12.8883 15.478 12.8883 15.3749V7.44601H14.625C14.782 7.44601 14.8687 7.26554 14.7727 7.14367L12.1477 3.82023C12.1301 3.79782 12.1077 3.7797 12.0821 3.76723C12.0565 3.75477 12.0285 3.74829 12 3.74829C11.9715 3.74829 11.9435 3.75477 11.9179 3.76723C11.8923 3.7797 11.8699 3.79782 11.8523 3.82023L9.22734 7.14133C9.13125 7.26555 9.21797 7.44601 9.375 7.44601ZM20.5781 14.6718H19.1719C19.0688 14.6718 18.9844 14.7562 18.9844 14.8593V18.4687H5.01562V14.8593C5.01562 14.7562 4.93125 14.6718 4.82812 14.6718H3.42188C3.31875 14.6718 3.23438 14.7562 3.23438 14.8593V19.4999C3.23438 19.9148 3.56953 20.2499 3.98438 20.2499H20.0156C20.4305 20.2499 20.7656 19.9148 20.7656 19.4999V14.8593C20.7656 14.7562 20.6812 14.6718 20.5781 14.6718Z"
+                                      fill="black"
+                                    />
+                                  </svg>
+                                </div>
+                                <p
+                                  class="text-sm text-center font-thin text-gray-700 pl-3"
+                                >
+                                  Click here to upload a resource (50mb maximum)
+                                </p>
+                              </div>
+                            </div>
+
+                            <div class="flex flex-row justify-center gap-5">
+                              <div
+                                class="flex flex-row bg-white rounded-md border border-orange-400 shadow-hover mt-2 mb-5 py-1 px-2 cursor-pointer"
+                              >
+                                <svg
+                                  width="15"
+                                  height="16"
+                                  viewBox="0 0 15 16"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M1.3291 6.28682V14.5134H13.6701V9.21275V1.48682H5.8996M1.3291 6.28682L5.8996 1.48682M1.3291 6.28682H5.8996V1.48682"
+                                    stroke="#8A8A8A"
+                                    stroke-width="1.5"
+                                  />
+                                </svg>
+                                <p
+                                  class="text-xs text-center font-thin text-gray-600 pl-2"
+                                >
+                                  Add resource
+                                </p>
+                              </div>
+                              <div
+                                class="flex flex-row bg-white rounded-md border border-orange-400 shadow-hover mt-2 mb-5 py-1 px-2 cursor-pointer"
+                              >
+                                <svg
+                                  width="17"
+                                  height="16"
+                                  viewBox="0 0 17 16"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M9.57731 10.6644C9.5512 10.6386 9.51595 10.6241 9.47921 10.6241C9.44248 10.6241 9.40722 10.6386 9.38112 10.6644L7.36366 12.6819C6.42959 13.616 4.85312 13.7149 3.82182 12.6819C2.78878 11.6489 2.88775 10.0741 3.82182 9.14006L5.83928 7.1226C5.8931 7.06878 5.8931 6.98023 5.83928 6.92641L5.14827 6.2354C5.12217 6.20955 5.08692 6.19505 5.05018 6.19505C5.01344 6.19505 4.97819 6.20955 4.95208 6.2354L2.93462 8.25286C1.4658 9.72168 1.4658 12.0985 2.93462 13.5656C4.40345 15.0327 6.7803 15.0344 8.24738 13.5656L10.2648 11.5482C10.3187 11.4943 10.3187 11.4058 10.2648 11.352L9.57731 10.6644ZM14.0671 2.43487C12.5983 0.966046 10.2214 0.966046 8.75435 2.43487L6.73516 4.45233C6.70931 4.47843 6.69481 4.51369 6.69481 4.55042C6.69481 4.58716 6.70931 4.62241 6.73516 4.64852L7.42443 5.33779C7.47825 5.39161 7.56679 5.39161 7.62062 5.33779L9.63808 3.32033C10.5721 2.38625 12.1486 2.28729 13.1799 3.32033C14.213 4.35336 14.114 5.92809 13.1799 6.86217L11.1625 8.87963C11.1366 8.90573 11.1221 8.94099 11.1221 8.97772C11.1221 9.01446 11.1366 9.04971 11.1625 9.07582L11.8535 9.76682C11.9073 9.82065 11.9958 9.82065 12.0497 9.76682L14.0671 7.74936C15.5342 6.28054 15.5342 3.90369 14.0671 2.43487ZM10.2041 5.57565C10.178 5.5498 10.1427 5.5353 10.106 5.5353C10.0692 5.5353 10.034 5.5498 10.0079 5.57565L6.0754 9.5064C6.04955 9.5325 6.03505 9.56775 6.03505 9.60449C6.03505 9.64123 6.04955 9.67648 6.0754 9.70259L6.76294 10.3901C6.81676 10.4439 6.9053 10.4439 6.95913 10.3901L10.8899 6.45937C10.9437 6.40555 10.9437 6.317 10.8899 6.26318L10.2041 5.57565Z"
+                                    fill="#8A8A8A"
+                                  />
+                                </svg>
+                                <p
+                                  class="text-xs text-center font-thin text-gray-600 pl-2"
+                                >
+                                  Add link
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </dash-items-section-group>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </section>
           </div>
           <!-- Right Add Image -->
           <div class="col-span-full lg:col-span-5 xl:col-span-4">
@@ -437,7 +545,12 @@
           <div class="col-span-full lg:col-span-7 xl:col-span-8">
             <hr class="my-5" />
             <div class="flex flex-row justify-between">
-              <button class="btn btn-light btn-sm lg:mt-0">Previous</button>
+              <button
+                class="btn btn-sm lg:mt-0"
+                :class="isWebinars.preliminary ? 'btn-light' : 'btn-primary'"
+              >
+                Previous
+              </button>
               <button class="btn btn-primary btn-sm lg:mt-0">Next</button>
             </div>
           </div>
