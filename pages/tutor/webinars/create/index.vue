@@ -545,7 +545,12 @@
           <div class="col-span-full lg:col-span-7 xl:col-span-8">
             <hr class="my-5" />
             <div class="flex flex-row justify-between">
-              <button class="btn btn-light btn-sm lg:mt-0">Previous</button>
+              <button
+                class="btn btn-sm lg:mt-0"
+                :class="isWebinars.preliminary ? 'btn-light' : 'btn-primary'"
+              >
+                Previous
+              </button>
               <button class="btn btn-primary btn-sm lg:mt-0">Next</button>
             </div>
           </div>
