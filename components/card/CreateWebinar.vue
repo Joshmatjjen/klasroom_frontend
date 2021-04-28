@@ -17,11 +17,33 @@
           <li>Share files and media with students</li>
           <li>Take polls to get students’ opinions</li>
         </ul>
-        <nuxt-link to="/" class="btn btn-primary">Create Webinar</nuxt-link>
+        <a href="#" @click.prevent="signinCallBackAction" class="btn btn-primary">Create Webinar</a>
       </div>
     </div>
   </div>
 </template>
+
+<script>
+export default {
+  methods: {
+    signinCallBackAction() {
+        
+      if (this.$store.getters["auth/user"])
+        this.$router.push("/student/webinars/new");
+
+      else
+        this.$store.commit('app/LOGIN_MODAL', {
+          status: true, 
+          type: 'login', 
+          userType: 'student',
+          callback: () => {
+            this.$router.push("/student/webinars/new")
+          }
+        });
+    }
+  }
+}
+</script>
 
 <style scoped>
 .create-webinar {

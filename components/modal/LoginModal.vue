@@ -339,7 +339,13 @@ export default {
       this.close()
     },
     gotoDashboard(type) {
-      this.$router.push(`/${type}/dashboard`)
+      console.log('callback: ', this.showLogin.callback)
+      if (this.showLogin.callback){
+        console.log('callback')
+        this.showLogin.callback()
+      }
+      else
+        this.$router.push(`/${type}/dashboard`)
       this.close()
     },
     close() {

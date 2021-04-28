@@ -126,7 +126,7 @@ import Vue from 'vue'
 
 export default {
   layout: 'dashboard',
-  middleware: ['check-auth', 'auth'],
+  middleware: ['check-auth', 'auth', 'isTutor'],
   data: () => ({
     meetingOpt: false,
     planBasicData: {
