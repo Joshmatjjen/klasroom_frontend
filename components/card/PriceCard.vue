@@ -13,7 +13,7 @@
         {{ priceData.name }}
       </p>
       <h1 class="text-4xl text-gray-900 font-semibold mb-0">
-        {{ priceData.price }}
+        {{ isAnnually ? priceData.annualPrice : priceData.monthlyPrice }}
       </h1>
       <p class="text-sm text-gray-700 mt-2 md:mt-0">
         {{ priceData.description }}
@@ -60,6 +60,7 @@ export default {
   props: {
     priceData: { type: Object, required: true },
     priceInfo: { type: Array, default: [] },
+    isAnnually: { type: Boolean, default: false },
     // bg-orange-500
     // border-gray-300
   },
