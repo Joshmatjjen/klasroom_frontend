@@ -6,10 +6,12 @@ export default function (context) {
     context.redirect(`/student/dashboard`);
   }
   else if (context.store.getters["auth/user"]) {
-    context.$axios.$get(`users/tutor/validate`, {
+    return context.$axios.$get(`users/tutor/validate`, {
       headers: getAccessTokenHeader(context.store.getters["auth/token"])
     }).then(res => {
       console.log('res: ', res)
+    }).catch(err => {
+      context.redirect(`/student/dashboard`);
     })
   }
 }

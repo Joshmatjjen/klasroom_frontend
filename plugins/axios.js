@@ -48,7 +48,7 @@ export default ({ $axios, app, store, redirect, route }) => {
       Swal.fire({
         position: 'top-end',
         width: '350px',
-        text: 'Something went wrong. Try again',
+        text: error.response.data.message ? error.response.data.message : 'Something went wrong. Try again',
         backdrop: false,
         allowOutsideClick: false,
         showConfirmButton: false,
@@ -64,7 +64,7 @@ export default ({ $axios, app, store, redirect, route }) => {
       Swal.fire({
         position: 'top-end',
         width: '350px',
-        text: 'Your session has expired',
+        text: error.response.data.message ? error.response.data.message : 'Your session has expired',
         backdrop: false,
         allowOutsideClick: false,
         showConfirmButton: false,
