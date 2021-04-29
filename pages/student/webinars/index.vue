@@ -13,31 +13,8 @@
             label="Webinar sales"
             more="/student/webinars"
           />
-          <dash-item-metrics
-            title="1 webinars"
-            label="Draft"
-            more="/student/webinars"
-          />
-          <dash-item-metrics
-            title="3,540"
-            label="Attendants"
-            more="/student/webinars"
-          />
-          <dash-item-metrics
-            title="4 webinars"
-            label="Upcoming"
-            more="/student/webinars"
-          />
-          <dash-item-metrics
-            title="13 webinars"
-            label="Saved"
-            more="/student/webinars"
-          />
-          <dash-item-metrics
-            title="20 webinars"
-            label="Attended"
-            more="/student/webinars"
-          />
+          <dash-item-metrics title="3,540" label="Attendants" />
+          <dash-item-metrics title="20 webinars" label="Attended" />
         </div>
       </div>
     </section>

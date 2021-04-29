@@ -8,7 +8,7 @@
           </h5>
           <p class="text-sm text-gray-600">{{ label }}</p>
         </div>
-        <div class="text-right pl-5">
+        <div v-if="more" class="text-right pl-5">
           <!-- <span class="text-xs text-gray-700">Due 12th Oct. 2020</span> -->
           <nuxt-link
             to="/student/undone-tasks"
