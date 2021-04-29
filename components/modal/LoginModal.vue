@@ -302,7 +302,7 @@ export default {
         this.loading = false
         if (res) {
           this.clearInput()
-          this.showSuccess()
+          this.showSuccess(res)
         }
       }).catch(e => console.log('e: ', e));
     },
@@ -326,10 +326,10 @@ export default {
         }
       }).catch(e => console.log('e: ', e));
     },
-    showSuccess() {
+    showSuccess(res) {
       this.$store.commit('app/NOTICE_MODAL', {
         title: 'All done!',
-        text: `You have successfully signed up to klasroom.com. 
+        text: res.message ? res.message : `You have successfully signed up to klasroom.com. 
           Please check your email and click the link in it to 
           complete your registration.`,
       })

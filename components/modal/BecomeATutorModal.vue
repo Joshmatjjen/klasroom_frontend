@@ -173,15 +173,15 @@ export default {
         this.loading = false
         if (res) {
           this.clearInput()
-          this.showSuccess()
+          this.showSuccess(res)
         }
       }).catch(e => console.log('e: ', e));
     },
     
-    showSuccess() {
+    showSuccess(res) {
       this.$store.commit('app/NOTICE_MODAL', {
         title: 'All done!',
-        text: `You have successfully become a tutor. 
+        text: res.message ? res.message : `You have successfully become a tutor. 
           You can now switch to tutor dashboard.`,
       })
       this.$store.commit('app/BECOME_A_TUTOR_MODAL', false)
