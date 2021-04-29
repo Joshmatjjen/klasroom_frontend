@@ -40,6 +40,7 @@ export default {
     '~plugins/vue2-filters',
     { src: '~plugins/validate', mode: 'client' },
     { src: '~plugins/datepicker', mode: 'client' },
+    { src: '~plugins/vue-select', mode: 'client' },
     { src: '~plugins/paystack', mode: 'client' },
     { src: '~/plugins/vue-good-table', ssr: false },
   ],

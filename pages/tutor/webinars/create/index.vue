@@ -47,7 +47,10 @@
                 <div class="container mx-auto my-10 px-4 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
-                      <dash-items-section-group title="Preliminary">
+                      <dash-items-section-group
+                        title="Preliminary"
+                        :edit="true"
+                      >
                         <div
                           class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
                         >
@@ -126,13 +129,13 @@
                 </div>
               </section>
 
-              <!-- Tutor section-->
+              <!-- Tutor Or Co-Host section-->
               <section>
                 <div class="container mx-auto my-10 px-4 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                       <!-- Tutor -->
-                      <dash-items-section-group title="Tutor">
+                      <dash-items-section-group title="Co-Host" :edit="true">
                         <div
                           class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
                         >
@@ -147,17 +150,17 @@
                             />
                             <hr class="my-5" />
                             <p class="text-sm font-bold text-gray-700 mb-3">
-                              Add new tutor
+                              Add new co-host
                             </p>
                             <div class="flex flex-row gap-10">
                               <div class="form-group flex-1 mb-5">
-                                <label for="input-name">Tutor name</label>
+                                <label for="input-name">co-host name</label>
                                 <div>
                                   <input
                                     id="input-name"
                                     type="text"
                                     class="form-input"
-                                    placeholder="Enter tutor name here"
+                                    placeholder="Enter co-host name here"
                                     v-model="createWebinar.name"
                                   />
                                 </div>
@@ -170,7 +173,7 @@
                                     id="input-name"
                                     type="text"
                                     class="form-input"
-                                    placeholder="Enter tutor name here"
+                                    placeholder="Enter co-host name here"
                                     v-model="createWebinar.name"
                                   />
                                 </div>
@@ -186,7 +189,7 @@
                               </div>
                             </div>
                             <p class="text-xs text-gray-700">
-                              An invitation email will be sent to the tutor's
+                              An invitation email will be sent to the co-host's
                               email address including their unique link
                             </p>
                           </div>
@@ -195,7 +198,7 @@
 
                       <div class="mb-8"></div>
                       <!-- Moderator -->
-                      <dash-items-section-group title="Moderators">
+                      <dash-items-section-group title="Moderators" :edit="true">
                         <div
                           class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
                         >
@@ -258,71 +261,6 @@
                   </div>
                 </div>
               </section>
-              <!-- <div
-              class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
-            >
-              <div class="px-4 md:px-5 lg:px-6 py-4">
-                <div class="mb-5 lg:mb-20">
-                  <p class="text-sm font-bold text-gray-700 mb-3">
-                    Account Details
-                  </p>
-                  <hr class="mt-4 mb-6" />
-                  <div class="grid grid-cols-12 mb-5">
-                    <div class="col-span-7">
-                      <p class="text-sm font-bold text-gray-700 mb-3">Name</p>
-                      <p class="text-sm text-gray-700">Amina Bello</p>
-                    </div>
-                    <div class="col-span-5 text-right">
-                      <button class="btn btn-light btn-sm">Edit</button>
-                    </div>
-                  </div>
-                  <div class="grid grid-cols-12 mb-5">
-                    <div class="col-span-7">
-                      <p class="text-sm font-bold text-gray-700 mb-3">Phone</p>
-                      <p class="text-sm text-gray-700">+234 123 4567</p>
-                    </div>
-                  </div>
-                  <div class="grid grid-cols-12 mb-5">
-                    <div class="col-span-7">
-                      <p class="text-sm font-bold text-gray-700 mb-3">Email</p>
-                      <p class="text-sm text-gray-700">damilare@gmail.com</p>
-                    </div>
-                  </div>
-                  <div class="grid grid-cols-12">
-                    <div class="col-span-7">
-                      <p class="text-sm font-bold text-gray-700 mb-3">Gender</p>
-                      <p class="text-sm text-gray-700">Female</p>
-                    </div>
-                  </div>
-                  <hr class="mt-4 mb-6" />
-                  <div class="grid grid-cols-12 mb-5">
-                    <div class="col-span-7">
-                      <p class="text-sm font-bold text-gray-700 mb-3">
-                        Password
-                      </p>
-                      <p class="text-sm text-gray-700">*****************</p>
-                    </div>
-                    <div class="col-span-5 text-right">
-                      <button class="btn btn-light btn-sm">Change</button>
-                    </div>
-                  </div>
-                  <hr class="mt-4 mb-6" />
-                  <div class="grid grid-cols-12 mb-5">
-                    <div class="col-span-7">
-                      <p class="text-sm font-bold text-gray-700 mb-3">
-                        Payment
-                      </p>
-                      <p class="text-sm text-gray-700">
-                        Your default payment method is ****1992
-                      </p>
-                    </div>
-                    <div class="col-span-5 text-right">
-                      <button class="btn btn-light btn-sm">Change</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
             </section>
 
             <!-- Resources -->
@@ -332,7 +270,10 @@
                 <div class="container mx-auto my-10 px-4 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
-                      <dash-items-section-group title="Preliminary">
+                      <dash-items-section-group
+                        title="Preliminary"
+                        :edit="true"
+                      >
                         <div
                           class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
                         >
