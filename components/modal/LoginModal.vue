@@ -377,6 +377,11 @@ export default {
     color: #8a8a8a;
   }
 
+  .style-chooser .vs__dropdown-menu {
+    overflow: auto;
+    height: 150px;
+  }
+
   .style-chooser .vs__clear,
   .style-chooser .vs__open-indicator {
     fill: #8a8a8a;
