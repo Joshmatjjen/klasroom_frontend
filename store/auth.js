@@ -63,10 +63,10 @@ export const actions = {
       // console.log('store: ', vuexContext.state.user)
       const user = vuexContext.state.user
       const { data: newData } = await this.$axios.$post('/users/tutor', {
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        password: userData.password,
+        // name: user.name,
+        // email: user.email,
+        // phone: user.phone,
+        // password: userData.password,
         courseCategories: userData.courseCategories
       }, {
         headers: getAccessTokenHeader(user.accessToken)

@@ -193,17 +193,13 @@
                 <div v-if="showLogin.userType === 'tutor'" class="form-group">
                   <label for="input-courseCategories">Course Categories</label>
                   <div>
-                    <select
-                      id="input-password"
-                      multiple
-                      class="form-input"
-                      v-model="signupForm.courseCategories"
-                    >
-                      <option disabled value="">Select Course Categories</option>
-                      <option value="Programming">Programming</option>
-                      <option value="Business">Business</option>
-                      <option value="Finance">Finance</option>
-                    </select>
+                    <v-select 
+                      class="form-input style-chooser"
+                      placeholder="Select Course Categories"
+                      multiple 
+                      v-model="signupForm.courseCategories" 
+                      :options="coursesCategories" 
+                    />
                   </div>
                 </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
@@ -272,6 +268,7 @@ export default {
   computed: {
     ...mapState({
       showLogin: (state) => state.app.loginModal,
+      coursesCategories: (state) => state.app.coursesCategories,
     }),
   },
   watch: {
@@ -369,3 +366,19 @@ export default {
   },
 }
 </script>
+
+<style>
+  .style-chooser .vs__search::placeholder,
+  .style-chooser .vs__dropdown-toggle,
+  .style-chooser .vs__dropdown-menu {
+    background: #f5f5f3;
+    border: none;
+    font-size: 0.875rem;
+    color: #8a8a8a;
+  }
+
+  .style-chooser .vs__clear,
+  .style-chooser .vs__open-indicator {
+    fill: #8a8a8a;
+  }
+</style>

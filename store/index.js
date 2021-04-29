@@ -17,6 +17,20 @@ export const actions = {
     if (locale) {
       await commit('lang/SET_LOCALE', { locale })
     }
+
+    try {
+      const { data } = await this.$axios.$get(`/courses/categories`)
+      console.log("data: ", data)
+      if (data) {
+        await commit('app/SET_COURSES_CATEGORIES', data)
+      }
+    }
+
+    catch (err) {
+      await commit('app/SET_COURSES_CATEGORIES', ['Programming','Business', 'Finance'])
+      console.log("err: ", err)
+    }
+
   },
 
   async nuxtClientInit({ commit }) {
