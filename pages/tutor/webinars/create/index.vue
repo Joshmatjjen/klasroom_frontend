@@ -480,27 +480,25 @@
 
                             <!-- Poll Length -->
                             <div class="grid grid-cols-2 gap-x-5 gap-y-0 mb-5">
-                              <div class="form-group mb-5">
+                              <div class="form-group">
                                 <label for="input-name">Poll length</label>
-                                <div>
-                                  <input
-                                    id="input-name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="0 hours"
-                                    v-model="createWebinar.choice"
-                                  />
+                                <div class="cs-select mb-8">
+                                  <select v-model="timeLength" class="input">
+                                    <option default value="">
+                                      Select category
+                                    </option>
+                                  </select>
                                 </div>
                               </div>
-                              <div class="form-group mb-5 flex items-end">
+                              <div class="form-group flex items-end">
                                 <!-- <label for="input-name">Choice 2</label> -->
-                                <input
-                                  id="input-name"
-                                  type="text"
-                                  class="form-input"
-                                  placeholder="30 minutes"
-                                  v-model="createWebinar.introduction"
-                                />
+                                <div class="cs-select mb-8">
+                                  <select v-model="timeLength" class="input">
+                                    <option default value="">
+                                      Select category
+                                    </option>
+                                  </select>
+                                </div>
                               </div>
                             </div>
 
@@ -714,6 +712,7 @@ export default {
       subtitle: '',
     },
     publishOpt: false,
+    timeLength: ''
   }),
   methods: {
     switcher: function (value) {
