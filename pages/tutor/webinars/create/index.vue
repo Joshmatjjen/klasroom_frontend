@@ -1,13 +1,13 @@
 <template>
   <div class="min-h-screen mb-12">
     <section class="bg-orange-100">
-      <div class="container mx-auto px-4 lg:px-0">
+      <div class="container sm:mx-0 lg:mx-auto px-4 lg:px-0">
         <div class="grid grid-cols-12 gap-5">
           <!-- Left Add Image -->
           <div class="col-span-full lg:col-span-7 xl:col-span-8">
             <section>
               <div
-                class="flex flex-row gap-10 place-items-start px-5 border-b-2 border-gray-200"
+                class="switcher flex flex-row gap-10 place-items-start px-5 border-b-2 border-gray-200 overflow-scroll scrollbar-thumb-orange"
               >
                 <button
                   v-on:click="switcher('preliminary')"
@@ -366,6 +366,188 @@
                 </div>
               </section>
             </section>
+
+            <!-- Polls -->
+            <section v-if="isWebinars.polls">
+              <section>
+                <div class="container mx-auto my-10 px-4 lg:px-0">
+                  <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-12">
+                      <dash-items-section-group title="Polls" :edit="true">
+                        <!-- Poll Choice -->
+
+                        <div
+                          class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full items-center mb-8"
+                        >
+                          <div class="px-4 md:px-5 lg:px-6 py-4">
+                            <!-- Question -->
+                            <div class="form-group mb-5">
+                              <label for="input-name">Your question</label>
+                              <div>
+                                <input
+                                  id="input-name"
+                                  type="text"
+                                  class="form-input"
+                                  placeholder="What cryptocurrency is worth the most at the moment?"
+                                  v-model="createWebinar.name"
+                                />
+                              </div>
+                            </div>
+                            <hr class="mb-5" />
+                            <!-- Choices -->
+                            <div class="grid grid-cols-2 gap-x-5 gap-y-0">
+                              <div class="form-group mb-5">
+                                <label for="input-name">Choice1</label>
+                                <div>
+                                  <input
+                                    id="input-name"
+                                    type="text"
+                                    class="form-input"
+                                    placeholder="Enter choice 1 here"
+                                    v-model="createWebinar.choice"
+                                  />
+                                </div>
+                              </div>
+
+                              <div class="form-group mb-5">
+                                <label for="input-name">Choice 2</label>
+                                <div>
+                                  <input
+                                    id="input-name"
+                                    type="text"
+                                    class="form-input"
+                                    placeholder="Enter choice 2 here"
+                                    v-model="createWebinar.introduction"
+                                  />
+                                </div>
+                              </div>
+                              <div class="form-group mb-5">
+                                <label for="input-name">Choice 3</label>
+                                <div>
+                                  <input
+                                    id="input-name"
+                                    type="text"
+                                    class="form-input"
+                                    placeholder="Enter choice 3 here"
+                                    v-model="createWebinar.introduction"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <!-- Add New Choice Button -->
+                            <div
+                              class="relative flex items-center justify-center my-10"
+                              @click="callLog"
+                            >
+                              <hr class="w-full" />
+                              <empty-chip :isAbsolute="true">
+                                <svg
+                                  width="16"
+                                  height="16"
+                                  viewBox="0 0 16 16"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <g clip-path="url(#clip0)">
+                                    <path
+                                      d="M-2.18262 8H7.99972V-2.18234"
+                                      stroke="#8A8A8A"
+                                      stroke-width="1.5"
+                                    />
+                                    <path
+                                      d="M8 18.1821V7.99979H18.1823"
+                                      stroke="#8A8A8A"
+                                      stroke-width="1.5"
+                                    />
+                                  </g>
+                                  <defs>
+                                    <clipPath id="clip0">
+                                      <rect
+                                        width="16"
+                                        height="16"
+                                        fill="white"
+                                      />
+                                    </clipPath>
+                                  </defs>
+                                </svg>
+                                <p
+                                  class="text-xs text-center font-thin text-gray-600 pl-2"
+                                >
+                                  Add new choice
+                                </p>
+                              </empty-chip>
+                            </div>
+
+                            <!-- Poll Length -->
+                            <div class="grid grid-cols-2 gap-x-5 gap-y-0 mb-5">
+                              <div class="form-group">
+                                <label for="input-name">Poll length</label>
+                                <div class="cs-select mb-8">
+                                  <select v-model="timeLength" class="input">
+                                    <option default value="">
+                                      Select category
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group flex items-end">
+                                <!-- <label for="input-name">Choice 2</label> -->
+                                <div class="cs-select mb-8">
+                                  <select v-model="timeLength" class="input">
+                                    <option default value="">
+                                      Select category
+                                    </option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+
+                            <hr class="mb-8" />
+                          </div>
+                        </div>
+
+                        <div class="relative flex items-center justify-center">
+                          <div
+                            class="btn btn-primary absolute flex flex-row bottom-0 mb-2"
+                          >
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g clip-path="url(#clip0)">
+                                <path
+                                  d="M-2.18262 8H7.99972V-2.18234"
+                                  stroke="#FFFFFF"
+                                  stroke-width="1.5"
+                                />
+                                <path
+                                  d="M8 18.1821V7.99979H18.1823"
+                                  stroke="#FFFFFF"
+                                  stroke-width="1.5"
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id="clip0">
+                                  <rect width="16" height="16" fill="white" />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                            <p
+                              class="text-sm text-center font-thin text-white pl-2"
+                            >
+                              Add new choice
+                            </p>
+                          </div>
+                        </div>
+                      </dash-items-section-group>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </section>
           </div>
           <!-- Right Add Image -->
           <div class="col-span-full lg:col-span-5 xl:col-span-4">
@@ -530,6 +712,7 @@ export default {
       subtitle: '',
     },
     publishOpt: false,
+    timeLength: ''
   }),
   methods: {
     switcher: function (value) {
@@ -569,11 +752,21 @@ export default {
     togglePubOptMenu() {
       this.publishOpt = !this.publishOpt
     },
+    callLog() {
+      console.log('adding new')
+    },
   },
 }
 </script>
 
 <style scoped>
+.switcher {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.switcher::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
 .big-avatar {
   width: 100%;
   background-image: url('/webinar-view-bg.jpg');
