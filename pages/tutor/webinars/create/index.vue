@@ -10,29 +10,29 @@
                 class="switcher flex flex-row gap-10 place-items-start px-5 border-b-2 border-gray-200 overflow-scroll scrollbar-thumb-orange"
               >
                 <button
-                  v-on:click="switcher('preliminary')"
-                  v-bind:class="{ active: isWebinars.preliminary }"
+                  v-on:click="switcher(0)"
+                  v-bind:class="{ active: isWebinarSwitch === 0 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Preliminary</p>
                 </button>
                 <button
-                  v-on:click="switcher('resources')"
-                  v-bind:class="{ active: isWebinars.resources }"
+                  v-on:click="switcher(1)"
+                  v-bind:class="{ active: isWebinarSwitch === 1 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Resources</p>
                 </button>
                 <button
-                  v-on:click="switcher('polls')"
-                  v-bind:class="{ active: isWebinars.polls }"
+                  v-on:click="switcher(2)"
+                  v-bind:class="{ active: isWebinarSwitch === 2 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Polls</p>
                 </button>
                 <button
-                  v-on:click="switcher('settings')"
-                  v-bind:class="{ active: isWebinars.settings }"
+                  v-on:click="switcher(3)"
+                  v-bind:class="{ active: isWebinarSwitch === 3 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Settings</p>
@@ -41,7 +41,7 @@
             </section>
 
             <!-- Preliminary -->
-            <section v-if="isWebinars.preliminary">
+            <section v-if="isWebinarSwitch === 0">
               <!-- Preliminary section -->
               <section>
                 <div class="container mx-auto my-10 px-4 lg:px-0">
@@ -264,7 +264,7 @@
             </section>
 
             <!-- Resources -->
-            <section v-if="isWebinars.resources">
+            <section v-if="isWebinarSwitch === 1">
               <!-- Resources section -->
               <section>
                 <div class="container mx-auto my-10 px-4 lg:px-0">
@@ -368,7 +368,7 @@
             </section>
 
             <!-- Polls -->
-            <section v-if="isWebinars.polls">
+            <section v-if="isWebinarSwitch === 2">
               <section>
                 <div class="container mx-auto my-10 px-4 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
@@ -548,6 +548,579 @@
                 </div>
               </section>
             </section>
+
+            <!-- Settings -->
+            <section v-if="isWebinarSwitch === 3">
+              <section>
+                <div class="container mx-auto my-10 px-4 lg:px-0">
+                  <div class="grid grid-cols-12 gap-4">
+                    <div class="col-span-12">
+                      <!-- Settings and permissions -->
+                      <dash-items-section-group
+                        title="Settings and permissions"
+                        :edit="true"
+                      >
+                        <!-- Settings and permissions -->
+
+                        <div
+                          class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full items-center mb-8"
+                        >
+                          <div class="px-4 md:px-5 lg:px-6 py-4">
+                            <!-- Tutors -->
+                            <div class="form-group mb-5">
+                              <p
+                                class="text-sm text-left font-bold text-gray-800"
+                              >
+                                Co-host
+                              </p>
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="flex items-center">
+                                  <p
+                                    class="text-sm font-thin text-gray-600 self-center"
+                                  >
+                                    Max number of co-host
+                                  </p>
+                                </div>
+
+                                <v-select
+                                  class="style-chooser"
+                                  placeholder="4"
+                                  :options="[
+                                    'Components',
+                                    'CSS / Variables',
+                                    'Slots',
+                                  ]"
+                                />
+                              </div>
+                            </div>
+                            <hr class="mb-5" />
+
+                            <!-- Moderators -->
+                            <div class="form-group mb-5">
+                              <p
+                                class="text-sm text-left font-bold text-gray-800"
+                              >
+                                Tutors
+                              </p>
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="flex items-center">
+                                  <p
+                                    class="text-sm font-thin text-gray-600 self-center"
+                                  >
+                                    Max number of moderator
+                                  </p>
+                                </div>
+
+                                <v-select
+                                  class="style-chooser cursor-pointer"
+                                  placeholder="4"
+                                  :options="[
+                                    'Components',
+                                    'CSS / Variables',
+                                    'Slots',
+                                  ]"
+                                />
+                              </div>
+                            </div>
+                            <hr class="mb-5" />
+                            <!-- Students -->
+                            <div class="form-group mb-5">
+                              <p
+                                class="text-sm text-left font-bold text-gray-800"
+                              >
+                                Students
+                              </p>
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="flex items-center">
+                                  <p
+                                    class="text-sm font-thin text-gray-600 self-center"
+                                  >
+                                    Max number of students
+                                  </p>
+                                </div>
+
+                                <v-select
+                                  class="style-chooser cursor-pointer"
+                                  placeholder="50"
+                                  :options="[
+                                    'Components',
+                                    'CSS / Variables',
+                                    'Slots',
+                                  ]"
+                                />
+                              </div>
+                            </div>
+                            <hr class="mb-5" />
+                            <!-- Moderators -->
+                            <div class="form-group mb-5">
+                              <p
+                                class="text-sm text-left font-bold text-gray-800"
+                              >
+                                Tutors
+                              </p>
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="flex items-center">
+                                  <p
+                                    class="text-sm font-thin text-gray-600 self-center"
+                                  >
+                                    Max number of moderator
+                                  </p>
+                                </div>
+
+                                <v-select
+                                  class="style-chooser cursor-pointer"
+                                  placeholder="4"
+                                  :options="[
+                                    'Components',
+                                    'CSS / Variables',
+                                    'Slots',
+                                  ]"
+                                />
+                              </div>
+                            </div>
+                            <hr class="mb-5" />
+
+                            <!-- Videos -->
+                            <div class="form-group mb-5">
+                              <p
+                                class="text-sm text-left font-bold text-gray-800"
+                              >
+                                Videos
+                              </p>
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="flex items-center">
+                                  <p
+                                    class="text-sm font-thin text-gray-600 self-center"
+                                  >
+                                    Video streaming resolution
+                                  </p>
+                                </div>
+                                <v-select
+                                  class="style-chooser cursor-pointer"
+                                  placeholder="Auto adjust accordingly"
+                                  :options="[
+                                    'Components',
+                                    'CSS / Variables',
+                                    'Slots',
+                                  ]"
+                                />
+                              </div>
+                            </div>
+                            <hr class="mb-5" />
+
+                            <!-- Recording -->
+                            <div class="form-group mb-5">
+                              <p
+                                class="text-sm text-left font-bold text-gray-800"
+                              >
+                                Videos
+                              </p>
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="col-span-7">
+                                  <p class="text-sm text-gray-700">
+                                    Enable screen sharing for other tutors
+                                  </p>
+                                </div>
+                                <div class="col-span-5 text-right">
+                                  <input-toggle-switch v-model="autoplay" />
+                                </div>
+                              </div>
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="col-span-7">
+                                  <p class="text-sm text-gray-700">
+                                    Enable screen recording for students
+                                  </p>
+                                </div>
+                                <div class="col-span-5 text-right">
+                                  <input-toggle-switch v-model="autoplay" />
+                                </div>
+                              </div>
+                            </div>
+                            <hr class="mb-5" />
+
+                            <!-- Screen Sharing -->
+                            <div class="form-group mb-5">
+                              <p
+                                class="text-sm text-left font-bold text-gray-800"
+                              >
+                                Screen Sharing
+                              </p>
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="col-span-7">
+                                  <p class="text-sm text-gray-700">
+                                    Enable screen sharing for other tutors
+                                  </p>
+                                </div>
+                                <div class="col-span-5 text-right">
+                                  <input-toggle-switch v-model="autoplay" />
+                                </div>
+                              </div>
+                            </div>
+                            <hr class="mb-5" />
+                          </div>
+                        </div>
+
+                        <div class="relative flex items-center justify-center">
+                          <div
+                            class="btn btn-primary absolute flex flex-row bottom-0 mb-2"
+                          >
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g clip-path="url(#clip0)">
+                                <path
+                                  d="M-2.18262 8H7.99972V-2.18234"
+                                  stroke="#FFFFFF"
+                                  stroke-width="1.5"
+                                />
+                                <path
+                                  d="M8 18.1821V7.99979H18.1823"
+                                  stroke="#FFFFFF"
+                                  stroke-width="1.5"
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id="clip0">
+                                  <rect width="16" height="16" fill="white" />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                            <p
+                              class="text-sm text-center font-thin text-white pl-2"
+                            >
+                              Add new choice
+                            </p>
+                          </div>
+                        </div>
+                      </dash-items-section-group>
+
+                      <!-- Pricing -->
+                      <dash-items-section-group title="Pricing" :edit="true">
+                        <div
+                          class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full items-center mb-8"
+                        >
+                          <div class="px-4 md:px-5 lg:px-6 py-4">
+                            <div class="form-group mb-5">
+                              <p
+                                class="text-sm text-left font-bold text-gray-800"
+                              >
+                                Enter course price
+                              </p>
+                              <!-- Nigeria price -->
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="flex items-center">
+                                  <p
+                                    class="text-sm font-thin text-gray-600 self-center"
+                                  >
+                                    Price in Nigeria Naria
+                                  </p>
+                                </div>
+                                <div
+                                  class="form-input currency-box flex flex-row text-center justify-center items-center"
+                                >
+                                  <p
+                                    class="text-sm font-bold text-gray-600 text-center py-1"
+                                  >
+                                    ₦
+                                  </p>
+                                  <input
+                                    type="text"
+                                    class="currency-input"
+                                    placeholder="price"
+                                    v-model="createWebinar.introduction"
+                                  />
+                                  <p
+                                    class="percentage-chip bg-orange-500 rounded-xl text-sm font-medium text-white text-center"
+                                  >
+                                    15% off
+                                  </p>
+                                </div>
+                              </div>
+
+                              <!-- Kenya price -->
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="flex items-center">
+                                  <p
+                                    class="text-sm font-thin text-gray-600 self-center"
+                                  >
+                                    Price in Kenya Shilling
+                                  </p>
+                                </div>
+                                <div
+                                  class="form-input currency-box flex flex-row text-center justify-center items-center"
+                                >
+                                  <p
+                                    class="text-sm font-bold text-gray-600 text-center py-1"
+                                  >
+                                    /=
+                                  </p>
+                                  <input
+                                    type="text"
+                                    class="currency-input"
+                                    placeholder="price"
+                                    v-model="createWebinar.introduction"
+                                  />
+                                  <p
+                                    class="percentage-chip bg-orange-500 rounded-xl text-sm font-medium text-white text-center"
+                                  >
+                                    15% off
+                                  </p>
+                                </div>
+                              </div>
+
+                              <!-- South African price -->
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="flex items-center">
+                                  <p
+                                    class="text-sm font-thin text-gray-600 self-center"
+                                  >
+                                    Price in South African Rand
+                                  </p>
+                                </div>
+                                <div
+                                  class="form-input currency-box flex flex-row text-center justify-center items-center"
+                                >
+                                  <p
+                                    class="text-sm font-bold text-gray-600 text-center py-1"
+                                  >
+                                    R
+                                  </p>
+                                  <input
+                                    type="text"
+                                    class="currency-input"
+                                    placeholder="price"
+                                    v-model="createWebinar.introduction"
+                                  />
+                                  <p
+                                    class="percentage-chip bg-orange-500 rounded-xl text-sm font-medium text-white text-center"
+                                  >
+                                    15% off
+                                  </p>
+                                </div>
+                              </div>
+                              <hr class="mb-5" />
+                              <!-- Default bank -->
+                              <p
+                                class="text-sm text-left font-bold text-gray-800"
+                              >
+                                Change default bank account
+                              </p>
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="flex items-center">
+                                  <p
+                                    class="text-sm font-thin text-gray-600 self-center"
+                                  >
+                                    Your default bank account for receiving
+                                    payment is 305**..
+                                  </p>
+                                </div>
+                                <div
+                                  class="btn btn-light text-center items-center"
+                                >
+                                  Change
+                                </div>
+                              </div>
+                            </div>
+                            <hr class="mb-5" />
+                          </div>
+                        </div>
+
+                        <div class="relative flex items-center justify-center">
+                          <div
+                            class="btn btn-primary absolute flex flex-row bottom-0 mb-2"
+                          >
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g clip-path="url(#clip0)">
+                                <path
+                                  d="M-2.18262 8H7.99972V-2.18234"
+                                  stroke="#FFFFFF"
+                                  stroke-width="1.5"
+                                />
+                                <path
+                                  d="M8 18.1821V7.99979H18.1823"
+                                  stroke="#FFFFFF"
+                                  stroke-width="1.5"
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id="clip0">
+                                  <rect width="16" height="16" fill="white" />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                            <p
+                              class="text-sm text-center font-thin text-white pl-2"
+                            >
+                              Add new choice
+                            </p>
+                          </div>
+                        </div>
+                      </dash-items-section-group>
+
+                      <!-- Promotion -->
+                      <dash-items-section-group title="Promotion" :edit="true">
+                        <div
+                          class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full items-center mb-8"
+                        >
+                          <div class="px-4 md:px-5 lg:px-6 py-4">
+                            <!-- Recording -->
+                            <div class="form-group mb-5">
+                              <p
+                                class="text-sm text-left font-bold text-gray-800"
+                              >
+                                Price off
+                              </p>
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="col-span-7">
+                                  <p class="text-sm text-gray-700">
+                                    Run price off promotion
+                                  </p>
+                                </div>
+                                <div class="col-span-5 text-right">
+                                  <input-toggle-switch v-model="autoplay" />
+                                </div>
+                              </div>
+                              <div class="flex flex-row justify-between my-4">
+                                <div
+                                  class="flex col-span-7 items-center justify-center"
+                                >
+                                  <p class="text-sm text-gray-700 text-center">
+                                    Reduce price by
+                                  </p>
+                                </div>
+
+                                <div
+                                  class="form-input currency-box flex flex-row text-center justify-center items-center"
+                                >
+                                  <input
+                                    type="text"
+                                    class="promotion-input"
+                                    placeholder="price"
+                                    v-model="createWebinar.introduction"
+                                  />
+                                </div>
+                              </div>
+
+                              <div class="flex flex-row justify-between my-4">
+                                <div
+                                  class="flex col-span-7 items-center justify-center"
+                                >
+                                  <p class="text-sm text-gray-700 text-center">
+                                    Starting from
+                                  </p>
+                                </div>
+
+                                <div
+                                  class="form-input currency-box flex flex-row text-center justify-center items-center"
+                                >
+                                  <input
+                                    type="date"
+                                    class="promotion-input"
+                                    placeholder="price"
+                                    v-model="createWebinar.introduction"
+                                  />
+                                </div>
+                              </div>
+
+                              <div class="flex flex-row justify-between my-4">
+                                <div
+                                  class="flex col-span-7 items-center justify-center"
+                                >
+                                  <p class="text-sm text-gray-700 text-center">
+                                    Until
+                                  </p>
+                                </div>
+
+                                <div
+                                  class="form-input currency-box flex flex-row text-center justify-center items-center"
+                                >
+                                  <input
+                                    type="date"
+                                    class="promotion-input"
+                                    placeholder="price"
+                                    v-model="createWebinar.introduction"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <hr class="mb-5" />
+
+                            <!-- Screen Sharing -->
+                            <div class="form-group mb-5">
+                              <p
+                                class="text-sm text-left font-bold text-gray-800"
+                              >
+                                Screen Sharing
+                              </p>
+                              <div class="flex flex-row justify-between my-4">
+                                <div class="col-span-7">
+                                  <p class="text-sm text-gray-700">
+                                    Enable screen sharing for other tutors
+                                  </p>
+                                </div>
+                                <div class="col-span-5 text-right">
+                                  <input-toggle-switch v-model="autoplay" />
+                                </div>
+                              </div>
+                            </div>
+                            <hr class="mb-5" />
+                          </div>
+                        </div>
+
+                        <div class="relative flex items-center justify-center">
+                          <div
+                            class="btn btn-primary absolute flex flex-row bottom-0 mb-2"
+                          >
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g clip-path="url(#clip0)">
+                                <path
+                                  d="M-2.18262 8H7.99972V-2.18234"
+                                  stroke="#FFFFFF"
+                                  stroke-width="1.5"
+                                />
+                                <path
+                                  d="M8 18.1821V7.99979H18.1823"
+                                  stroke="#FFFFFF"
+                                  stroke-width="1.5"
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id="clip0">
+                                  <rect width="16" height="16" fill="white" />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                            <p
+                              class="text-sm text-center font-thin text-white pl-2"
+                            >
+                              Add new choice
+                            </p>
+                          </div>
+                        </div>
+                      </dash-items-section-group>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </section>
+
+            <!-- End for Switchers -->
           </div>
           <!-- Right Add Image -->
           <div class="col-span-full lg:col-span-5 xl:col-span-4">
@@ -624,7 +1197,7 @@
                       @click.capture.stop="togglePubOptMenu"
                     >
                       <span class="text-xs">Publish webinar</span>
-                      <svg
+                      <!-- <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-5 w-5 ml-1"
                         viewBox="0 0 20 20"
@@ -635,9 +1208,9 @@
                           d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                           clip-rule="evenodd"
                         />
-                      </svg>
+                      </svg> -->
                     </button>
-                    <div
+                    <!-- <div
                       v-if="publishOpt"
                       class="pop-up flex flex-col gap-5 items-start px-4 py-5 justify-around pop-up absolute top-0 left-0 mt-12 ml-5 border-gray-500 bg-white rounded-lg shadow-lg"
                       :style="{ zIndex: 3 }"
@@ -654,7 +1227,7 @@
                       >
                         <p>Schedule for later</p>
                       </a>
-                    </div>
+                    </div> -->
                     <button class="btn btn-light">
                       <span class="text-xs">Save </span>
                     </button>
@@ -670,11 +1243,22 @@
             <div class="flex flex-row justify-between">
               <button
                 class="btn btn-sm lg:mt-0"
-                :class="isWebinars.preliminary ? 'btn-light' : 'btn-primary'"
+                :class="isWebinarSwitch === 0 ? 'btn-disable' : 'btn-primary'"
+                @click="
+                  isWebinarSwitch <= 0 ? null : switcher(isWebinarSwitch - 1)
+                "
               >
                 Previous
               </button>
-              <button class="btn btn-primary btn-sm lg:mt-0">Next</button>
+              <button
+                class="btn btn-sm lg:mt-0"
+                :class="isWebinarSwitch === 3 ? 'btn-disable' : 'btn-primary'"
+                @click="
+                  isWebinarSwitch >= 3 ? null : switcher(isWebinarSwitch + 1)
+                "
+              >
+                Next
+              </button>
             </div>
           </div>
         </div>
@@ -701,52 +1285,17 @@ export default {
     courses: _.take(courses, 4),
     webinars: _.take(webinars, 4),
     undoneTasks: _.take(courses, 3),
-    isWebinars: {
-      preliminary: true,
-      resources: false,
-      polls: false,
-      settings: false,
-    },
+    isWebinarSwitch: 0,
     createWebinar: {
       name: '',
       subtitle: '',
     },
     publishOpt: false,
-    timeLength: ''
+    timeLength: '',
   }),
   methods: {
     switcher: function (value) {
-      switch (value) {
-        case 'preliminary':
-          this.isWebinars.preliminary = true
-          this.isWebinars.resources = false
-          this.isWebinars.polls = false
-          this.isWebinars.settings = false
-          break
-        case 'resources':
-          this.isWebinars.preliminary = false
-          this.isWebinars.resources = true
-          this.isWebinars.polls = false
-          this.isWebinars.settings = false
-          break
-        case 'polls':
-          this.isWebinars.preliminary = false
-          this.isWebinars.resources = false
-          this.isWebinars.polls = true
-          this.isWebinars.settings = false
-          break
-        case 'settings':
-          this.isWebinars.preliminary = false
-          this.isWebinars.resources = false
-          this.isWebinars.polls = false
-          this.isWebinars.settings = true
-          break
-        default:
-          this.isWebinars.preliminary = true
-          this.isWebinars.resources = false
-          this.isWebinars.polls = false
-          this.isWebinars.settings = false
-      }
+      this.isWebinarSwitch = value
       // some code to filter users
     },
     togglePubOptMenu() {
@@ -760,6 +1309,20 @@ export default {
 </script>
 
 <style scoped>
+.promotion-input {
+  padding: 0.1rem 0.1rem;
+  border: none !important;
+}
+.percentage-chip {
+  min-width: 4.1rem;
+  padding: 0.1rem 0;
+}
+.currency-box {
+  width: 16rem;
+}
+.currency-input {
+  border: none !important;
+}
 .switcher {
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */
