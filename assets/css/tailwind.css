@@ -131,6 +131,14 @@ input[type='date'] {
   outline: none !important;
 }
 
+.style-chooser {
+  border-radius: 12px;
+  background: #f5f5f3;
+  color: #8a8a8a;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  @apply text-sm py-2 px-4 w-64 outline-none cursor-pointer;
+}
+
 .btn {
   padding: 13.5px 36px;
   @apply text-sm font-semibold rounded-lg;
@@ -148,6 +156,10 @@ input[type='date'] {
 
 .btn.btn-light {
   @apply text-black  bg-gray-300;
+}
+
+.btn.btn-disable {
+  @apply text-white  bg-gray-400;
 }
 
 .btn.btn-primary.shadow {
