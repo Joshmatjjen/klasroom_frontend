@@ -374,8 +374,10 @@
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                       <dash-items-section-group title="Polls" :edit="true">
+                        <!-- Poll Choice -->
+
                         <div
-                          class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
+                          class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full items-center mb-8"
                         >
                           <div class="px-4 md:px-5 lg:px-6 py-4">
                             <!-- Question -->
@@ -477,30 +479,67 @@
                             </div>
 
                             <!-- Poll Length -->
-                            <div class="grid grid-cols-2 gap-x-5 gap-y-0">
-                              <div class="form-group mb-5">
+                            <div class="grid grid-cols-2 gap-x-5 gap-y-0 mb-5">
+                              <div class="form-group">
                                 <label for="input-name">Poll length</label>
-                                <div>
-                                  <input
-                                    id="input-name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="0 hours"
-                                    v-model="createWebinar.choice"
-                                  />
+                                <div class="cs-select mb-8">
+                                  <select v-model="timeLength" class="input">
+                                    <option default value="">
+                                      Select category
+                                    </option>
+                                  </select>
                                 </div>
                               </div>
-                              <div class="form-group mb-5 flex items-end">
+                              <div class="form-group flex items-end">
                                 <!-- <label for="input-name">Choice 2</label> -->
-                                <input
-                                  id="input-name"
-                                  type="text"
-                                  class="form-input"
-                                  placeholder="30 minutes"
-                                  v-model="createWebinar.introduction"
-                                />
+                                <div class="cs-select mb-8">
+                                  <select v-model="timeLength" class="input">
+                                    <option default value="">
+                                      Select category
+                                    </option>
+                                  </select>
+                                </div>
                               </div>
                             </div>
+
+                            <hr class="mb-8" />
+                          </div>
+                        </div>
+
+                        <div class="relative flex items-center justify-center">
+                          <div
+                            class="btn btn-primary absolute flex flex-row bottom-0 mb-2"
+                          >
+                            <svg
+                              width="16"
+                              height="16"
+                              viewBox="0 0 16 16"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g clip-path="url(#clip0)">
+                                <path
+                                  d="M-2.18262 8H7.99972V-2.18234"
+                                  stroke="#FFFFFF"
+                                  stroke-width="1.5"
+                                />
+                                <path
+                                  d="M8 18.1821V7.99979H18.1823"
+                                  stroke="#FFFFFF"
+                                  stroke-width="1.5"
+                                />
+                              </g>
+                              <defs>
+                                <clipPath id="clip0">
+                                  <rect width="16" height="16" fill="white" />
+                                </clipPath>
+                              </defs>
+                            </svg>
+                            <p
+                              class="text-sm text-center font-thin text-white pl-2"
+                            >
+                              Add new choice
+                            </p>
                           </div>
                         </div>
                       </dash-items-section-group>
@@ -673,6 +712,7 @@ export default {
       subtitle: '',
     },
     publishOpt: false,
+    timeLength: ''
   }),
   methods: {
     switcher: function (value) {

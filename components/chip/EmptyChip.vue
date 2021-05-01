@@ -2,8 +2,8 @@
   <div
     :class="
       isAbsolute
-        ? 'flex absolute inset-x-auto items-center shadow-xl bg-white border border-orange-400 -mt-1 rounded-lg px-2 py-1 cursor-pointer'
-        : 'flex flex-row absolute bg-orange-200 rounded-lg border border-orange-400 shadow-hover mb-5 cursor-pointer'
+        ? 'flex absolute inset-x-auto items-center shadow-xl bg-white border border-orange-400 -mt-1 rounded-lg px-2 py-1'
+        : 'flex flex-row absolute bg-orange-200 rounded-lg border border-orange-400 shadow-hover mb-5'
     "
   >
     <slot />
