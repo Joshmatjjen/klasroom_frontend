@@ -66,7 +66,7 @@ export const actions = {
       }, {
         headers: getAccessTokenHeader(user.accessToken)
       })
-      console.log("newData: ", newData)
+      // console.log("newData: ", newData)
       return {newData, message}
 
     } catch (e) {
@@ -80,11 +80,11 @@ export const actions = {
       const { data, message } = await this.$axios.$post(`/validatetoken?token_type=${userData.type}`, {
         token: userData.token,
       })
-      console.log("data: ", data)
+      // console.log("data: ", data)
       return {data, message}
 
     } catch (e) {
-      console.log("error validation: ", e)
+      // console.log("error validation: ", e)
       return false
     }
   }, 
@@ -94,11 +94,11 @@ export const actions = {
       const { data, message } = await this.$axios.$post(`/resettoken`, {
         email: userData.email,
       })
-      console.log("data: ", data)
+      // console.log("data: ", data)
       return {data, message}
 
     } catch (e) {
-      console.log("error validation: ", e)
+      // console.log("error validation: ", e)
       return false
     }
   },
@@ -109,11 +109,11 @@ export const actions = {
         password: userData.password,
         token: userData.token
       })
-      console.log("data: ", data)
+      // console.log("data: ", data)
       return {data, message}
 
     } catch (e) {
-      console.log("error validation: ", e)
+      // console.log("error validation: ", e)
       return false
     }
   },
@@ -140,7 +140,7 @@ export const actions = {
         })
         return {newData, message}
       }
-      const { data } = await this.$axios.$post(userData.userType === "student" ? '/users' : '/users/tutor', userData)
+      const { data, message } = await this.$axios.$post(userData.userType === "student" ? '/users' : '/users/tutor', userData)
       return {data, message}
     } catch (e) {
       return false
