@@ -929,7 +929,7 @@
                                   </p>
                                 </div>
                                 <div
-                                  class="btn btn-light text-center items-center"
+                                  class="btn btn-light flex text-center self-center items-center h-10 px-2"
                                 >
                                   Change
                                 </div>
@@ -1002,9 +1002,9 @@
                               </div>
                               <div class="flex flex-row justify-between my-4">
                                 <div
-                                  class="flex col-span-7 items-center justify-center"
+                                  class="flex col-span-7 items-center justify-center mr-5"
                                 >
-                                  <p class="text-sm text-gray-700 text-center">
+                                  <p class="text-sm text-gray-700 text-left">
                                     Reduce price by
                                   </p>
                                 </div>
@@ -1023,9 +1023,9 @@
 
                               <div class="flex flex-row justify-between my-4">
                                 <div
-                                  class="flex col-span-7 items-center justify-center"
+                                  class="flex col-span-7 items-center justify-center mr-5"
                                 >
-                                  <p class="text-sm text-gray-700 text-center">
+                                  <p class="text-sm text-gray-700 text-left">
                                     Starting from
                                   </p>
                                 </div>
@@ -1044,9 +1044,9 @@
 
                               <div class="flex flex-row justify-between my-4">
                                 <div
-                                  class="flex col-span-7 items-center justify-center"
+                                  class="flex col-span-7 items-center justify-center mr-10"
                                 >
-                                  <p class="text-sm text-gray-700 text-center">
+                                  <p class="text-sm text-gray-700 text-left">
                                     Until
                                   </p>
                                 </div>
