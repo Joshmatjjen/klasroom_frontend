@@ -99,27 +99,33 @@
                       class="form-input"
                       placeholder="Enter your password here"
                       v-model="form.password"
+                      @input="checkConfirmPassword"
                     />
                   </div>
                 </div>
-                <!-- <div class="form-group">
-                  <label for="input-re_password">New Password</label>
+                <div class="form-group">
+                  <label for="input-re_password">Confirm Password</label>
                   <div>
                     <input
                       id="input-re_password"
+                      type="password"
                       class="form-input"
-                      placeholder="Repeat password"
+                      placeholder="Confirm password"
+                      v-model="form.confirmPassword"
+                      @input="checkConfirmPassword"
                     />
                   </div>
-                </div> -->
+                </div>
+                <span v-if="showConfirmPasswordErr" class="text-sm text-red-700">Confirm password dosen't match</span>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="proceed"
+                      @click="resetPassword"
                     >
                       Set new password
+                      <loader v-if="loading" color="white" />
                     </button>
                   </span>
                 </div>
@@ -150,8 +156,11 @@ export default {
   data: () => ({
     form: {
       password: '',
+      confirmPassword: '',
       token: ''
     },
+    loading: false,
+    showConfirmPasswordErr: false,
   }),
   computed: {
     ...mapState({
@@ -159,8 +168,15 @@ export default {
     }),
   },
   methods: {
+    checkConfirmPassword(e) {
+      this.showConfirmPasswordErr = false;
+    },
     resetPassword(e) {
       if (e) e.preventDefault()
+      if (this.form.password !== this.form.confirmPassword) {
+        this.showConfirmPasswordErr = true;
+        return;
+      }
       this.loading = true
 
       this.$store.dispatch("auth/resetPassword", {
@@ -170,14 +186,14 @@ export default {
         this.loading = false
         if (res) {
           this.clearInput()
-          this.showSuccess()
+          this.showSuccess(res)
         }
       }).catch(e => console.log('e: ', e));
     },
-    showSuccess() {
+    showSuccess(res) {
       this.$store.commit('app/NOTICE_MODAL', {
         title: 'Congratulations!',
-        text: `Your password has been changed successfully. 
+        text: res.message ? res.message : `Your password has been changed successfully. 
           Please log in to your account to proceed.`,
         confirmCallback: () => {
           this.$store.commit('app/LOGIN_MODAL', {

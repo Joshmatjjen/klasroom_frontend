@@ -131,6 +131,14 @@ input[type='date'] {
   outline: none !important;
 }
 
+.style-chooser {
+  border-radius: 12px;
+  background: #f5f5f3;
+  color: #8a8a8a;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  @apply text-sm py-2 px-4 w-64 outline-none cursor-pointer;
+}
+
 .btn {
   padding: 13.5px 36px;
   @apply text-sm font-semibold rounded-lg;
@@ -138,6 +146,7 @@ input[type='date'] {
 
 .btn:hover,
 .btn:focus {
+  cursor: pointer;
   outline: none;
 }
 
@@ -145,11 +154,57 @@ input[type='date'] {
   @apply text-white bg-orange-500;
 }
 
+.btn.btn-light {
+  @apply text-black  bg-gray-300;
+}
+
+.btn.btn-disable {
+  @apply text-white  bg-gray-400;
+}
+
 .btn.btn-primary.shadow {
   box-shadow: 0 10px 36px rgba(249, 158, 66, 0.42);
 }
 
+.btn.btn-xs {
+  padding: 0.75rem;
+  @apply font-semibold rounded-lg;
+}
+
 .btn.btn-light.btn-sm {
+  padding: 8.5px 25px;
+  @apply text-sm font-semibold rounded-lg;
+  @apply text-black bg-gray-300;
+}
+
+/* Btn2 */
+.btn2 {
+  @apply font-semibold rounded-lg;
+}
+
+.btn2:hover,
+.btn2:focus {
+  cursor: pointer;
+  outline: none;
+}
+
+.btn2.btn2-primary {
+  @apply text-white bg-orange-500;
+}
+
+.btn2.btn2-light {
+  @apply text-black  bg-gray-300;
+}
+
+.btn2.btn2-disable {
+  @apply text-white  bg-gray-400;
+}
+
+.btn2.btn2-primary.shadow {
+  box-shadow: 0 10px 36px rgba(249, 158, 66, 0.42);
+}
+
+.btn2.btn2-light.btn2-sm {
   padding: 8.5px 25px;
   @apply text-sm font-semibold rounded-lg;
   @apply text-black bg-gray-300;

@@ -15,6 +15,7 @@ export const state = () => ({
   pageData: null,
   viewData: {},
   categories: [],
+  coursesCategories: [],
   customer_details: null,
   banks: [],
   userDetails: null,
@@ -29,6 +30,7 @@ export const getters = {
   pageData: (state) => state.pageData,
   viewData: (state) => state.viewData,
   categories: (state) => state.categories,
+  coursesCategories: (state) => state.coursesCategories,
   banks: (state) => state.banks,
   accounts: (state) => state.accounts,
   validationModal: (state) => state.validationModal,
@@ -41,6 +43,9 @@ export const mutations = {
   },
   SET_TITLE(state, title) {
     state.pageTitle = title
+  },
+  SET_COURSES_CATEGORIES(state, data) {
+    state.coursesCategories = data
   },
   SET_MENU(state, status) {
     state.menu = status

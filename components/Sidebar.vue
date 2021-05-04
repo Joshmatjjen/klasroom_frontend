@@ -22,7 +22,27 @@
       </div>
       <div class="menu-scroll">
         <nav class="h-full">
+          <span v-if="$route.name !== `${userDash}-webinars-new`" class="flex justify-center" :class="userDash === 'tutor' ? 'mb-3' : 'mb-10'">
+            <nuxt-link
+              :to="`/${userDash}/webinars/new`"
+              class="btn btn-primary"
+              style="padding-left: 1rem; padding-right: 1rem;"
+            >
+              <!-- <img src="/icon/camera.svg" class="inline h-5 mr-2" /> -->
+              New Meeting or Webinar
+            </nuxt-link>
+          </span>
+          <span v-if="userDash === 'tutor'" class="flex justify-center mb-10">
+            <nuxt-link
+              :to="`/${userDash}/courses/create`"
+              class="btn btn-primary"
+            >
+              <!-- <img src="/icon/camera.svg" class="inline h-5 mr-2" /> -->
+              New Course
+            </nuxt-link>
+          </span>
           <ul class="relative h-full" @click="toggleNav">
+            
             <li class="nav-item">
               <router-link
                 :to="{ name: `${userDash}-dashboard` }"
@@ -61,6 +81,26 @@
                 exact
               >
                 Chat
+              </router-link>
+            </li>
+            <li v-if="userDash === 'tutor'" class="nav-item">
+              <router-link
+                :to="{ name: `${userDash}-financials` }"
+                class="nav-link nav-home"
+                active-class="active"
+                exact
+              >
+                Financials
+              </router-link>
+            </li>
+            <li v-if="userDash === 'tutor'" class="nav-item">
+              <router-link
+                :to="{ name: `${userDash}-analytics` }"
+                class="nav-link nav-home"
+                active-class="active"
+                exact
+              >
+                Analytics
               </router-link>
             </li>
             <li class="nav-item">

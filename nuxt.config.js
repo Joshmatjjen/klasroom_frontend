@@ -20,6 +20,7 @@ export default {
         name: 'description',
         content: process.env.npm_package_description || '',
       },
+      { "http-equiv": 'Content-Security-Policy', content: "img-src 'self' data: *; default-src 'self' data: 'unsafe-inline' 'unsafe-eval' https://*; connect-src 'self' https://*" },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
   },
@@ -39,6 +40,7 @@ export default {
     '~plugins/vue2-filters',
     { src: '~plugins/validate', mode: 'client' },
     { src: '~plugins/datepicker', mode: 'client' },
+    { src: '~plugins/vue-select', mode: 'client' },
     { src: '~plugins/paystack', mode: 'client' },
     { src: '~/plugins/vue-good-table', ssr: false },
   ],
@@ -63,7 +65,7 @@ export default {
     '@nuxtjs/device',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
-    '@nuxtjs/proxy',
+    // '@nuxtjs/proxy',
     '@nuxtjs/pwa',
     // Doc: https://github.com/nuxt/content
     '@nuxt/content',

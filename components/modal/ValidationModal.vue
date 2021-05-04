@@ -111,21 +111,24 @@
                       class="form-input"
                       placeholder="Enter your password here"
                       v-model="signupForm.password"
+                      @input="checkConfirmPassword"
                     />
                   </div>
                 </div>
-                <!-- <div class="form-group">
-                  <label for="input-re_password">New Password</label>
+                <div class="form-group">
+                  <label for="input-re_password">Confirm Password</label>
                   <div>
                     <input
                       id="input-re_password"
                       class="form-input"
                       type="password"
-                      placeholder="Repeat password"
-                      v-model="signupForm.password"
+                      placeholder="Confirm password"
+                      v-model="signupForm.confirmPassword"
+                      @input="checkConfirmPassword"
                     />
                   </div>
-                </div> -->
+                </div>
+                <span v-if="showConfirmPasswordErr" class="text-sm text-red-700">Confirm password dosen't match</span>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
                     <button
@@ -141,6 +144,19 @@
               </form>
               
               <form v-else id="signup-form">
+
+                <div class="form-group mb-5">
+                  <label for="input-email">Email</label>
+                  <div>
+                    <input
+                      id="input-email"
+                      type="email"
+                      class="form-input"
+                      placeholder="Enter your email here"
+                      v-model="signupForm.email"
+                    />
+                  </div>
+                </div>
 
                 <div class="form-group mb-5">
                   <label for="input-password">Password</label>
@@ -186,8 +202,11 @@ export default {
     loading: false,
     signupForm: {
       password: "",
+      confirmPassword: '',
+      email: "",
       courseCategories: []
     },
+    showConfirmPasswordErr: false,
   }),
   computed: {
     ...mapState({
@@ -206,8 +225,15 @@ export default {
   // },
   
   methods: {
+    checkConfirmPassword() {
+      this.showConfirmPasswordErr = false;
+    },
     resetPassword(e) {
-      if (e) e.preventDefault()
+      if (e) e.preventDefault();
+      if (this.signupForm.password !== this.signupForm.confirmPassword) {
+        this.showConfirmPasswordErr = true;
+        return;
+      }
       this.loading = true
 
       this.$store.dispatch("auth/resetPassword", {
@@ -218,7 +244,7 @@ export default {
         this.loading = false
         if (res) {
           this.clearInput()
-          this.showSuccess1()
+          this.showSuccess1(res)
         }
       }).catch(e => console.log('e: ', e));
     },
@@ -229,7 +255,7 @@ export default {
 
       this.$store.dispatch("auth/loginUser", {
         password: this.signupForm.password,
-        email: this.showModal.email
+        userIdentity: this.signupForm.email
       })
       .then((res) => {
         this.loading = false
@@ -240,10 +266,10 @@ export default {
       }).catch(e => console.log('e: ', e));
     },
     
-    showSuccess1() {
+    showSuccess1(res) {
       this.$store.commit('app/NOTICE_MODAL', {
         title: 'All done!',
-        text: `Your password has been changed successfully. 
+        text: res.message ? res.message : `Your password has been changed successfully. 
           Please log in to your account to proceed.`,
         confirmCallback: () => {
           this.$store.commit('app/LOGIN_MODAL', {
@@ -251,9 +277,10 @@ export default {
             type: 'login',
             userType: 'student',
           });
+          this.$store.commit('app/NOTICE_MODAL', false)
         }
       })
-      this.$store.commit('app/NOTICE_MODAL', false)
+      this.$store.commit('app/VALIDATION_MODAL', null)
     },
     showSuccess2() {
       this.$router.push(`/student/dashboard`)
