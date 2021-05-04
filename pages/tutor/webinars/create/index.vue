@@ -498,9 +498,7 @@
                                 <label for="input-name">Poll length</label>
                                 <div class="cs-select mb-8">
                                   <select v-model="timeLength" class="input">
-                                    <option default value="">
-                                      Select category
-                                    </option>
+                                    <option default value="">Select</option>
                                   </select>
                                 </div>
                               </div>
@@ -508,9 +506,7 @@
                                 <!-- <label for="input-name">Choice 2</label> -->
                                 <div class="cs-select mb-8">
                                   <select v-model="timeLength" class="input">
-                                    <option default value="">
-                                      Select category
-                                    </option>
+                                    <option default value="">Select</option>
                                   </select>
                                 </div>
                               </div>
