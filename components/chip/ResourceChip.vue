@@ -11,7 +11,7 @@
     </div>
     <div>
       <div
-        class="flex flex-row rounded-3xl text-xs md:text-sm text-white md:text-right md:m-5"
+        class="flex flex-row rounded-3xl text-xs md:text-sm text-white md:text-right my-5 mr-5"
       >
         <button class="flex items-center mr-5">
           <img class="w-6 h-6" src="/icon/edit.svg" />

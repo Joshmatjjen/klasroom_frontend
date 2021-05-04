@@ -3,7 +3,7 @@
     <div class="flex mb-4">
       <h5
         v-if="title"
-        class="text-lg md:text-base flex-grow font-extrabold text-gray-900"
+        class="text-sm lg:text-lg md:text-base flex-grow font-extrabold text-gray-900"
       >
         {{ title }}
       </h5>

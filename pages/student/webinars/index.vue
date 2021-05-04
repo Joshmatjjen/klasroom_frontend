@@ -51,7 +51,7 @@
       <!-- Upcoming -->
       <div
         v-if="isWebinars.upcoming"
-        class="container mx-auto my-10 px-4 lg:px-0"
+        class="container mx-auto my-10 px-2 lg:px-0"
       >
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-12">
@@ -63,7 +63,7 @@
       <!-- Recorded -->
       <div
         v-if="isWebinars.recorded"
-        class="container mx-auto my-10 px-4 lg:px-0"
+        class="container mx-auto my-10 px-2 lg:px-0"
       >
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-12">
@@ -73,7 +73,7 @@
       </div>
 
       <!-- Draft -->
-      <div v-if="isWebinars.draft" class="container mx-auto my-10 px-4 lg:px-0">
+      <div v-if="isWebinars.draft" class="container mx-auto my-10 px-2 lg:px-0">
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-12">
             <webinar-table
@@ -87,7 +87,7 @@
     </section>
 
     <section>
-      <div class="container mx-auto my-10 px-4 lg:px-0">
+      <div class="container mx-auto my-10 px-2 lg:px-0">
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-12">
             <dash-items-section-group
@@ -109,7 +109,7 @@
     </section>
 
     <section class="bg-orange-100">
-      <div class="container mx-auto my-10 px-4 lg:px-0">
+      <div class="container mx-auto my-10 px-2 lg:px-0">
         <div class="md:grid grid-cols-3 gap-5 space-y-4 md:space-y-0">
           <dash-webinars-calendar class="col-span-2" />
           <dash-pre-recorded-webinars :items="undoneTasks" />
@@ -118,7 +118,7 @@
     </section>
 
     <section>
-      <div class="container mx-auto my-10 px-4 lg:px-0">
+      <div class="container mx-auto my-10 px-2 lg:px-0">
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-12">
             <dash-items-section-group title="Previously Attended Webinars">

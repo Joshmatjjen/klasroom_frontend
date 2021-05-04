@@ -44,7 +44,7 @@
             <section v-if="isWebinarSwitch === 0">
               <!-- Preliminary section -->
               <section>
-                <div class="container mx-auto my-10 px-4 lg:px-0">
+                <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                       <dash-items-section-group
@@ -131,7 +131,7 @@
 
               <!-- Tutor Or Co-Host section-->
               <section>
-                <div class="container mx-auto my-10 px-4 lg:px-0">
+                <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                       <!-- Tutor -->
@@ -267,7 +267,7 @@
             <section v-if="isWebinarSwitch === 1">
               <!-- Resources section -->
               <section>
-                <div class="container mx-auto my-10 px-4 lg:px-0">
+                <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                       <dash-items-section-group
@@ -370,7 +370,7 @@
             <!-- Polls -->
             <section v-if="isWebinarSwitch === 2">
               <section>
-                <div class="container mx-auto my-10 px-4 lg:px-0">
+                <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                       <dash-items-section-group title="Polls" :edit="true">
@@ -552,7 +552,7 @@
             <!-- Settings -->
             <section v-if="isWebinarSwitch === 3">
               <section>
-                <div class="container mx-auto my-10 px-4 lg:px-0">
+                <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                       <!-- Settings and permissions -->
