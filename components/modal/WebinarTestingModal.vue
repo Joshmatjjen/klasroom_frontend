@@ -35,7 +35,7 @@
           To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
       -->
       <div
-        class="inline-block align-top bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full sm:max-w-lg"
+        class="inline-block align-top bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full sm:max-w-2xl"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-headline"
@@ -49,16 +49,98 @@
               </div> -->
               <h2
                 id="modal-headline"
-                class="text-xl sm:text-2xl leading-none font-bold text-center text-gray-800"
+                class="text-xl sm:text-2xl leading-none font-bold text-center text-gray-800 pb-3"
               >
                 {{ title }}
               </h2>
-              <div class="mt-2">
-                <p
-                  class="text-sm text-center leading-normal text-gray-700 mt-8"
-                  v-html="title"
-                ></p>
+              <div v-if="startState === 'mic_carmera_test'" class="flex justify-center">
+                <div class="mt-4 w-1/2 px-6">
+
+                  <div class="flex text-center mb-8" style="height: 100px">
+                    <img src="/card/mic.svg" class="mx-auto" />
+                  </div>
+                  <div>
+                    <v-select 
+                      class="form-input style-chooser"
+                      placeholder="Select mic"
+                      v-model="devicesOpt.mic"
+                      :options="devices.filter(i => i.kind === 'audioinput' && i.deviceId !== 'default')" 
+                    />
+                  </div>
+                  <p
+                    class="text-sm text-center leading-normal font-bold text-gray-700 mt-8"
+                  >
+                    Status
+                  </p>
+                  <p
+                    class="text-sm text-center leading-normal text-gray-700 mt-1"
+                  >
+                    Perfect
+                  </p>
+                </div>
+                <div class="mt-4 w-1/2 px-6 border-l">
+                  <div class="flex text-center mb-8" style="height: 100px">
+                    <!-- <video-player 
+                      class="video"
+                      ref="video"
+                      autoplay
+                      playsinline
+                      :muted="muted"
+                      :data-fit="state.fill ? 'cover' : 'contain'"
+                      autoPictureInPicture="true"
+                    >
+                    </video-player> -->
+                    <video id="localVideoTest" autoplay muted height="100" class="mx-auto"></video>
+                  </div>
+                  <div>
+                    <v-select 
+                      class="form-input style-chooser"
+                      placeholder="Select carmera"
+                      v-model="devicesOpt.carmera" 
+                      :options="devices.filter(i => i.kind === 'videoinput')" 
+                    />
+                  </div>
+                  <p
+                    class="text-sm text-center leading-normal font-bold text-gray-700 mt-8"
+                  >
+                    Status
+                  </p>
+                  <p
+                    class="text-sm text-center leading-normal text-gray-700 mt-1"
+                  >
+                    Perfect
+                  </p>
+                </div>
               </div>
+
+              <div v-if="startState === 'speaker_test'" class="flex justify-center">
+                <div class="mt-4 px-6">
+
+                  <div class="flex text-center mb-8" style="height: 100px">
+                    <img src="/card/speaker.svg" class="mx-auto" />
+                  </div>
+                  <div>
+                    <v-select 
+                      class="form-input style-chooser"
+                      placeholder="Select audio"
+                      v-model="devicesOpt.audio"
+                      :options="devices.filter(i => i.kind === 'audiooutput' && i.deviceId !== 'default')" 
+                    />
+                  </div>
+                  <p
+                    class="text-sm text-center leading-normal font-bold text-gray-700 mt-8"
+                  >
+                    Status
+                  </p>
+                  <p
+                    class="text-sm text-center leading-normal text-gray-700 mt-1"
+                  >
+                    Perfect
+                  </p>
+                </div>
+                
+              </div>
+
               <div class="flex text-center pt-8 pb-4 sm:pb-4">
                 <span class="flex mx-auto">
                   <button
@@ -81,6 +163,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { getDevices, getUserMedia } from '~/logic/stream'
 
 export default {
   props: {
@@ -99,102 +182,40 @@ export default {
     confirm: {
       type: Function,
       required: true
-    }
+    },
+    devices: {
+      type: Array,
+      required: true
+    },
+    devicesOpt: {
+      type: Object,
+      required: true
+    },
+    // stream: {
+    //   type: Object,
+    //   default: null,
+    // },
+    muted: {
+      type: Boolean,
+      default: false,
+    },
   }, 
   async mounted() {
-    let defaultVideoConstraints = {
-      // frameRate: {
-      //   min: 1,
-      //   ideal: 15,
-      // },
-    }
 
-    let defaultAudioConstraints = {
-      // echoCancellation: true,
-      // noiseSuppression: true,
-      // autoGainControl: true,
-    }
-
-    function __getUserMedia(constraints) {
-      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        return navigator.mediaDevices.getUserMedia(constraints)
-      }
-      const _getUserMedia =
-        navigator.getUserMedia ||
-        navigator.webkitGetUserMedia ||
-        navigator.mozGetUserMedia
-      return new Promise((resolve, reject) => {
-        if (!_getUserMedia) {
-          reject(
-            new Error(
-              "Video and audio cannot be accessed. Please try again with another browser or check your browser's settings."
-            )
-          )
+    let { stream, error } = await getUserMedia()
+    if (stream) {
+      const video = document.querySelector('video#localVideoTest');
+      if (video) {
+        if ("srcObject" in video) {
+          video.srcObject = stream;
         } else {
-          _getUserMedia.call(navigator, constraints, resolve, reject)
+          video.src = window.URL.createObjectURL(stream) // for older browsers
         }
-      })
+      }
+    } else {
+      console.error("Media error", error)
     }
 
-    async function getUserMedia(
-      constraints = {
-        audio: {
-          ...defaultAudioConstraints,
-        },
-        video: {
-          ...defaultVideoConstraints,
-          facingMode: "user",
-        },
-      }
-    ) {
-      try {
-        // Solution via https://stackoverflow.com/a/47958949/140927
-        // Only available for HTTPS! See https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getUserMedia#Security
-        console.log("getUserMedia constraints", constraints)
-        let stream = await __getUserMedia(constraints)
-        return { stream }
-      } catch (err) {
-        const name = err?.name || err?.toString()
-        if (name === "NotAllowedError") {
-          return {
-            error:
-              "You denied access to your camera and microphone. Please check your setup.",
-          }
-        } else if (name === "NotFoundError") {
-          return {
-            error: "No camera or microphone has been found!",
-          }
-        }
-        trackException(err)
-        return {
-          error: err?.message || err?.name || err.toString(),
-        }
-      }
-    }
-      async function getDevices() {
-        try {
-          const devices = navigator.mediaDevices.enumerateDevices();
-          console.log('getDevices devices: ',devices)
-          return devices;
-        } catch (err) {
-          console.log('getDevices err: ',err)
-        }
-        return []
-      }
-      let { stream, error } = await getUserMedia()
-      if (stream) {
-        // Safari getDevices only works immediately after getUserMedia (bug)
-        const devices = ((await getDevices()) || []).map((d) => {
-          console.log("found device", d)
-          return {
-            kind: d?.kind?.toLowerCase() || "?",
-            deviceId: d?.deviceId,
-            label: d.label || "Unknown name",
-          }
-        })
-      } else {
-        console.error("Media error", error)
-      }
   }
 }
 </script>

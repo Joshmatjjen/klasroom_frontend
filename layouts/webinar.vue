@@ -1,7 +1,6 @@
 <template>
   <div>
-    <Navbar />
+    <WebinarNavbar />
     <Nuxt />
-    <Footer />
   </div>
 </template>
