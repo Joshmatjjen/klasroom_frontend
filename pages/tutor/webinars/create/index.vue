@@ -1,13 +1,13 @@
 <template>
   <div class="min-h-screen mb-12">
     <section class="bg-orange-100">
-      <div class="container sm:mx-0 lg:mx-auto px-4 lg:px-0">
+      <div class="container sm:mx-0 lg:mx-auto lg:px-0">
         <div class="grid grid-cols-12 gap-5">
           <!-- Left Add Image -->
           <div class="col-span-full lg:col-span-7 xl:col-span-8">
             <section>
               <div
-                class="switcher flex flex-row gap-10 place-items-start px-5 border-b-2 border-gray-200 overflow-scroll scrollbar-thumb-orange"
+                class="switcher flex flex-row gap-6 lg:gap-10 place-items-start mx-2 border-b-2 border-gray-200 overflow-scroll scrollbar-thumb-orange"
               >
                 <button
                   v-on:click="switcher(0)"
@@ -44,7 +44,7 @@
             <section v-if="isWebinarSwitch === 0">
               <!-- Preliminary section -->
               <section>
-                <div class="container mx-auto my-10 px-4 lg:px-0">
+                <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                       <dash-items-section-group
@@ -131,7 +131,7 @@
 
               <!-- Tutor Or Co-Host section-->
               <section>
-                <div class="container mx-auto my-10 px-4 lg:px-0">
+                <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                       <!-- Tutor -->
@@ -139,7 +139,7 @@
                         <div
                           class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
                         >
-                          <div class="px-4 md:px-5 lg:px-6 py-4">
+                          <div class="px-2 md:px-5 lg:px-6 py-4">
                             <!-- Webinar name -->
                             <user-chip :owner="{ name: 'Joy Adeleke' }" />
                             <user-chip
@@ -152,37 +152,44 @@
                             <p class="text-sm font-bold text-gray-700 mb-3">
                               Add new co-host
                             </p>
-                            <div class="flex flex-row gap-10">
-                              <div class="form-group flex-1 mb-5">
-                                <label for="input-name">co-host name</label>
-                                <div>
-                                  <input
-                                    id="input-name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="Enter co-host name here"
-                                    v-model="createWebinar.name"
-                                  />
+                            <div class="flex flex-wrap gap-2 justify-between">
+                              <div
+                                class="flex flex-row flex-wrap gap-2 md:gap-10 lg:gap-10 xl:gap-10"
+                              >
+                                <div
+                                  class="form-group flex-1 min-w-100 sm:w-full mb-5"
+                                >
+                                  <label for="input-name">Name</label>
+                                  <div>
+                                    <input
+                                      id="input-name"
+                                      type="text"
+                                      class="form-input"
+                                      placeholder="Enter name"
+                                      v-model="createWebinar.name"
+                                    />
+                                  </div>
                                 </div>
-                              </div>
 
-                              <div class="form-group flex-1 mb-5">
-                                <label for="input-name">Email</label>
-                                <div>
-                                  <input
-                                    id="input-name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="Enter co-host name here"
-                                    v-model="createWebinar.name"
-                                  />
+                                <div
+                                  class="form-group flex-1 min-w-100 sm:w-full mb-5"
+                                >
+                                  <label for="input-name">Email</label>
+                                  <div>
+                                    <input
+                                      id="input-name"
+                                      type="text"
+                                      class="form-input"
+                                      placeholder="Enter email"
+                                      v-model="createWebinar.name"
+                                    />
+                                  </div>
                                 </div>
                               </div>
                               <div class="flex flex-col justify-end mb-5">
-                                <div></div>
                                 <div
                                   type="button"
-                                  class="btn btn-primary align-middle text-center hover"
+                                  class="add-btn btn btn-primary text-xs align-middle text-center hover"
                                 >
                                   Add
                                 </div>
@@ -213,37 +220,44 @@
                             <p class="text-sm font-bold text-gray-700 mb-3">
                               Add new moderator
                             </p>
-                            <div class="flex flex-row gap-10">
-                              <div class="form-group flex-1 mb-5">
-                                <label for="input-name">Moderator name</label>
-                                <div>
-                                  <input
-                                    id="input-name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="Enter moderator name here"
-                                    v-model="createWebinar.name"
-                                  />
+                            <div class="flex flex-wrap gap-2 justify-between">
+                              <div
+                                class="flex flex-row flex-wrap gap-2 md:gap-10 lg:gap-10 xl:gap-10"
+                              >
+                                <div
+                                  class="form-group flex-1 min-w-100 sm:w-full mb-5"
+                                >
+                                  <label for="input-name">Name</label>
+                                  <div>
+                                    <input
+                                      id="input-name"
+                                      type="text"
+                                      class="form-input"
+                                      placeholder="Enter name"
+                                      v-model="createWebinar.name"
+                                    />
+                                  </div>
                                 </div>
-                              </div>
 
-                              <div class="form-group flex-1 mb-5">
-                                <label for="input-name">Email</label>
-                                <div>
-                                  <input
-                                    id="input-name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="Enter moderator email here"
-                                    v-model="createWebinar.name"
-                                  />
+                                <div
+                                  class="form-group flex-1 min-w-100 sm:w-full mb-5"
+                                >
+                                  <label for="input-name">Email</label>
+                                  <div>
+                                    <input
+                                      id="input-name"
+                                      type="text"
+                                      class="form-input"
+                                      placeholder="Enter email"
+                                      v-model="createWebinar.name"
+                                    />
+                                  </div>
                                 </div>
                               </div>
                               <div class="flex flex-col justify-end mb-5">
-                                <div></div>
                                 <div
                                   type="button"
-                                  class="btn btn-primary align-middle text-center"
+                                  class="add-btn btn btn-primary text-xs align-middle text-center hover"
                                 >
                                   Add
                                 </div>
@@ -267,7 +281,7 @@
             <section v-if="isWebinarSwitch === 1">
               <!-- Resources section -->
               <section>
-                <div class="container mx-auto my-10 px-4 lg:px-0">
+                <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                       <dash-items-section-group
@@ -370,7 +384,7 @@
             <!-- Polls -->
             <section v-if="isWebinarSwitch === 2">
               <section>
-                <div class="container mx-auto my-10 px-4 lg:px-0">
+                <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                       <dash-items-section-group title="Polls" :edit="true">
@@ -484,9 +498,7 @@
                                 <label for="input-name">Poll length</label>
                                 <div class="cs-select mb-8">
                                   <select v-model="timeLength" class="input">
-                                    <option default value="">
-                                      Select category
-                                    </option>
+                                    <option default value="">Select</option>
                                   </select>
                                 </div>
                               </div>
@@ -494,9 +506,7 @@
                                 <!-- <label for="input-name">Choice 2</label> -->
                                 <div class="cs-select mb-8">
                                   <select v-model="timeLength" class="input">
-                                    <option default value="">
-                                      Select category
-                                    </option>
+                                    <option default value="">Select</option>
                                   </select>
                                 </div>
                               </div>
@@ -552,7 +562,7 @@
             <!-- Settings -->
             <section v-if="isWebinarSwitch === 3">
               <section>
-                <div class="container mx-auto my-10 px-4 lg:px-0">
+                <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
                       <!-- Settings and permissions -->
@@ -919,7 +929,7 @@
                                   </p>
                                 </div>
                                 <div
-                                  class="btn btn-light text-center items-center"
+                                  class="btn btn-light flex text-center self-center items-center h-10 px-2"
                                 >
                                   Change
                                 </div>
@@ -992,9 +1002,9 @@
                               </div>
                               <div class="flex flex-row justify-between my-4">
                                 <div
-                                  class="flex col-span-7 items-center justify-center"
+                                  class="flex col-span-7 items-center justify-center mr-5"
                                 >
-                                  <p class="text-sm text-gray-700 text-center">
+                                  <p class="text-sm text-gray-700 text-left">
                                     Reduce price by
                                   </p>
                                 </div>
@@ -1013,9 +1023,9 @@
 
                               <div class="flex flex-row justify-between my-4">
                                 <div
-                                  class="flex col-span-7 items-center justify-center"
+                                  class="flex col-span-7 items-center justify-center mr-5"
                                 >
-                                  <p class="text-sm text-gray-700 text-center">
+                                  <p class="text-sm text-gray-700 text-left">
                                     Starting from
                                   </p>
                                 </div>
@@ -1034,9 +1044,9 @@
 
                               <div class="flex flex-row justify-between my-4">
                                 <div
-                                  class="flex col-span-7 items-center justify-center"
+                                  class="flex col-span-7 items-center justify-center mr-10"
                                 >
-                                  <p class="text-sm text-gray-700 text-center">
+                                  <p class="text-sm text-gray-700 text-left">
                                     Until
                                   </p>
                                 </div>
@@ -1309,6 +1319,12 @@ export default {
 </script>
 
 <style scoped>
+.add-box {
+  min-width: 40rem;
+}
+.add-btn {
+  @apply text-xs !important;
+}
 .promotion-input {
   padding: 0.1rem 0.1rem;
   border: none !important;
@@ -1345,10 +1361,6 @@ export default {
   background-repeat: no-repeat;
   padding: 5px 5px 5px 32px;
   line-height: 20px;
-}
-.add-btn {
-  padding: 2px;
-  background: 'red';
 }
 .menu-btn {
   border-top: 5px solid;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div
+    <!-- <div
       @click="toggleMeetingOpt"
       :class="{ hidden: !meetingOpt }"
       class="fixed"
@@ -10,17 +10,17 @@
         zIndex: 2,
         marginLeft: '-300px',
       }"
-    ></div>
+    ></div> -->
     <section class="bg-orange-100">
-      <div
-        class="container mx-auto flex items-center align-middle justify-center"
-      >
-        <div class="grid grid-cols-12 gap-10 mt-8 mb-6 lg:mb-40">
+      <div class="mx-auto flex items-center align-middle justify-center">
+        <div
+          class="grid grid-cols-12 mt-8 md:mb-6 lg:mb-20 xl:mb-24 md:mx-0 lg:mx-5 xl:mx-0"
+        >
           <!-- Left -->
           <div class="col-span-12 md:col-span-6 px-4 lg:px-0">
-            <h1 class="font-bold leading-tight md:mt-20 mt-10 lg:-mr-8">
-              <!-- Webinars and courses to up your game 🚀🚀 -->
-              <!-- Relevant knowledge to start earning immediately -->
+            <h1
+              class="font-bold leading-tight sm:mt-0 md:mt-0 lg:mt-10 lg:-mr-8"
+            >
               Create video meetings and webinars for free.
             </h1>
             <h5 class="mt-10 mb-8 leading-normal">
@@ -29,12 +29,12 @@
               strategies for building successful businesses in Africa.
             </h5>
 
-            <div class="flex text-center pt-8 pb-4 sm:pb-4">
-              <div class="flex text-center pt-8 pb-4 sm:pb-4">
+            <div class="flex text-center pt-8 pb-4 sm:pb-4 mb-10">
+              <div class="flex text-center md:pt-8 md:pb-4 sm:pb-8">
                 <span class="flex mr-3">
                   <nuxt-link
                     to="/tutor/webinars/create"
-                    class="btn text-white bg-blue-500 shadow"
+                    class="btn2 p-3 lg:px-5 text-xs sm:text-xs md:text-xs lg:text-sm xl:text-sm text-white bg-blue-500 shadow"
                   >
                     <img src="/icon/webinars.svg" class="inline h-5 mr-2" />
                     New Webinar
@@ -42,11 +42,11 @@
                 </span>
               </div>
 
-              <div class="flex text-center pt-8 pb-4 sm:pb-4 relative">
+              <div class="flex text-center md:pt-8 md:pb-4 sm:pb-4 relative">
                 <span class="flex mr-3">
                   <button
                     type="button"
-                    class="btn btn-primary shadow"
+                    class="btn2 p-3 lg:px-5 text-xs sm:text-xs md:text-xs lg:text-sm xl:text-sm btn2-primary shadow"
                     @click.prevent="toggleMeetingOpt"
                   >
                     <img src="/icon/camera.svg" class="inline h-5 mr-2" />
@@ -80,10 +80,6 @@
                 </div>
               </div>
             </div>
-
-            <!-- <div class="mt-8 mb-6 lg:mb-40">
-              <hr />
-            </div> -->
           </div>
           <!-- Right -->
           <div class="col-span-12 md:col-span-6 px-4 lg:px-0">
@@ -98,7 +94,7 @@
             >
               <div class="flex justify-center">
                 <span
-                  class="text-3xl text-gray-600 hover:text-white h-12 w-12 bg-gray-200 hover:bg-black rounded-full flex align-middle justify-center items-center cursor-pointer"
+                  class="md:text-3xl lg:text-2xl text-2xl text-gray-600 hover:text-white h-12 w-12 bg-gray-200 hover:bg-black rounded-full flex align-middle justify-center items-center cursor-pointer"
                   @click="togglePrice(priceSwitch === 0 ? 1 : 0)"
                   >&#x3c;</span
                 >
@@ -115,7 +111,7 @@
               />
               <div class="flex justify-center">
                 <span
-                  class="text-3xl text-gray-600 hover:text-white h-12 w-12 bg-gray-200 hover:bg-black rounded-full flex align-middle justify-center items-center cursor-pointer"
+                  class="md:text-3xl lg:text-2xl text-2xl text-gray-600 hover:text-white h-12 w-12 bg-gray-200 hover:bg-black rounded-full flex align-middle justify-center items-center cursor-pointer"
                   @click="togglePrice(priceSwitch === 1 ? 0 : 1)"
                   >&#x3e;</span
                 >
@@ -133,7 +129,7 @@ import Vue from 'vue'
 
 export default {
   layout: 'dashboard',
-  middleware: ['check-auth', 'auth'],
+  middleware: ['check-auth', 'auth', 'isTutor'],
   data: () => ({
     meetingOpt: false,
     isAnnually: false,
@@ -183,6 +179,9 @@ export default {
 </script>
 
 <style scoped>
+/* .webinar-btn {
+  @apply text-xs p-3  !important;
+} */
 .search-box {
   background-image: url('/icon/search.svg');
   background-repeat: no-repeat;

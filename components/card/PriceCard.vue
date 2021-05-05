@@ -8,18 +8,24 @@
       borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
     }"
   >
-    <div class="px-10 py-10 md:p-6 mx-auto text-center">
+    <div
+      class="sm:px-5 lg:px-5 md:px-5 sm:py-5 md:py-10 md:p-6 mx-auto text-center"
+    >
       <p class="text-sm text-gray-700 font-semibold mt-2 mb-3">
         {{ priceData.name }}
       </p>
-      <h1 class="text-4xl text-gray-900 font-semibold mb-0">
+      <h1
+        class="text-2x lg:text-2xl xl:text-4xl text-gray-900 font-semibold mb-0"
+      >
         {{ isAnnually ? priceData.annualPrice : priceData.monthlyPrice }}
       </h1>
       <p class="text-sm text-gray-700 mt-2 md:mt-0">
         {{ priceData.description }}
       </p>
     </div>
-    <div class="px-10 py-10 md:p-6 mx-auto text-left">
+    <div
+      class="px-5 sm:px-5 lg:px-5 md:px-5 xl:px-10 py-10 md:p-6 mx-auto text-left"
+    >
       <div
         class="flex flex-row gap-5 mb-5"
         v-for="item in priceInfo"
