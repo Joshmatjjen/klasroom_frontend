@@ -166,7 +166,45 @@ input[type='date'] {
   box-shadow: 0 10px 36px rgba(249, 158, 66, 0.42);
 }
 
+.btn.btn-xs {
+  padding: 0.75rem;
+  @apply font-semibold rounded-lg;
+}
+
 .btn.btn-light.btn-sm {
+  padding: 8.5px 25px;
+  @apply text-sm font-semibold rounded-lg;
+  @apply text-black bg-gray-300;
+}
+
+/* Btn2 */
+.btn2 {
+  @apply font-semibold rounded-lg;
+}
+
+.btn2:hover,
+.btn2:focus {
+  cursor: pointer;
+  outline: none;
+}
+
+.btn2.btn2-primary {
+  @apply text-white bg-orange-500;
+}
+
+.btn2.btn2-light {
+  @apply text-black  bg-gray-300;
+}
+
+.btn2.btn2-disable {
+  @apply text-white  bg-gray-400;
+}
+
+.btn2.btn2-primary.shadow {
+  box-shadow: 0 10px 36px rgba(249, 158, 66, 0.42);
+}
+
+.btn2.btn2-light.btn2-sm {
   padding: 8.5px 25px;
   @apply text-sm font-semibold rounded-lg;
   @apply text-black bg-gray-300;

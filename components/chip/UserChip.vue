@@ -1,8 +1,8 @@
 <template>
   <div
-    class="container flex flex-row bg-white rounded-lg border border-gray-300 shadow-hover mb-5"
+    class="container flex flex-row gap-5 justify-between bg-white rounded-lg border border-gray-300 shadow-hover mb-3 overflow-x-auto"
   >
-    <div class="flex flex-row w-full p-4">
+    <div class="flex flex-row w-full px-2 py-4">
       <img class="h-full rounded-lg" src="/avatar.jpg" />
       <div class="pl-3 md:pl-5 flex flex-col justify-around">
         <p class="text-xs font-bold text-gray-700">
@@ -13,16 +13,16 @@
         </p>
       </div>
     </div>
-    <div v-if="owner">
+    <div v-if="owner" class="ml-5">
       <div
-        class="bg-green-600 rounded-3xl text-xs md:text-sm text-white md:text-right px-3 py-1 md:m-5"
+        class="bg-green-600 rounded-3xl text-xs md:text-sm text-white md:text-right px-3 py-1 my-5 mx-2"
       >
         Owner
       </div>
     </div>
-    <div v-if="user">
+    <div v-if="user" class="ml-5">
       <div
-        class="flex flex-row rounded-3xl text-xs md:text-sm text-white md:text-right md:m-5"
+        class="flex flex-row rounded-3xl text-xs md:text-sm text-white md:text-right my-5 ml-2 mr-5"
       >
         <button class="flex items-center mr-5">
           <svg
