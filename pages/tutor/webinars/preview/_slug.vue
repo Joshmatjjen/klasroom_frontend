@@ -2,6 +2,37 @@
   <div class="min-h-screen mb-24">
     <section class="bg-orange-100">
       <div class="container mx-auto mb-10 px-4 lg:px-0">
+        <section>
+          <div
+            class="flex flex-row gap-10 place-items-start px-10 border-b-2 border-gray-200 mb-8"
+          >
+            <button
+              v-on:click="switcher('preview')"
+              v-bind:class="{ active: isWebinars.preview }"
+              class="menu-btn"
+            >
+              <p class="text-xs text-gray-700">Webinar Preview</p>
+            </button>
+            <button
+              v-on:click="switcher('signups')"
+              v-bind:class="{ active: isWebinars.signups }"
+              class="menu-btn"
+            >
+              <p class="text-xs text-gray-700">Signups</p>
+            </button>
+            <button
+              v-on:click="switcher('ratingReview')"
+              v-bind:class="{ active: isWebinars.ratingReview }"
+              class="menu-btn"
+            >
+              <p class="text-xs text-gray-700">Ratings and Reviews</p>
+            </button>
+          </div>
+          <edit-chip
+            desc='This is a preview of your webinar. To make changes, please click "Edit Webinar"'
+            name="Edit Webinar"
+          />
+        </section>
         <div class="grid grid-cols-12 gap-5">
           <div
             v-if="!$device.isMobile"
@@ -86,11 +117,13 @@
 
 <script>
 import Vue from 'vue'
+import EditChip from '~/components/chip/EditChip.vue'
 
 const webinars = require('@/static/json/latest-webinars.json')
 const youLearn = require('@/static/json/courses-you-learn.json')
 
 export default {
+  components: { EditChip },
   layout: 'dashboard',
   middleware: ['check-auth', 'auth', 'isTutor'],
   fetch({ store }) {
@@ -103,6 +136,11 @@ export default {
     youLearn,
     tab: 0,
     tabs: ['Chat', 'People', 'Poll', 'Resources'],
+    isWebinars: {
+      preview: true,
+      signups: false,
+      ratingReview: false,
+    },
   }),
   mounted() {
     if (this.$device.isMobile) {
@@ -125,6 +163,46 @@ export default {
         price: 2500,
       })
     },
+
+    switcher: function (value) {
+      switch (value) {
+        case 'preview':
+          this.isWebinars.preview = true
+          this.isWebinars.signups = false
+          this.isWebinars.ratingReview = false
+          break
+        case 'signups':
+          this.isWebinars.preview = false
+          this.isWebinars.signups = true
+          this.isWebinars.ratingReview = false
+          break
+        case 'ratingReview':
+          this.isWebinars.preview = false
+          this.isWebinars.signups = false
+          this.isWebinars.ratingReview = true
+          break
+        default:
+          this.isWebinars.preview = true
+          this.isWebinars.signups = false
+          this.isWebinars.ratingReview = false
+      }
+      // some code to filter users
+    },
   },
 }
 </script>
+<style scoped>
+.menu-btn {
+  border-top: 5px solid;
+  border-bottom: 5px solid;
+  padding: 0.938rem 0;
+  display: inline-block;
+  border-color: transparent;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.menu-btn.active {
+  border-bottom-color: #f99e42;
+  font-weight: 700;
+}
+</style>

@@ -378,6 +378,10 @@ label.checkbox input:checked ~ span.checkmark::after {
 }
 
 /* Vue Good Table */
+.vgt-right-align {
+  text-align: center !important;
+}
+
 .vgt-table th.line-numbers,
 .vgt-table th.vgt-checkbox-col {
   background: #ffffff !important;
