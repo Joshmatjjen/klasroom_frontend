@@ -89,9 +89,10 @@ export default ({ $axios, app, store, redirect, route }) => {
         showConfirmButton: false,
         showCloseButton: true,
         timer: 5000,
-      }).then(() => {
-        redirect({ name: 'index' })
       })
+      // .then(() => {
+      //   redirect({ name: 'index' })
+      // })
     }
 
     // no access to route
