@@ -48,7 +48,7 @@ export default ({ $axios, app, store, redirect, route }) => {
       Swal.fire({
         position: 'top-end',
         width: '350px',
-        text: 'Something went wrong. Try again',
+        text: error.response.data.message ? error.response.data.message : 'Something went wrong. Try again',
         backdrop: false,
         allowOutsideClick: false,
         showConfirmButton: false,
@@ -64,7 +64,7 @@ export default ({ $axios, app, store, redirect, route }) => {
       Swal.fire({
         position: 'top-end',
         width: '350px',
-        text: 'Your session has expired',
+        text: error.response.data.message ? error.response.data.message : 'Your session has expired',
         backdrop: false,
         allowOutsideClick: false,
         showConfirmButton: false,
@@ -78,7 +78,7 @@ export default ({ $axios, app, store, redirect, route }) => {
       })
     }
 
-    if (status === 400 || status === 409 || status === 404) {
+    if (status === 400 || status === 409 || status === 404 || status === 403) {
 
       Swal.fire({
         position: 'top-end',
@@ -89,15 +89,16 @@ export default ({ $axios, app, store, redirect, route }) => {
         showConfirmButton: false,
         showCloseButton: true,
         timer: 5000,
-      }).then(() => {
-        redirect({ name: 'login' })
       })
+      // .then(() => {
+      //   redirect({ name: 'index' })
+      // })
     }
 
     // no access to route
-    if (status === 403 && store.getters['auth/check']) {
-      redirect({ name: 'dashboard' })
-    }
+    // if (status === 403 && store.getters['auth/check']) {
+    //   redirect({ name: 'dashboard' })
+    // }
 
     return Promise.reject(error)
   })

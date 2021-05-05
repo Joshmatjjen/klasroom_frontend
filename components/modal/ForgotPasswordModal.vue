@@ -95,9 +95,10 @@
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="proceed"
+                      @click.prevent="proceed"
                     >
                       Request password reset
+                      <loader v-if="loading" color="white" />
                     </button>
                   </span>
                 </div>
@@ -129,6 +130,7 @@ export default {
   methods: {
     proceed(e) {
       if (e) e.preventDefault()
+      this.loading = true
       this.$store.dispatch("auth/forgetPassword", {
         ...this.form,
       })

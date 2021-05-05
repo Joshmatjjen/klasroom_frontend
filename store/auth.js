@@ -60,18 +60,14 @@ export const actions = {
   async becomeATutor(vuexContext, userData) {
     try {
 
-      // console.log('store: ', vuexContext.state.user)
       const user = vuexContext.state.user
-      const { data: newData } = await this.$axios.$post('/users/tutor', {
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        password: userData.password,
+      const { data: newData, message } = await this.$axios.$post('/users/tutor', {
         courseCategories: userData.courseCategories
       }, {
         headers: getAccessTokenHeader(user.accessToken)
       })
-      return newData
+      // console.log("newData: ", newData)
+      return {newData, message}
 
     } catch (e) {
       return false
@@ -81,43 +77,43 @@ export const actions = {
   async validateToken(vuexContext, userData) {
     try {
       console.log("start validation: ", userData)
-      const { data } = await this.$axios.$post(`/validatetoken?token_type=${userData.type}`, {
+      const { data, message } = await this.$axios.$post(`/validatetoken?token_type=${userData.type}`, {
         token: userData.token,
       })
-      console.log("data: ", data)
-      return data
+      // console.log("data: ", data)
+      return {data, message}
 
     } catch (e) {
-      console.log("error validation: ", e)
+      // console.log("error validation: ", e)
       return false
     }
   }, 
 
   async forgetPassword(vuexContext, userData) {
     try {
-      const { data } = await this.$axios.$post(`/resettoken`, {
+      const { data, message } = await this.$axios.$post(`/resettoken`, {
         email: userData.email,
       })
-      console.log("data: ", data)
-      return data
+      // console.log("data: ", data)
+      return {data, message}
 
     } catch (e) {
-      console.log("error validation: ", e)
+      // console.log("error validation: ", e)
       return false
     }
   },
 
   async resetPassword(vuexContext, userData) {
     try {
-      const { data } = await this.$axios.$post(`/resetpassword`, {
+      const { data, message } = await this.$axios.$post(`/resetpassword`, {
         password: userData.password,
         token: userData.token
       })
-      console.log("data: ", data)
-      return data
+      // console.log("data: ", data)
+      return {data, message}
 
     } catch (e) {
-      console.log("error validation: ", e)
+      // console.log("error validation: ", e)
       return false
     }
   },
@@ -133,7 +129,7 @@ export const actions = {
 
         // console.log('fetch old user success: ', data)
 
-        const { data: newData } = await this.$axios.$post('/users/tutor', {
+        const { data: newData, message } = await this.$axios.$post('/users/tutor', {
           name: data.name,
           email: userData.email,
           phone: data.phone,
@@ -142,10 +138,10 @@ export const actions = {
         }, {
           headers: getAccessTokenHeader(data.accessToken)
         })
-        return newData
+        return {newData, message}
       }
-      const { data } = await this.$axios.$post(userData.userType === "student" ? '/users' : '/users/tutor', userData)
-      return data
+      const { data, message } = await this.$axios.$post(userData.userType === "student" ? '/users' : '/users/tutor', userData)
+      return {data, message}
     } catch (e) {
       return false
     }
