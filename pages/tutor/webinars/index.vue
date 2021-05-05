@@ -100,6 +100,7 @@
                   :key="key"
                   :webinar="webinar"
                   :session="true"
+                  userType="tutor"
                 />
               </div>
             </dash-items-section-group>

@@ -10,6 +10,7 @@
                   v-for="(webinar, key) in webinars"
                   :key="key"
                   :webinar="webinar"
+                  userType="tutor"
                 />
               </div>
             </dash-items-section-group>
