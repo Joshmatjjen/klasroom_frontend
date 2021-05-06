@@ -358,10 +358,15 @@ export default {
     },
     onLogin(e, userType) {
       if (e) e.preventDefault()
-      this.loading = true
-      for (let i in this.loginForm) {
+      this.loading = true;
+
+      const data = {
+        ...this.loginForm
+      }
+      
+      for (let i in data) {
         console.log(i)
-        if (this.loginForm[i].length === 0) {
+        if (data[i].length === 0) {
           this.loginFormError.push(i);
         }
       }
@@ -369,9 +374,7 @@ export default {
         this.loading = false;
         return;
       }
-      const data = {
-        ...this.loginForm
-      }
+      
       this.$store.dispatch("auth/loginUser", {
         ...data,
         userType

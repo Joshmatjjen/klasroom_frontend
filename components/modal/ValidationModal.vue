@@ -111,9 +111,13 @@
                       class="form-input"
                       placeholder="Enter your password here"
                       v-model="signupForm.password"
-                      @input="checkConfirmPassword"
+                      @input="() => {
+                        checkSignupFormError('password')
+                        checkConfirmPassword()
+                      }"
                     />
                   </div>
+                  <span v-if="signupFormError.find(i => i === 'password')" class="text-sm text-red-700">Password is required</span>
                 </div>
                 <div class="form-group">
                   <label for="input-re_password">Confirm Password</label>
@@ -124,11 +128,15 @@
                       type="password"
                       placeholder="Confirm password"
                       v-model="signupForm.confirmPassword"
-                      @input="checkConfirmPassword"
+                      @input="() => {
+                        checkSignupFormError('confirmPassword')
+                        checkConfirmPassword()
+                      }"
                     />
                   </div>
+                  <span v-if="signupFormError.find(i => i === 'confirmPassword')" class="text-sm text-red-700 block">Confirm password is required</span>
+                  <span v-if="showConfirmPasswordErr" class="text-sm text-red-700">Confirm password dosen't match</span>
                 </div>
-                <span v-if="showConfirmPasswordErr" class="text-sm text-red-700">Confirm password dosen't match</span>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
                     <button
@@ -154,8 +162,10 @@
                       class="form-input"
                       placeholder="Enter your email here"
                       v-model="signupForm.email"
+                      @input="checkSignupFormError('email')"
                     />
                   </div>
+                  <span v-if="signupFormError.find(i => i === 'email')" class="text-sm text-red-700">Email is required</span>
                 </div>
 
                 <div class="form-group mb-5">
@@ -167,8 +177,10 @@
                       class="form-input"
                       placeholder="Enter your password here"
                       v-model="signupForm.password"
+                      @input="checkSignupFormError('password')"
                     />
                   </div>
+                  <span v-if="signupFormError.find(i => i === 'password')" class="text-sm text-red-700">Password is required</span>
                 </div>
                 
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
@@ -207,6 +219,7 @@ export default {
       courseCategories: []
     },
     showConfirmPasswordErr: false,
+    signupFormError: [],
   }),
   computed: {
     ...mapState({
@@ -228,16 +241,35 @@ export default {
     checkConfirmPassword() {
       this.showConfirmPasswordErr = false;
     },
+    checkSignupFormError(value) {
+      this.signupFormError = this.signupFormError.filter(i => i !== value);
+    },
     resetPassword(e) {
       if (e) e.preventDefault();
       if (this.signupForm.password !== this.signupForm.confirmPassword) {
         this.showConfirmPasswordErr = true;
         return;
       }
-      this.loading = true
+      this.loading = true;
+
+      const {password, confirmPassword} = this.signupForm;
+
+      const data = {
+        password, confirmPassword
+      }
+
+      for (let i in data) {
+        if (data[i].length === 0) {       
+          this.signupFormError.push(i);
+        }
+      }
+      if (this.signupFormError.length) {
+        this.loading = false;
+        return;
+      }
 
       this.$store.dispatch("auth/resetPassword", {
-        ...this.signupForm,
+        ...data,
         token: this.showModal.token
       })
       .then((res) => {
@@ -251,12 +283,25 @@ export default {
 
     confirmEmail(e) {
       if (e) e.preventDefault()
-      this.loading = true
+      this.loading = true;
 
-      this.$store.dispatch("auth/loginUser", {
-        password: this.signupForm.password,
-        userIdentity: this.signupForm.email
-      })
+      const {email, password} = this.signupForm;
+
+      const data = {
+        email, password
+      }
+
+      for (let i in data) {
+        if (data[i].length === 0) {       
+          this.signupFormError.push(i);
+        }
+      }
+      if (this.signupFormError.length) {
+        this.loading = false;
+        return;
+      }
+
+      this.$store.dispatch("auth/loginUser", data)
       .then((res) => {
         this.loading = false
         if (res) {
