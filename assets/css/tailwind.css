@@ -376,8 +376,17 @@ label.checkbox input:checked ~ span.checkmark::after {
     max-height: calc(100vh - 170px);
   }
 }
+.vl {
+  height: 100%;
+  width: 1px;
+  @apply bg-gray-300;
+}
 
 /* Vue Good Table */
+.vgt-right-align {
+  text-align: center !important;
+}
+
 .vgt-table th.line-numbers,
 .vgt-table th.vgt-checkbox-col {
   background: #ffffff !important;

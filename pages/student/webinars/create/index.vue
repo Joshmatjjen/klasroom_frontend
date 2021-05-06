@@ -7,7 +7,7 @@
           <div class="col-span-full lg:col-span-7 xl:col-span-8">
             <section>
               <div
-                class="switcher flex flex-row gap-10 place-items-start px-5 border-b-2 border-gray-200 overflow-scroll scrollbar-thumb-orange"
+                class="switcher whitespace-no-wrap flex flex-row gap-10 place-items-start px-5 border-b-2 border-gray-200 overflow-scroll scrollbar-thumb-orange"
               >
                 <button
                   v-on:click="switcher(0)"

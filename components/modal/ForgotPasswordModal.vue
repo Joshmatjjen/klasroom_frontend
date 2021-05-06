@@ -87,8 +87,10 @@
                       type="email"
                       placeholder="Enter your email here"
                       v-model="form.email"
+                      @input="checkFormError"
                     />
                   </div>
+                  <span v-if="formError" class="text-sm text-red-700">Email address is required</span>
                 </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
@@ -121,6 +123,7 @@ export default {
       email: '',
     },
     loading: false,
+    formError: false,
   }),
   computed: {
     ...mapState({
@@ -128,9 +131,17 @@ export default {
     }),
   },
   methods: {
+    checkFormError() {
+      this.formError = false;
+    },
     proceed(e) {
       if (e) e.preventDefault()
       this.loading = true
+      if (!this.form.email) {
+        this.formError = true;
+        this.loading = false;
+        return;
+      }
       this.$store.dispatch("auth/forgetPassword", {
         ...this.form,
       })
