@@ -149,6 +149,19 @@
             </div>
           </div>
         </div>
+
+        <!-- Ratings and Reviews -->
+        <div class="grid grid-cols-12 gap-5" v-if="isWebinars.ratingReview">
+          <div class="col-span-full">
+            <div class="col-span-12">
+              <list-table-1
+                :columns="columnsReviews"
+                :rows="rowsReviews"
+                type="Reviews"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -161,6 +174,7 @@ import EditChip from '~/components/chip/EditChip.vue'
 const webinars = require('@/static/json/latest-webinars.json')
 const youLearn = require('@/static/json/courses-you-learn.json')
 const students = require('@/static/json/student-signups.json')
+const reviews = require('@/static/json/webinar-reviews.json')
 
 export default {
   components: { EditChip },
@@ -199,6 +213,29 @@ export default {
       },
     ],
     rowsStudent: _.take(students, 6),
+
+    columnsReviews: [
+      {
+        label: 'Name',
+        field: 'name',
+      },
+      {
+        label: 'Date',
+        field: 'date',
+        type: 'date',
+        dateInputFormat: 'yyyy-MM-dd',
+        dateOutputFormat: 'MMM do yy',
+      },
+      {
+        label: 'Review',
+        field: 'review',
+      },
+      {
+        label: 'Rating',
+        field: 'rating',
+      },
+    ],
+    rowsReviews: _.take(reviews, 10),
   }),
   mounted() {
     if (this.$device.isMobile) {

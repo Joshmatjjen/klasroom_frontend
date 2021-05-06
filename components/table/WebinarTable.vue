@@ -31,7 +31,8 @@
           >
             <span
               v-if="props.column.field == 'webinarTitle'"
-              class="flex flex-row justify-between"
+              class=""
+              :class="onDraft && 'flex flex-row justify-between'"
             >
               <div class="flex flex-row max-w-md">
                 <img
@@ -200,7 +201,7 @@ export default {
   border-width: 0.1rem;
 }
 .vgt-wrap {
-  min-width: 60rem;
+  min-width: 58rem;
   overflow-x: auto;
   overflow-y: hidden;
   margin: 0.5rem;

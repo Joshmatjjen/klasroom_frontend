@@ -13,7 +13,9 @@
       @click="toggleMenu"
     ></div>
     <div class="flex flex-row justify-between px-5 my-5">
-      <p class="text-sm font-medium">{{ rows ? rows.length : 0 }} {{ type }}</p>
+      <p class="text-sm font-semibold">
+        {{ rows ? rows.length : 0 }} {{ type }}
+      </p>
       <div class="flex flex-row gap-5">
         <p class="text-xs font-medium">Export CSV</p>
         <div class="vl"></div>
@@ -47,11 +49,8 @@
         styleClass="vgt-table vgt-wrap vgt-left-align vgt-right-align striped"
       >
         <template slot="table-row" slot-scope="props">
-          <span
-            v-if="props.column.field == 'name'"
-            class="flex flex-row justify-between"
-          >
-            <div class="flex flex-row max-w-md items-center">
+          <span v-if="props.column.field == 'name'" class="flex flex-row">
+            <div class="flex flex-row items-center">
               <img
                 v-if="!onDraft"
                 :src="props.row.imageUrl"
@@ -76,14 +75,14 @@
               </div>
             </div>
             <!-- Draft for webinar Start -->
-            <div
+            <!-- <div
               v-if="onDraft && props.column.field == 'name'"
               class="flex flex-row gap-5 items-center justify-end relative"
             >
               <div class="bg-gray-300 w-16 h-5 rounded-xl"></div>
               <div class="bg-gray-300 w-16 h-5 rounded-xl"></div>
               <div class="bg-gray-300 w-16 h-5 rounded-xl"></div>
-            </div>
+            </div> -->
 
             <!-- Draft for webinar End -->
           </span>
@@ -92,14 +91,22 @@
               >₦{{ props.row.price }}</span
             >
           </span>
-          <span v-else-if="props.column.field == 'rating'">
+          <span
+            v-else-if="props.column.field == 'rating'"
+            class="flex flex-row"
+          >
             <rating :grade="props.row.rating" :viewOnly="true" />
+            <span class="pl-2">{{ ' ' + props.row.rating + ' stars' }}</span>
           </span>
-
           <span v-else>
             {{ props.formattedRow[props.column.field] }}
           </span>
-          <span v-if="props.column.field == 'lastActive'">
+          <span
+            v-if="
+              props.column.field == 'lastActive' ||
+              props.column.field == 'rating'
+            "
+          >
             <div class="flex flex-row gap-10 items-center justify-end relative">
               <span
                 v-on:click.prevent="toggleMenu(props.row.id)"
@@ -200,7 +207,7 @@ export default {
   @apply font-normal text-xs;
 }
 .vgt-wrap {
-  min-width: 40rem;
+  min-width: 60rem;
   overflow-x: auto;
   overflow-y: hidden;
   margin: 0.5rem;
