@@ -538,3 +538,31 @@ table.vgt-table {
     @apply text-lg;
   } /* 18px */
 }
+
+
+/* body.swal2-no-backdrop .swal2-container.swal2-top-end, body.swal2-no-backdrop .swal2-container.swal2-top-right {
+  background-color: rgba(63,255,106,0.69) !important;
+  border: 3px solid white;
+  position: relative !important;
+} */
+
+.swal2-popup {
+  border: 3px solid #000;
+  @apply bg-blue-500 !important;
+}
+
+.swal2-content {
+  color: #fff !important;
+}
+
+.swal2-close{
+  color: #fff !important;
+}
+
+.swal2-close:focus {
+  box-shadow: none !important;
+}
+
+.swal2-close:hover {
+  color: #f27474 !important;
+}
