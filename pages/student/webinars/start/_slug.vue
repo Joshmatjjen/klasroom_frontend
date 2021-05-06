@@ -22,6 +22,9 @@
     <div class="grid grid-cols-12">
       <div class="video-player col-span-full lg:col-span-9 xl:col-span-9 flex flex-col justify-between">
         <video ref="localVideo" id="localVideo" autoplay muted playsinline class="mx-auto max-h-full"></video>
+        <div id="players" class="bg-white flex p-10 h-64">
+          <!-- <video ref="localVideo" id="localVideo" autoplay muted playsinline class="mx-auto max-h-full"></video> -->
+        </div>
         <div class="player-control bg-white flex p-10">
           <div class="flex w-1/3">
             <img src="/webinar/record.svg" class="mr-2 cursor-pointer" />
@@ -37,7 +40,7 @@
             >
               {{isStreaming ? 'End Sream' : 'Start Sream'}}
             </button>
-            <img @click="toogleVideo" :src="`/webinar/${videoOn ? 'video' : 'videooff'}.svg`" class="mx-auto cursor-pointer" />
+            <img @click="toogleVideo" :src="`/webinar/${isCameraOff ? 'videooff' : 'video'}.svg`" class="mx-auto cursor-pointer" />
           </div>
 
           <div class="flex w-1/3">
@@ -121,7 +124,7 @@ import Vue from 'vue'
 import {WebRTCAdaptor} from '~/assets/js/webrtc_adaptor'
 import { getDevices, getUserMedia } from '~/logic/stream'
 const isProduction = process.env.NODE_ENV === 'production'
-let webRTCAdaptor = null;
+// let this.webRTCAdaptor = null;
 
 // console.log(adaptor.browserDetails.browser)
 
@@ -149,50 +152,12 @@ export default {
     tab: 0,
     tabs: ['Chat', 'People', 'Poll', 'Resources'],
     isMute: true,
-    videoOn: true,
-    // streams: {
-    //   rtmp: '',
-    //   hls: ''
-    // },
-    // playerOptions: {
-    //   overNative: true,
-    //   autoplay: false,
-    //   controls: true,
-    //   techOrder: ['flash', 'html5'],
-    //   sourceOrder: true,
-    //   flash: {
-    //     hls: { withCredentials: false },
-    //     swf: isProduction ? '/vue-videojs-demo/static/media/video-js.swf' : '/static/media/video-js.swf'
-    //   },
-    //   html5: { hls: { withCredentials: false } },
-    //   sources: [
-    //     {
-    //       type: 'rtmp/mp4',
-    //       src: 'rtmp://184.72.239.149/vod/&mp4:BigBuckBunny_115k.mov'
-    //     },
-    //     {
-    //       withCredentials: false,
-    //       type: 'application/x-mpegURL',
-    //       src: 'http://playertest.longtailvideo.com/adaptive/bipbop/gear4/prog_index.m3u8'
-    //     }
-    //   ],
-    //   poster: isProduction ? '/vue-videojs-demo/static/images/logo.png' : '/static/images/logo.png'
-    //   // controlBar: {
-    //   //   timeDivider: false, // 时间分割线
-    //   //   durationDisplay: false, // 总时间
-    //   //   progressControl: true, // 进度条
-    //   //   customControlSpacer: true, // 未知
-    //   //   fullscreenToggle: true // 全屏
-    //   // },
-    // },
-    // showCode: false,
-    // showPlayButton: false,
+    isCameraOff: true,
+    streamsList: [],
+    roomOfStream: [],
+    playOnly: false,
+    webRTCAdaptor: null,
   }),
-  // mounted() {
-  //   if (this.$device.isMobile) {
-  //     this.tabs.unshift('Home')
-  //   }
-  // },
   methods: {
     confirm(state) {
       if (state === 'mic_carmera_test')
@@ -205,7 +170,7 @@ export default {
 
     startPublishing() {
       this.streamId = 'stream1' // streamNameBox.value;
-      webRTCAdaptor.publish(this.streamId, this.token, this.subscriberId, this.subscriberCode);
+      this.webRTCAdaptor.publish(this.streamId, this.token, this.subscriberId, this.subscriberCode);
     },
 
     stopPublishing() {
@@ -213,42 +178,42 @@ export default {
         clearInterval(autoRepublishIntervalJob);
         autoRepublishIntervalJob = null;
       }
-      webRTCAdaptor.stop(this.streamId);
+      this.webRTCAdaptor.stop(this.streamId);
     },
 
     toogleAudio() {
-      if (this.isMute) webRTCAdaptor.unmuteLocalMic()
-      else webRTCAdaptor.muteLocalMic()
+      if (this.isMute) this.webRTCAdaptor.unmuteLocalMic()
+      else this.webRTCAdaptor.muteLocalMic()
       this.isMute = !this.isMute
     },
 
     toogleVideo() {
-      if (this.videoOn) webRTCAdaptor.turnOffLocalCamera()
-      else webRTCAdaptor.turnOnLocalCamera()
-      this.videoOn = !this.videoOn
+      if (this.isCameraOff) this.webRTCAdaptor.turnOnLocalCamera()
+      else this.webRTCAdaptor.turnOffLocalCamera()
+      this.isCameraOff = !this.isCameraOff
     },
 
     switchVideoMode(value) {
       if(value == "screen") {
-        //webRTCAdaptor.switchDesktopWithMicAudio(this.streamId);
-        webRTCAdaptor.switchDesktopCapture(this.streamId);
+        //this.webRTCAdaptor.switchDesktopWithMicAudio(this.streamId);
+        this.webRTCAdaptor.switchDesktopCapture(this.streamId);
       }
       else if(value == "screenwithcamera"){
-        webRTCAdaptor.switchDesktopCaptureWithCamera(this.streamId);
+        this.webRTCAdaptor.switchDesktopCaptureWithCamera(this.streamId);
       }
       else {
-        webRTCAdaptor.switchVideoCameraCapture(this.streamId, value);
+        this.webRTCAdaptor.switchVideoCameraCapture(this.streamId, value);
       }
     },
 
     switchAudioMode(value) {
-      webRTCAdaptor.switchAudioInputSource(this.streamId, value);
+      this.webRTCAdaptor.switchAudioInputSource(this.streamId, value);
     },
     // startAnimation() {
 
-    //   var state = webRTCAdaptor.signallingState(this.streamId);
+    //   var state = this.webRTCAdaptor.signallingState(this.streamId);
     //   if (state != null && state != "closed") {
-    //     var iceState = webRTCAdaptor.iceConnectionState(this.streamId);
+    //     var iceState = this.webRTCAdaptor.iceConnectionState(this.streamId);
     //     if (iceState != null && iceState != "failed" && iceState != "disconnected") {
     //         startAnimation();
     //     }
@@ -263,6 +228,20 @@ export default {
 
         const video = this.$refs.localVideo
         // video.srcObject = this.stream;
+      }
+      // this.doConnectStream(value)
+    },
+    async webRTCAdaptor(value) {
+      await this.$nextTick()
+      if (value !== null) {
+        // console.log(value.localVideo.srcObject)
+        // const player = document.createElement("video");
+        // player.srcObject = value.localVideo.srcObject
+        const clone = value.localVideo.cloneNode(true);
+        console.log('clone:', clone)
+        // clone.removeAttribute("id");
+        // player = '<video id="localVideo'+this.streamId+'"controls autoplay playsinline></video>';
+        document.getElementById("players").appendChild(clone);
       }
       // this.doConnectStream(value)
     },
@@ -288,22 +267,61 @@ export default {
     let autoRepublishIntervalJob = null;
 
     const checkAndRepublishIfRequired = () => {
-      const iceState = webRTCAdaptor.iceConnectionState(this.streamId);
+      const iceState = this.webRTCAdaptor.iceConnectionState(this.streamId);
       console.log("Ice state checked = " + iceState);
 
         if (iceState == null || iceState == "failed" || iceState == "disconnected"){
-          webRTCAdaptor.stop(this.streamId);
-          webRTCAdaptor.closePeerConnection(this.streamId);
-          webRTCAdaptor.closeWebSocket();
+          this.webRTCAdaptor.stop(this.streamId);
+          this.webRTCAdaptor.closePeerConnection(this.streamId);
+          this.webRTCAdaptor.closeWebSocket();
           initWebRTCAdaptor(true, autoRepublishEnabled);
         }	
     }
 
+    const joinRoom = () => {
+
+      this.webRTCAdaptor.joinRoom('room1', this.streamId);
+    }
+
+    const playVideo = (obj) => {
+      const room = roomOfStream[obj.streamId];
+      console.log("new stream available with id: "
+          + obj.streamId + "on the room:" + room);
+
+      const video = document.getElementById("remoteVideo"+obj.streamId);
+
+      if (video == null) {
+        createRemoteVideo(obj.streamId);
+        video = document.getElementById("remoteVideo"+obj.streamId);
+      }
+
+      video.srcObject = obj.stream;
+    }
+
+    const createRemoteVideo = (streamId) => {
+      // const player = document.createElement("div");
+      // player.className = "col-sm-3";
+      // player.id = "player"+streamId;
+      // player.innerHTML = '<video id="remoteVideo'+streamId+'"controls autoplay playsinline></video>';
+      player = '<video id="remoteVideo'+streamId+'"controls autoplay playsinline></video>';
+      document.getElementById("players").appendChild(player);
+    }
+
+    const removeRemoteVideo = (streamId) => {
+      const video = document.getElementById("remoteVideo"+streamId);
+      if (video != null) {
+        const player = document.getElementById("player" + streamId);
+        video.srcObject = null;
+        document.getElementById("players").removeChild(player);
+      }
+      this.webRTCAdaptor.stop(streamId);
+    }
+
     const startAnimation = () => {
 
-      const state = webRTCAdaptor.signallingState(this.streamId);
+      const state = this.webRTCAdaptor.signallingState(this.streamId);
       if (state != null && state != "closed") {
-        const iceState = webRTCAdaptor.iceConnectionState(this.streamId);
+        const iceState = this.webRTCAdaptor.iceConnectionState(this.streamId);
         if (iceState != null && iceState != "failed" && iceState != "disconnected") {
             startAnimation();
         }
@@ -361,12 +379,13 @@ export default {
       }
 
       const initWebRTCAdaptor = (publishImmediately, autoRepublishEnabled) => {
-        webRTCAdaptor = new WebRTCAdaptor({
+        this.webRTCAdaptor = new WebRTCAdaptor({
           websocket_url : websocketURL,
           mediaConstraints : mediaConstraints,
           peerconnection_config : pc_config,
           sdp_constraints : sdpConstraints,
           localVideoId : "localVideo",
+          isPlayMode : this.playOnly,
           debug: true,
           bandwidth: this.maxVideoBitrateKbps,
           callback : (info, obj) => {
@@ -375,7 +394,7 @@ export default {
               // start_publish_button.disabled = false;
               // stop_publish_button.disabled = true;
               if (publishImmediately) {
-                webRTCAdaptor.publish(this.streamId, this.token)
+                this.webRTCAdaptor.publish(this.streamId, this.token)
               }
               
               
@@ -391,7 +410,7 @@ export default {
                   checkAndRepublishIfRequired();
                 }, 3000);
               }
-              webRTCAdaptor.enableStats(obj.streamId);
+              this.webRTCAdaptor.enableStats(obj.streamId);
               enableAudioLevel();
             } else if (info == "publish_finished") {
               //stream is being finished
@@ -420,7 +439,7 @@ export default {
               //ping/pong message are sent to and received from server to make the connection alive all the time
               //It's especially useful when load balancer or firewalls close the websocket connection due to inactivity
             }
-            else if (info == "refreshConnection") {
+            else if (info == "refreshConnestreamsListction") {
               checkAndRepublishIfRequired();
             }
             else if (info == "ice_connection_state_changed") {
@@ -514,6 +533,42 @@ export default {
               console.log("Data received: " + obj.event.data + " type: " + obj.event.type + " for stream: " + obj.streamId);
               // $("#dataMessagesTextarea").append("Received: " + obj.event.data + "\r\n");
             }
+            else if (info == "joinedTheRoom") {
+              const room = obj.ATTR_ROOM_NAME;
+              roomOfStream[obj.streamId] = room;
+              console.log("joined the room: "
+                  + roomOfStream[obj.streamId]);
+              console.log(obj)
+
+              // publishStreamId = obj.streamId
+
+              if(this.playOnly) {
+                // join_publish_button.disabled = true;
+                // stop_publish_button.disabled = false;
+                this.isCameraOff = true;
+                // handleCameraButtons();
+              }
+              else {
+                this.isCameraOff = false;
+                publish(obj.streamId, this.token);
+              }
+              
+              if (obj.streams != null) {
+                obj.streams.forEach(function(item) {
+                  console.log("Stream joined with ID: "+item);
+                  this.webRTCAdaptor.play(item, this.token,
+                      'room1');
+                });
+                this.streamsList = obj.streams;
+              }
+              // roomTimerId = setInterval(() => {			
+              //   this.webRTCAdaptor.getRoomInfo('room1', publishStreamId);
+              // }, 5000);
+            }
+            else if (info == "newStreamAvailable") {
+              console.log( info + obj);
+						  playVideo(obj);
+					  }
             else if (info == "available_devices") {
               devices = obj.map((d) => {
                 // console.log("found device", d)
@@ -528,7 +583,7 @@ export default {
               this.devicesOpt.audio = devices.filter(i => i.kind === 'audiooutput' && i.deviceId !== 'default')[0]
               this.devicesOpt.carmera = devices.filter(i => i.kind === 'videoinput')[0]
               // document.querySelector('video#localVideoTest').srcObject = stream;
-              console.log('localVideo: ', webRTCAdaptor.localVideo)
+              
             }
             else {
               console.log( info + " notification received");
@@ -573,7 +628,8 @@ export default {
         });
       }
       //initialize the WebRTCAdaptor
-	    initWebRTCAdaptor(false, autoRepublishEnabled);
+      initWebRTCAdaptor(false, autoRepublishEnabled);
+      // joinRoom();
 
   },
 }
