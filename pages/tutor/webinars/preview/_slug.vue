@@ -2,9 +2,9 @@
   <div class="min-h-screen mb-24">
     <section class="bg-orange-100">
       <div class="container mx-auto mb-10 px-4 lg:px-0">
-        <section>
+        <section class="col-span-full lg:col-span-7 xl:col-span-8">
           <div
-            class="flex flex-row gap-10 place-items-start px-10 border-b-2 border-gray-200 mb-8"
+            class="switcher whitespace-no-wrap flex flex-row gap-6 md:gap-10 place-items-start mx-2 border-b-2 border-gray-200 overflow-scroll scrollbar-thumb-orange"
           >
             <button
               v-on:click="switcher('preview')"
@@ -192,6 +192,13 @@ export default {
 }
 </script>
 <style scoped>
+.switcher {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.switcher::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
 .menu-btn {
   border-top: 5px solid;
   border-bottom: 5px solid;
