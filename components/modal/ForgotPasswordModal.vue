@@ -116,6 +116,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import Swal from 'sweetalert2'
 
 export default {
   data: () => ({
@@ -149,7 +150,17 @@ export default {
         this.loading = false
         if (res) {
           this.$store.commit('app/RESET_PASSWORD_MODAL', this.form.email)
-          this.$store.commit('app/FORGOT_PASSWORD_MODAL', false)
+          this.$store.commit('app/FORGOT_PASSWORD_MODAL', false);
+          Swal.fire({
+            position: 'top-end',
+            width: '350px',
+            text: res.message ? res.message : 'A message was sent to the email associated with your account.',
+            backdrop: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            showCloseButton: true,
+            timer: 10000,
+          })
         }
       }).catch(e => console.log('e: ', e));
     },
