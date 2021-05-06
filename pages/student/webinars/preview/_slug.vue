@@ -179,7 +179,7 @@ const reviews = require('@/static/json/webinar-reviews.json')
 export default {
   components: { EditChip },
   layout: 'dashboard',
-  middleware: ['check-auth', 'auth', 'isTutor'],
+  middleware: ['check-auth', 'auth'],
   fetch({ store }) {
     store.commit('app/SET_DARK_MENU', true)
   },
