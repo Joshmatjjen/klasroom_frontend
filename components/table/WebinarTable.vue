@@ -205,7 +205,7 @@ export default {
   overflow-y: hidden;
   margin: 0.5rem;
 }
-.vgt-right-align > span {
+.vgt-right-align > a > span {
   /* pr-10 */
   @apply text-gray-700 font-normal text-left text-xs pr-5;
 }
