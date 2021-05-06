@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="bg-orange-100" style="height: calc(100vh - 80px)">
     <webinar-testing-modal
       v-if="startState === 'mic_carmera_test'"
       startState="mic_carmera_test"
@@ -19,8 +19,98 @@
       :devicesOpt="devicesOpt"
     />
     <!-- content -->
-    <div class="flex">
-      <video ref="localVideo" id="localVideo" autoplay muted controls playsinline class="mx-auto"></video>
+    <div class="grid grid-cols-12">
+      <div class="video-player col-span-full lg:col-span-9 xl:col-span-9 flex flex-col justify-between">
+        <video ref="localVideo" id="localVideo" autoplay muted playsinline class="mx-auto max-h-full"></video>
+        <div class="player-control bg-white flex p-10">
+          <div class="flex w-1/3">
+            <img src="/webinar/record.svg" class="mr-2 cursor-pointer" />
+            <img @click="() => switchVideoMode('screenwithcamera')" src="/webinar/sharescreen.svg" class="cursor-pointer" />
+          </div>
+
+          <div class="flex  w-1/3">
+            <img @click="toogleAudio" :src="`/webinar/${isMute ? 'mute' : 'unmute'}.svg`" class="mx-auto cursor-pointer" />
+            <button
+              type="button"
+              class="btn btn-primary shadow"
+              @click.prevent="() => console.log('start sreaming')"
+            >
+              {{isStreaming ? 'End Sream' : 'Start Sream'}}
+            </button>
+            <img @click="toogleVideo" :src="`/webinar/${videoOn ? 'video' : 'videooff'}.svg`" class="mx-auto cursor-pointer" />
+          </div>
+
+          <div class="flex w-1/3">
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="col-span-full lg:col-span-3 xl:col-span-3">
+        <div
+          class="flex flex-col flex-1 bg-white rounded-xl border border-gray-300 min-h-full"
+        >
+          <tabs-menu v-model="tab" :tabs="tabs" />
+          <div v-if="$device.isMobile && tab === 0 && tabs.length === 5">
+            <webinar-view-details />
+          </div>
+          <div
+            v-if="
+              (tab === 0 && tabs.length === 4) ||
+              (tab === 1 && tabs.length === 5)
+            "
+          >
+            <chat-messages no-card />
+          </div>
+          <div
+            v-if="
+              (tab === 1 && tabs.length === 4) ||
+              (tab === 2 && tabs.length === 5)
+            "
+            class="pl-4 md:pl-5 lg:pl-6 pb-5"
+          >
+            <webinar-people />
+          </div>
+          <div
+            v-if="
+              (tab === 2 && tabs.length === 4) ||
+              (tab === 3 && tabs.length === 5)
+            "
+            class="px-4 md:px-5 lg:px-6 py-4 pb-10"
+          >
+            <webinar-poll />
+          </div>
+          <div
+            v-if="
+              (tab === 3 && tabs.length === 4) ||
+              (tab === 4 && tabs.length === 5)
+            "
+            class="px-4 md:px-5 lg:px-6 py-4 pb-10"
+          >
+            <div class="space-y-4">
+              <resource-list
+                v-for="(item, key) in [
+                  'Businessstats.com / businessfailurerates',
+                ]"
+                :key="key"
+                :name="item"
+                desc="This will show you stats of business failure across countries of the world. This information will be useful for your assignment"
+                link="#"
+              />
+              <resource-list
+                v-for="(item, key) in [
+                  'Business finance spreadsheet.xls',
+                  'Business startup checklist.doc',
+                ]"
+                :key="key"
+                :name="item"
+                link="#"
+                :download="true"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -49,12 +139,17 @@ export default {
 	  subscriberId: '123', // getUrlParameter("subscriberId"),
 	  subscriberCode: '123sdef', // getUrlParameter("subscriberCode"),
     stream: null,
+    isStreaming: false,
     devices: [],
     devicesOpt: {
       mic: null,
       carmera: null,
       audio: null
     },
+    tab: 0,
+    tabs: ['Chat', 'People', 'Poll', 'Resources'],
+    isMute: true,
+    videoOn: true,
     // streams: {
     //   rtmp: '',
     //   hls: ''
@@ -121,21 +216,33 @@ export default {
       webRTCAdaptor.stop(this.streamId);
     },
 
-    switchVideoMode(chbx) {
-      if(chbx.value == "screen") {
+    toogleAudio() {
+      if (this.isMute) webRTCAdaptor.unmuteLocalMic()
+      else webRTCAdaptor.muteLocalMic()
+      this.isMute = !this.isMute
+    },
+
+    toogleVideo() {
+      if (this.videoOn) webRTCAdaptor.turnOffLocalCamera()
+      else webRTCAdaptor.turnOnLocalCamera()
+      this.videoOn = !this.videoOn
+    },
+
+    switchVideoMode(value) {
+      if(value == "screen") {
         //webRTCAdaptor.switchDesktopWithMicAudio(this.streamId);
         webRTCAdaptor.switchDesktopCapture(this.streamId);
       }
-      else if(chbx.value == "screenwithcamera"){
+      else if(value == "screenwithcamera"){
         webRTCAdaptor.switchDesktopCaptureWithCamera(this.streamId);
       }
       else {
-        webRTCAdaptor.switchVideoCameraCapture(this.streamId, chbx.value);
+        webRTCAdaptor.switchVideoCameraCapture(this.streamId, value);
       }
     },
 
-    switchAudioMode(chbx) {
-      webRTCAdaptor.switchAudioInputSource(this.streamId, chbx.value);
+    switchAudioMode(value) {
+      webRTCAdaptor.switchAudioInputSource(this.streamId, value);
     },
     // startAnimation() {
 
