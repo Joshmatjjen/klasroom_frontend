@@ -36,7 +36,7 @@
             <button
               type="button"
               class="btn btn-primary shadow"
-              @click.prevent="() => console.log('start sreaming')"
+              @click.prevent="() => isStreaming? stopPublishing() : startPublishing()"
             >
               {{isStreaming ? 'End Sream' : 'Start Sream'}}
             </button>
@@ -136,12 +136,13 @@ export default {
   },
   data: () => ({
     startState: 'mic_carmera_test',
-    streamId: null,
     token: 'dgsgduywtghduygjhegfdgf', // getUrlParameter("token"),
     maxVideoBitrateKbps: 900,
 	  subscriberId: '123', // getUrlParameter("subscriberId"),
 	  subscriberCode: '123sdef', // getUrlParameter("subscriberCode"),
     stream: null,
+    streamId: null,
+    roomName: null,
     isStreaming: false,
     devices: [],
     devicesOpt: {
@@ -153,11 +154,21 @@ export default {
     tabs: ['Chat', 'People', 'Poll', 'Resources'],
     isMute: true,
     isCameraOff: true,
+    roomTimerId: -1,
+    isDataChannelOpen: false,
     streamsList: [],
     roomOfStream: [],
-    playOnly: false,
+    playStart: false,
     webRTCAdaptor: null,
+    autoRepublishIntervalJob: null,
+    autoRepublishEnabled: true,
   }),
+  computed: {
+    // ...mapState({
+    //   showModal: (state) => state.app.validationModal,
+    // }),
+    
+  },
   methods: {
     confirm(state) {
       if (state === 'mic_carmera_test')
@@ -169,14 +180,13 @@ export default {
     },
 
     startPublishing() {
-      this.streamId = 'stream1' // streamNameBox.value;
       this.webRTCAdaptor.publish(this.streamId, this.token, this.subscriberId, this.subscriberCode);
     },
 
     stopPublishing() {
-      if (autoRepublishIntervalJob != null) {
-        clearInterval(autoRepublishIntervalJob);
-        autoRepublishIntervalJob = null;
+      if (this.autoRepublishIntervalJob != null) {
+        clearInterval(this.autoRepublishIntervalJob);
+        this.autoRepublishIntervalJob = null;
       }
       this.webRTCAdaptor.stop(this.streamId);
     },
@@ -209,16 +219,15 @@ export default {
     switchAudioMode(value) {
       this.webRTCAdaptor.switchAudioInputSource(this.streamId, value);
     },
-    // startAnimation() {
+    sendNotificationEvent(eventType) {
+      if(this.isDataChannelOpen) {
+        const notEvent = { streamId: this.streamId, eventType: eventType };
 
-    //   var state = this.webRTCAdaptor.signallingState(this.streamId);
-    //   if (state != null && state != "closed") {
-    //     var iceState = this.webRTCAdaptor.iceConnectionState(this.streamId);
-    //     if (iceState != null && iceState != "failed" && iceState != "disconnected") {
-    //         startAnimation();
-    //     }
-    //   }
-    // },
+        this.webRTCAdaptor.sendData(this.streamId, JSON.stringify(notEvent));
+      }	else {
+        console.log("Could not send the notification because data channel is not open.");
+      }
+    }
 
   },
   watch: {
@@ -247,6 +256,16 @@ export default {
     },
   },
   async mounted() {
+    this.streamId = this.$route.query.streamId,
+    this.roomName = this.$route.query.roomName,
+
+    console.log('query: ', this.$route.query)
+
+    if (this.streamId === '1') {
+      this.playStart = true;
+      this.isCameraOff = false;
+      this.isMute = false;
+    }
 
     // function confirm(state) {
     //   if (state === 'mic_carmera_test')
@@ -260,12 +279,9 @@ export default {
     /**
    * If publishing stops for any reason, it tries to republish again.
    */
-    const autoRepublishEnabled = true;
     /**
      * Timer job that checks the WebRTC connection 
-     */
-    let autoRepublishIntervalJob = null;
-
+    */
     const checkAndRepublishIfRequired = () => {
       const iceState = this.webRTCAdaptor.iceConnectionState(this.streamId);
       console.log("Ice state checked = " + iceState);
@@ -274,19 +290,19 @@ export default {
           this.webRTCAdaptor.stop(this.streamId);
           this.webRTCAdaptor.closePeerConnection(this.streamId);
           this.webRTCAdaptor.closeWebSocket();
-          initWebRTCAdaptor(true, autoRepublishEnabled);
+          initWebRTCAdaptor(this.playStart, this.autoRepublishEnabled);
         }	
     }
 
     const joinRoom = () => {
 
-      this.webRTCAdaptor.joinRoom('room1', this.streamId);
+      this.webRTCAdaptor.joinRoom(this.roomName, this.streamId);
     }
 
     const playVideo = (obj) => {
-      const room = roomOfStream[obj.streamId];
+      const room = this.roomOfStream[obj.streamId];
       console.log("new stream available with id: "
-          + obj.streamId + "on the room:" + room);
+          + obj.streamId + " on the room:" + room);
 
       const video = document.getElementById("remoteVideo"+obj.streamId);
 
@@ -303,8 +319,8 @@ export default {
       // player.className = "col-sm-3";
       // player.id = "player"+streamId;
       // player.innerHTML = '<video id="remoteVideo'+streamId+'"controls autoplay playsinline></video>';
-      player = '<video id="remoteVideo'+streamId+'"controls autoplay playsinline></video>';
-      document.getElementById("players").appendChild(player);
+      const player = '<video id="remoteVideo'+streamId+'"autoplay playsinline></video>';
+      document.getElementById("players").innerHTML += player;
     }
 
     const removeRemoteVideo = (streamId) => {
@@ -317,16 +333,47 @@ export default {
       this.webRTCAdaptor.stop(streamId);
     }
 
+    const streamInformation = (obj) => {
+      this.webRTCAdaptor.play(obj.streamId, this.token,	this.roomName);
+    }
+
     const startAnimation = () => {
 
-      const state = this.webRTCAdaptor.signallingState(this.streamId);
-      if (state != null && state != "closed") {
-        const iceState = this.webRTCAdaptor.iceConnectionState(this.streamId);
-        if (iceState != null && iceState != "failed" && iceState != "disconnected") {
-            startAnimation();
+      setTimeout(() => {
+        const state = this.webRTCAdaptor.signallingState(this.streamId);
+        if (state != null && state != "closed") {
+          const iceState = this.webRTCAdaptor.iceConnectionState(this.streamId);
+          if (iceState != null && iceState != "failed" && iceState != "disconnected") {
+              startAnimation();
+          }
+        }
+      }, 1000);
+
+    }
+
+    const handleNotificationEvent = (obj) => {
+      console.log("+++ Data received: " + obj.event.data + " type: " + obj.event.type + " for stream: " + obj.streamId);
+      const notificationEvent = JSON.parse(obj.event.data);
+      if(notificationEvent != null && typeof(notificationEvent) == "object") {
+        const eventStreamId = notificationEvent.streamId;
+        const eventTyp = notificationEvent.eventType;
+
+        if(eventTyp == "CAM_TURNED_OFF") {
+            console.log("Camera turned off for : ", eventStreamId);
+        } else if (eventTyp == "CAM_TURNED_ON"){
+            console.log("Camera turned on for : ", eventStreamId);
+        } else if (eventTyp == "MIC_MUTED"){
+            console.log("Microphone muted for : ", eventStreamId);
+        } else if (eventTyp == "MIC_UNMUTED"){
+            console.log("Microphone unmuted for : ", eventStreamId);
         }
       }
-      }
+    }
+
+    const publish = (streamName, token) => {
+      // publishStreamId = streamName;
+      this.webRTCAdaptor.publish(streamName, token);
+    }
 
     // let { stream, error } = await getUserMedia()
     // if (stream) {
@@ -369,13 +416,14 @@ export default {
       };
 
       const rtmpForward = 'rtmp://klasroom-RTMPLoad-1FSGS5HI2J4RX-1215248151.us-west-2.elb.amazonaws.com/WebRTCAppEE/'
+      const websocketPath = 'media.klasroom.com/klasroomLive/websocket'
 
       const appName = location.pathname.substring(0, location.pathname.lastIndexOf("/")+1);
       const path =  location.hostname + ":" + location.port + appName + "websocket?rtmpForward=" + rtmpForward;
-      let websocketURL =  "ws://" + path;
+      let websocketURL =  "ws://" + websocketPath;
       
       if (location.protocol.startsWith("https")) {
-        websocketURL = "wss://" + path;
+        websocketURL = "wss://" + websocketPath;
       }
 
       const initWebRTCAdaptor = (publishImmediately, autoRepublishEnabled) => {
@@ -385,7 +433,7 @@ export default {
           peerconnection_config : pc_config,
           sdp_constraints : sdpConstraints,
           localVideoId : "localVideo",
-          isPlayMode : this.playOnly,
+          isPlayMode : false,
           debug: true,
           bandwidth: this.maxVideoBitrateKbps,
           callback : (info, obj) => {
@@ -394,27 +442,145 @@ export default {
               // start_publish_button.disabled = false;
               // stop_publish_button.disabled = true;
               if (publishImmediately) {
-                this.webRTCAdaptor.publish(this.streamId, this.token)
+                // this.webRTCAdaptor.publish(this.streamId, this.token)
+                joinRoom();
+              }
+              else {
+                this.webRTCAdaptor.muteLocalMic()
+                this.webRTCAdaptor.turnOffLocalCamera()
+                joinRoom();
               }
               
               
-            } else if (info == "publish_started") {
+            }
+            else if (info == "joinedTheRoom") {
+              const room = obj.ATTR_ROOM_NAME;
+              this.roomOfStream[obj.streamId] = room;
+              console.log("++++ joinedTheRoom: "
+                  + this.roomOfStream[obj.streamId]);
+              console.log(obj)
+
+              console.log("+++ roomOfStream: ", this.roomOfStream);
+
+              // publishStreamId = obj.streamId
+              publish(obj.streamId, this.token);
+
+              // if(this.playStart) {
+                
+              //   this.isCameraOff = false;
+              //   publish(obj.streamId, this.token);
+              // }
+              // else {
+              //   this.isCameraOff = true;
+              // }
+              
+              if (obj.streams != null) {
+                obj.streams.forEach((item) => {
+                  console.log("Stream joined with ID: "+item);
+                  this.webRTCAdaptor.play(item, this.token,
+                      this.roomName);
+                });
+                this.streamsList = obj.streams;
+              }
+              this.roomTimerId = setInterval(() => {			
+                this.webRTCAdaptor.getRoomInfo(this.roomName, this.streamId);
+              }, 5000);
+            }
+            else if (info == "newStreamAvailable") {
+              console.log( '++++ newStreamAvailable' + obj);
+						  playVideo(obj);
+					  }
+            else if (info == "available_devices") {
+              devices = obj.map((d) => {
+                // console.log("found device", d)
+                return {
+                  kind: d?.kind?.toLowerCase() || "?",
+                  deviceId: d?.deviceId,
+                  label: d.label || "Unknown name",
+                }
+              })
+
+              this.devicesOpt.mic = devices.filter(i => i.kind === 'audioinput' && i.deviceId !== 'default')[0]
+              this.devicesOpt.audio = devices.filter(i => i.kind === 'audiooutput' && i.deviceId !== 'default')[0]
+              this.devicesOpt.carmera = devices.filter(i => i.kind === 'videoinput')[0]
+              // document.querySelector('video#localVideoTest').srcObject = stream;
+              
+            }
+            else if (info == "publish_started") {
               //stream is being published
               console.log("publish started: ", obj);
+              this.isStreaming = true;
               // start_publish_button.disabled = true;
               // stop_publish_button.disabled = false;
               startAnimation();
-              if (autoRepublishEnabled && autoRepublishIntervalJob == null) 
+              if (autoRepublishEnabled && this.autoRepublishIntervalJob == null) 
               {
-                autoRepublishIntervalJob = setInterval(() => {
+                this.autoRepublishIntervalJob = setInterval(() => {
                   checkAndRepublishIfRequired();
                 }, 3000);
               }
               this.webRTCAdaptor.enableStats(obj.streamId);
-              enableAudioLevel();
-            } else if (info == "publish_finished") {
+              // enableAudioLevel();
+            }
+            else if (info == "leavedFromRoom") {
+              const room = obj.ATTR_ROOM_NAME;
+              console.debug("leaved from the room:" + room);
+              if (this.roomTimerId != null)
+              {
+                clearInterval(this.roomTimerId);
+              }
+              
+              if (this.streamsList != null) {
+                this.streamsList.forEach(function(item) {
+                  removeRemoteVideo(item);
+                });
+              }
+              // we need to reset streams list
+              this.streamsList = new Array();
+            }
+            else if (info == "play_finished") {
+              console.log("+++ play_finished");
+              removeRemoteVideo(obj.streamId);
+            } 
+            else if (info == "streamInformation") {
+              console.log("+++ streamInformation");
+              streamInformation(obj);
+            } 
+            else if (info == "roomInformation") {
+              console.log("+++ roomInformation");
+
+              //Checks if any new stream has added, if yes, plays.
+              for(let str of obj.streams){
+                if(!this.streamsList.includes(str)){
+                  this.webRTCAdaptor.play(str, this.token,
+                      this.roomName);
+                }
+              }
+              // Checks if any stream has been removed, if yes, removes the view and stops webrtc connection.
+              for(let str of this.streamsList){
+                if(!obj.streams.includes(str)){
+                  removeRemoteVideo(str);
+                }
+              }
+              //Lastly updates the current streamlist with the fetched one.
+              this.streamsList = obj.streams;
+            }
+            else if (info == "data_channel_opened") {
+              console.log("+++ Data Channel open for stream id", obj );
+              this.isDataChannelOpen = true;
+            } 
+            else if (info == "data_channel_closed") {
+              console.log("+++ Data Channel closed for stream id", obj );
+              this.isDataChannelOpen = false;
+            } 
+            else if(info == "data_received") {
+              handleNotificationEvent(obj);
+            }
+
+            else if (info == "publish_finished") {
               //stream is being finished
               console.log("publish finished");
+              this.isStreaming = false;
               // start_publish_button.disabled = false;
               // stop_publish_button.disabled = true;
             }
@@ -431,6 +597,7 @@ export default {
             }
             else if (info == "closed") {
               //console.log("Connection closed");
+              this.isStreaming = false;
               if (typeof obj != "undefined") {
                 console.log("Connecton closed: " + JSON.stringify(obj));
               }
@@ -456,134 +623,7 @@ export default {
                   + " video packetLost: "  + obj.videoPacketsLost + " audio packetsLost: " + obj.audioPacketsLost
                   + " video RTT: " + obj.videoRoundTripTime + " audio RTT: " + obj.audioRoundTripTime 
                   + " video jitter: " + obj.videoJitter + " audio jitter: " + obj.audioJitter);
-
-                  
-              // $("#average_bit_rate").text(obj.averageOutgoingBitrate);
-              // if (obj.averageOutgoingBitrate > 0)  {
-              //   $("#average_bit_rate_container").show();
-              // }
-              // else {
-              //   $("#average_bit_rate_container").hide();
-              // }
-
-              // $("#latest_bit_rate").text(obj.currentOutgoingBitrate);
-              // if (obj.currentOutgoingBitrate > 0) {
-              //   $("#latest_bit_rate_container").show();
-              // }
-              // else {
-              //   $("#latest_bit_rate_container").hide();
-              // }
-              // var packetLost = parseInt(obj.videoPacketsLost) + parseInt(obj.audioPacketsLost);	
-              
-              // $("#packet_lost_text").text(packetLost);
-              // if (packetLost > -1) {
-              //   $("#packet_lost_container").show();
-              // }
-              // else {
-              //   $("#packet_lost_container").hide();
-              // }
-              // var jitter = ((parseFloat(obj.videoJitter) + parseInt(obj.audioJitter)) / 2).toPrecision(3);
-              // $("#jitter_text").text(jitter);
-              // if (jitter > 0) {
-              //   $("#jitter_container").show();
-              // }
-              // else {
-              //   $("#jitter_container").hide();
-              // }
-            
-              // var rtt = ((parseFloat(obj.videoRoundTripTime) + parseFloat(obj.audioRoundTripTime)) / 2).toPrecision(3);
-              // $("#round_trip_time").text(rtt);
-              // if (rtt > 0) {
-              //   $("#round_trip_time_container").show();
-              // }
-              // else {
-              //   $("#round_trip_time_container").hide();
-              // }
-              
-              // $("#source_width").text(obj.resWidth);
-              // $("#source_height").text(obj.resHeight);
-              // if (obj.resWidth > 0 && obj.resHeight > 0) {
-              //   $("#source_resolution_container").show();
-              // }
-              // else {
-              //   $("#source_resolution_container").hide();
-              // }
-
-              // $("#ongoing_width").text(obj.frameWidth);
-              // $("#ongoing_height").text(obj.frameHeight);	
-              // if (obj.frameWidth > 0 && obj.frameHeight > 0) {
-              //   $("#ongoing_resolution_container").show();
-              // }
-              // else {
-              //   $("#ongoing_resolution_container").hide();
-              // }
-              
-              // $("#on_going_fps").text(obj.currentFPS);
-              // if (obj.currentFPS > 0) {
-              //   $("#on_going_fps_container").show();
-              // }
-              // else {
-              //   $("#on_going_fps_container").hide();
-              // }
-
-              // $("#stats_panel").show();
     
-            }
-            else if (info == "data_received") {
-              console.log("Data received: " + obj.event.data + " type: " + obj.event.type + " for stream: " + obj.streamId);
-              // $("#dataMessagesTextarea").append("Received: " + obj.event.data + "\r\n");
-            }
-            else if (info == "joinedTheRoom") {
-              const room = obj.ATTR_ROOM_NAME;
-              roomOfStream[obj.streamId] = room;
-              console.log("joined the room: "
-                  + roomOfStream[obj.streamId]);
-              console.log(obj)
-
-              // publishStreamId = obj.streamId
-
-              if(this.playOnly) {
-                // join_publish_button.disabled = true;
-                // stop_publish_button.disabled = false;
-                this.isCameraOff = true;
-                // handleCameraButtons();
-              }
-              else {
-                this.isCameraOff = false;
-                publish(obj.streamId, this.token);
-              }
-              
-              if (obj.streams != null) {
-                obj.streams.forEach(function(item) {
-                  console.log("Stream joined with ID: "+item);
-                  this.webRTCAdaptor.play(item, this.token,
-                      'room1');
-                });
-                this.streamsList = obj.streams;
-              }
-              // roomTimerId = setInterval(() => {			
-              //   this.webRTCAdaptor.getRoomInfo('room1', publishStreamId);
-              // }, 5000);
-            }
-            else if (info == "newStreamAvailable") {
-              console.log( info + obj);
-						  playVideo(obj);
-					  }
-            else if (info == "available_devices") {
-              devices = obj.map((d) => {
-                // console.log("found device", d)
-                return {
-                  kind: d?.kind?.toLowerCase() || "?",
-                  deviceId: d?.deviceId,
-                  label: d.label || "Unknown name",
-                }
-              })
-
-              this.devicesOpt.mic = devices.filter(i => i.kind === 'audioinput' && i.deviceId !== 'default')[0]
-              this.devicesOpt.audio = devices.filter(i => i.kind === 'audiooutput' && i.deviceId !== 'default')[0]
-              this.devicesOpt.carmera = devices.filter(i => i.kind === 'videoinput')[0]
-              // document.querySelector('video#localVideoTest').srcObject = stream;
-              
             }
             else {
               console.log( info + " notification received");
@@ -591,6 +631,10 @@ export default {
           },
           callbackError : function(error, message) {
             //some of the possible errors, NotFoundError, SecurityError,PermissionDeniedError
+
+            if(error.indexOf("publishTimeoutError") != -1 && this.roomTimerId != null){
+						clearInterval(this.roomTimerId);
+					}
     
             console.log("error callback: " +  JSON.stringify(error));
             var errorMessage = JSON.stringify(error);
@@ -628,7 +672,7 @@ export default {
         });
       }
       //initialize the WebRTCAdaptor
-      initWebRTCAdaptor(false, autoRepublishEnabled);
+      initWebRTCAdaptor(this.playStart, this.autoRepublishEnabled);
       // joinRoom();
 
   },
