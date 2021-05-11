@@ -166,6 +166,13 @@ import { mapState } from 'vuex'
 import { getDevices, getUserMedia } from '~/logic/stream'
 
 export default {
+  data: () => ({
+    devicesOpt: {
+      mic: null,
+      carmera: null,
+      audio: null
+    },
+  }),
   props: {
     title: {
       type: String,
@@ -187,10 +194,10 @@ export default {
       type: Array,
       required: true
     },
-    devicesOpt: {
-      type: Object,
-      required: true
-    },
+    // devicesOpt: {
+    //   type: Object,
+    //   required: true
+    // },
     // stream: {
     //   type: Object,
     //   default: null,
@@ -202,8 +209,19 @@ export default {
   }, 
   async mounted() {
 
+    let devices = [];
+
     let { stream, error } = await getUserMedia()
     if (stream) {
+      // Safari getDevices only works immediately after getUserMedia (bug)
+      devices = ((await getDevices()) || []).map((d) => {
+        console.log("found device", d)
+        return {
+          kind: d?.kind?.toLowerCase() || "?",
+          deviceId: d?.deviceId,
+          label: d.label || "Unknown name",
+        }
+      })
       const video = document.querySelector('video#localVideoTest');
       if (video) {
         if ("srcObject" in video) {
@@ -215,6 +233,25 @@ export default {
     } else {
       console.error("Media error", error)
     }
+
+    this.devices = devices;
+    this.devicesOpt.mic = devices.filter(i => i.kind === 'audioinput' && i.deviceId !== 'default')[0]
+    this.devicesOpt.audio = devices.filter(i => i.kind === 'audiooutput' && i.deviceId !== 'default')[0]
+    this.devicesOpt.carmera = devices.filter(i => i.kind === 'videoinput')[0]
+
+    // let { stream, error } = await getUserMedia()
+    // if (stream) {
+    //   const video = document.querySelector('video#localVideoTest');
+    //   if (video) {
+    //     if ("srcObject" in video) {
+    //       video.srcObject = stream;
+    //     } else {
+    //       video.src = window.URL.createObjectURL(stream) // for older browsers
+    //     }
+    //   }
+    // } else {
+    //   console.error("Media error", error)
+    // }
 
   }
 }
