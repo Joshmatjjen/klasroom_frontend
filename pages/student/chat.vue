@@ -65,7 +65,7 @@ export default {
   created: function () {
     console.log('Starting connection to WebSocket Server')
     this.connection = new WebSocket(
-      'wss://e7a46558e455.ngrok.io/ws/public-chats/?token=BUSY8QLS3gyCUBhf0DrrtjXTZmqEp8Zisjq0_YiPaJs&webinar_id=25216'
+      'wss://1e879751f9b3.ngrok.io/ws/public-chats/?token=BUSY8QLS3gyCUBhf0DrrtjXTZmqEp8Zisjq0_YiPaJs&webinar_id=25216'
     )
 
     this.connection.onmessage = function (event) {
