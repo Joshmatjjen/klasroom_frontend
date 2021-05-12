@@ -1,0 +1,26 @@
+{
+  "name": "@antmedia/webrtc_adaptor",
+  "version": "2.3.2",
+  "description": "WebRTC Adaptor for implementing a front end using Ant Media Server.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ant-media/StreamApp.git"
+  },
+  "keywords": [
+    "webrtc",
+    "Ant",
+    "Media",
+    "stream",
+    "video"
+  ],
+  "author": "Ahmet Oğuz Mermerkaya, Tahir Ahmet Gölge, Selim Emre Toy, Enes Kuluk, Cem Kılıç, Burak Kekeç, Murat Uğur Eminoğlu.",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ant-media/StreamApp/issues"
+  },
+  "homepage": "https://github.com/ant-media/StreamApp#readme"
+}

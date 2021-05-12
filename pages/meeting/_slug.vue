@@ -1,7 +1,25 @@
 <template>
   <div class="bg-orange-100" style="height: calc(100vh - 80px)">
     <webinar-testing-modal
-      v-if="startState === 'mic_carmera_test'"
+      v-if="startState === 'closed'"
+      startState="closed"
+      confirmText="Go Home"
+      :confirm="confirm"
+      title="Meeting Ended"
+      :devices="devices"
+      :devicesOpt="devicesOpt"
+    />
+    <webinar-testing-modal
+      v-if="!isStreaming && startState === 'begin_test'"
+      startState="begin_test"
+      confirmText="Next"
+      :confirm="confirm"
+      title="Establishing connection. Please Wait..."
+      :devices="devices"
+      :devicesOpt="devicesOpt"
+    />
+    <webinar-testing-modal
+      v-if="isStreaming && startState === 'mic_carmera_test'"
       startState="mic_carmera_test"
       confirmText="Next"
       :confirm="confirm"
@@ -10,7 +28,7 @@
       :devicesOpt="devicesOpt"
     />
     <webinar-testing-modal
-      v-else-if="startState === 'speaker_test'"
+      v-else-if="isStreaming && startState === 'speaker_test'"
       startState="speaker_test"
       confirmText="Continue to webinar"
       :confirm="confirm"
@@ -20,38 +38,42 @@
     />
     <!-- content -->
     <div class="grid grid-cols-12">
-      <div class="video-player col-span-full lg:col-span-9 xl:col-span-9 flex flex-col justify-between">
-        <video ref="localVideo" id="localVideo" autoplay muted playsinline class="mx-auto max-h-full"></video>
-        <div id="players" class="bg-white flex p-10 h-64">
-          <!-- <video ref="localVideo" id="localVideo" autoplay muted playsinline class="mx-auto max-h-full"></video> -->
-        </div>
-        <div class="player-control bg-white flex p-10">
-          <div class="flex w-1/3">
-            <img src="/webinar/record.svg" class="mr-2 cursor-pointer" />
-            <img @click="() => switchVideoMode('screenwithcamera')" src="/webinar/sharescreen.svg" class="cursor-pointer" />
-          </div>
+      <div class="video-player col-span-full lg:col-span-9 xl:col-span-9 flex flex-col">
+        <div class="main-video">
+          <video ref="localVideo" id="localVideo" autoplay muted playsinline class="mx-auto">
+          </video>
+          <div class="player-control bg-white flex p-4">
+            <div class="flex w-1/3">
+              <img src="/webinar/record.svg" class="mr-2 cursor-pointer" />
+              <img @click="() => switchVideoMode('screenwithcamera')" src="/webinar/sharescreen.svg" class="cursor-pointer" />
+            </div>
 
-          <div class="flex  w-1/3">
-            <img @click="toogleAudio" :src="`/webinar/${isMute ? 'mute' : 'unmute'}.svg`" class="mx-auto cursor-pointer" />
-            <button
-              type="button"
-              class="btn btn-primary shadow"
-              @click.prevent="() => isStreaming? stopPublishing() : startPublishing()"
-            >
-              {{isStreaming ? 'End Sream' : 'Start Sream'}}
-            </button>
-            <img @click="toogleVideo" :src="`/webinar/${isCameraOff ? 'videooff' : 'video'}.svg`" class="mx-auto cursor-pointer" />
-          </div>
+            <div class="flex  w-1/3">
+              <img @click="toogleAudio" :src="`/webinar/${isMute ? 'mute' : 'unmute'}.svg`" class="mx-auto cursor-pointer" />
+              <button
+                type="button"
+                class="btn btn-primary shadow"
+                @click.prevent="() => isStreaming? stopPublishing() : startPublishing()"
+              >
+                {{isStreaming ? 'End Sream' : 'Start Sream'}}
+              </button>
+              <img @click="toogleVideo" :src="`/webinar/${isCameraOff ? 'videooff' : 'video'}.svg`" class="mx-auto cursor-pointer" />
+            </div>
 
-          <div class="flex w-1/3">
-            
+            <div class="flex w-1/3">
+              
+            </div>
           </div>
         </div>
+        <div id="players" class="players flex">
+        </div>
+        
       </div>
 
       <div class="col-span-full lg:col-span-3 xl:col-span-3">
         <div
-          class="flex flex-col flex-1 bg-white rounded-xl border border-gray-300 min-h-full"
+          class="flex flex-col flex-1 bg-white rounded-xl border border-gray-300 overflow-hidden"
+          style="height: auto"
         >
           <tabs-menu v-model="tab" :tabs="tabs" />
           <div v-if="$device.isMobile && tab === 0 && tabs.length === 5">
@@ -121,7 +143,9 @@
 <script>
 import Vue from 'vue'
 // import adaptor from 'webrtc-adapter'
-import {WebRTCAdaptor} from '~/assets/js/webrtc_adaptor'
+import {WebRTCAdaptor} from '~/utils/webrtc_adaptor/js/webrtc_adaptor';
+import Swal from 'sweetalert2';
+
 import { getDevices, getUserMedia } from '~/logic/stream'
 const isProduction = process.env.NODE_ENV === 'production'
 // let this.webRTCAdaptor = null;
@@ -130,12 +154,12 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 export default {
   layout: 'webinar',
-  // middleware: ['check-auth', 'auth'],
+  middleware: ['check-auth', 'auth'],
   fetch({ store }) {
     store.commit('app/SET_DARK_MENU', true)
   },
   data: () => ({
-    startState: 'mic_carmera_test',
+    startState: 'begin_test',
     token: 'dgsgduywtghduygjhegfdgf', // getUrlParameter("token"),
     maxVideoBitrateKbps: 900,
 	  subscriberId: '123', // getUrlParameter("subscriberId"),
@@ -171,12 +195,17 @@ export default {
   },
   methods: {
     confirm(state) {
+      if (state === 'begin_test')
+        this.startState = 'mic_carmera_test'
+
       if (state === 'mic_carmera_test')
         this.startState = 'speaker_test'
       
       if (state === 'speaker_test') {
         this.startState = 'done'
       }
+      if (state === 'closed')
+        this.$router.push(`/`)
     },
 
     startPublishing() {
@@ -189,6 +218,7 @@ export default {
         this.autoRepublishIntervalJob = null;
       }
       this.webRTCAdaptor.stop(this.streamId);
+      this.webRTCAdaptor.leaveFromRoom(this.roomName)
     },
 
     toogleAudio() {
@@ -246,22 +276,24 @@ export default {
         // console.log(value.localVideo.srcObject)
         // const player = document.createElement("video");
         // player.srcObject = value.localVideo.srcObject
-        const clone = value.localVideo.cloneNode(true);
-        console.log('clone:', clone)
+        // const clone = value.localVideo.cloneNode(true);
+        // console.log('clone:', clone)
         // clone.removeAttribute("id");
         // player = '<video id="localVideo'+this.streamId+'"controls autoplay playsinline></video>';
-        document.getElementById("players").appendChild(clone);
+        // document.getElementById("players").appendChild(clone);
       }
       // this.doConnectStream(value)
     },
   },
   async mounted() {
-    this.streamId = this.$route.query.streamId,
+    this.streamId = String(this.$store.getters["auth/user"].userId),
     this.roomName = this.$route.query.roomName,
 
-    console.log('query: ', this.$route.query)
+    // this.$store.getters["auth/user"]
 
-    if (this.streamId === '1') {
+    console.log('streamId: ', this.$store.getters["auth/user"].userId)
+
+    if (this.streamId === '24026') {
       this.playStart = true;
       this.isCameraOff = false;
       this.isMute = false;
@@ -290,7 +322,7 @@ export default {
           this.webRTCAdaptor.stop(this.streamId);
           this.webRTCAdaptor.closePeerConnection(this.streamId);
           this.webRTCAdaptor.closeWebSocket();
-          initWebRTCAdaptor(this.playStart, this.autoRepublishEnabled);
+          initWebRTCAdaptor(true, this.autoRepublishEnabled);
         }	
     }
 
@@ -326,9 +358,9 @@ export default {
     const removeRemoteVideo = (streamId) => {
       const video = document.getElementById("remoteVideo"+streamId);
       if (video != null) {
-        const player = document.getElementById("player" + streamId);
+        // const player = document.getElementById("player" + streamId);
         video.srcObject = null;
-        document.getElementById("players").removeChild(player);
+        document.getElementById("players").removeChild(video);
       }
       this.webRTCAdaptor.stop(streamId);
     }
@@ -375,30 +407,6 @@ export default {
       this.webRTCAdaptor.publish(streamName, token);
     }
 
-    // let { stream, error } = await getUserMedia()
-    // if (stream) {
-    //   // Safari getDevices only works immediately after getUserMedia (bug)
-    //   devices = ((await getDevices()) || []).map((d) => {
-    //     console.log("found device", d)
-    //     return {
-    //       kind: d?.kind?.toLowerCase() || "?",
-    //       deviceId: d?.deviceId,
-    //       label: d.label || "Unknown name",
-    //     }
-    //   })
-    //   document.querySelector('video#localVideoTest').srcObject = stream;
-    //   // document.querySelector('video#localVideo').srcObject = stream;
-    //   // adapter.attachMediaStream(localVideo, stream);
-    // } else {
-    //   console.error("Media error", error)
-    // }
-
-    // this.stream = stream;
-    // this.devices = devices;
-    // this.devicesOpt.mic = devices.filter(i => i.kind === 'audioinput' && i.deviceId !== 'default')[0]
-    // this.devicesOpt.audio = devices.filter(i => i.kind === 'audiooutput' && i.deviceId !== 'default')[0]
-    // this.devicesOpt.carmera = devices.filter(i => i.kind === 'videoinput')[0]
-
       const pc_config = {
         'iceServers' : [ {
           'urls' : 'stun:stun1.l.google.com:19302'
@@ -441,13 +449,16 @@ export default {
               console.log("initialized: ", obj);
               // start_publish_button.disabled = false;
               // stop_publish_button.disabled = true;
+              if(!this.playStart) {
+                this.webRTCAdaptor.muteLocalMic()
+                this.webRTCAdaptor.turnOffLocalCamera()
+              }
               if (publishImmediately) {
                 // this.webRTCAdaptor.publish(this.streamId, this.token)
                 joinRoom();
               }
               else {
-                this.webRTCAdaptor.muteLocalMic()
-                this.webRTCAdaptor.turnOffLocalCamera()
+                
                 joinRoom();
               }
               
@@ -510,6 +521,8 @@ export default {
               //stream is being published
               console.log("publish started: ", obj);
               this.isStreaming = true;
+              if (obj.streamId === String(this.$store.getters["auth/user"].userId))
+                this.startState = 'mic_carmera_test'
               // start_publish_button.disabled = true;
               // stop_publish_button.disabled = false;
               startAnimation();
@@ -548,6 +561,8 @@ export default {
             } 
             else if (info == "roomInformation") {
               console.log("+++ roomInformation");
+              console.log("+++ streamsList: ", this.streamsList);
+              console.log("+++ obj.streams: ", obj.streams);
 
               //Checks if any new stream has added, if yes, plays.
               for(let str of obj.streams){
@@ -581,6 +596,7 @@ export default {
               //stream is being finished
               console.log("publish finished");
               this.isStreaming = false;
+              this.startState = 'closed'
               // start_publish_button.disabled = false;
               // stop_publish_button.disabled = true;
             }
@@ -616,13 +632,14 @@ export default {
               //obj is the PeerStats which has fields
               //averageOutgoingBitrate - kbits/sec
               //currentOutgoingBitrate - kbits/sec
-              console.log("Average outgoing bitrate " + obj.averageOutgoingBitrate + " kbits/sec"
-                  + " Current outgoing bitrate: " + obj.currentOutgoingBitrate + " kbits/sec"
-                  + " video source width: " + obj.resWidth + " video source height: " + obj.resHeight
-                  + "frame width: " + obj.frameWidth + " frame height: " + obj.frameHeight
-                  + " video packetLost: "  + obj.videoPacketsLost + " audio packetsLost: " + obj.audioPacketsLost
-                  + " video RTT: " + obj.videoRoundTripTime + " audio RTT: " + obj.audioRoundTripTime 
-                  + " video jitter: " + obj.videoJitter + " audio jitter: " + obj.audioJitter);
+              console.log("Current obj: ", obj)
+              // console.log("Average outgoing bitrate " + obj.averageOutgoingBitrate + " kbits/sec"
+              //     + " Current outgoing bitrate: " + obj.currentOutgoingBitrate + " kbits/sec"
+              //     + " video source width: " + obj.resWidth + " video source height: " + obj.resHeight
+              //     + "frame width: " + obj.frameWidth + " frame height: " + obj.frameHeight
+              //     + " video packetLost: "  + obj.videoPacketsLost + " audio packetsLost: " + obj.audioPacketsLost
+              //     + " video RTT: " + obj.videoRoundTripTime + " audio RTT: " + obj.audioRoundTripTime 
+              //     + " video jitter: " + obj.videoJitter + " audio jitter: " + obj.audioJitter);
     
             }
             else {
@@ -667,14 +684,70 @@ export default {
             else if (error.indexOf("WebSocketNotConnected") != -1) {
               errorMessage = "WebSocket Connection is disconnected.";
             }
-            alert(errorMessage);
+            // alert(errorMessage);
+            Swal.fire({
+              position: 'top-end',
+              width: '350px',
+              text: errorMessage,
+              backdrop: false,
+              allowOutsideClick: false,
+              showConfirmButton: false,
+              showCloseButton: true,
+              timer: 3000,
+            });
           }
         });
       }
       //initialize the WebRTCAdaptor
-      initWebRTCAdaptor(this.playStart, this.autoRepublishEnabled);
+      initWebRTCAdaptor(true, this.autoRepublishEnabled);
       // joinRoom();
 
   },
 }
 </script>
+
+
+<style>
+.main-video {
+   padding: 10px;
+   height: calc(80vh - 80px);
+   width: 100%;
+   position: relative;   
+ }
+ .main-video > video {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+   border: 5px outset #000000;
+ }
+
+ .players {
+   /* border: 1px outset #000000; */
+   width: 100%;
+   height: 20vh;
+   padding: 0 10px 10px 10px;
+ }
+
+ .players > video {
+   width: 260px;
+   height: 100%;
+   object-fit: cover;
+   border: 5px outset #000000;
+ }
+ 
+ .player-control {
+   position: absolute;
+   width: calc(100% - 20px);
+   height: 100px;
+   bottom: 10px;
+   border: 5px outset #000000;
+   border-top: none;
+   opacity: 0;
+   z-index: -1;
+ }
+
+ .main-video:hover .player-control {
+   opacity: 1;
+   z-index: 1;
+ }
+</style>
