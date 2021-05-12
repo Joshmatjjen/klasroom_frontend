@@ -1,6 +1,15 @@
 <template>
   <div class="bg-orange-100" style="height: calc(100vh - 80px)">
     <webinar-testing-modal
+      v-if="startState === 'closed'"
+      startState="closed"
+      confirmText="Go Home"
+      :confirm="confirm"
+      title="Webinar Ended"
+      :devices="devices"
+      :devicesOpt="devicesOpt"
+    />
+    <webinar-testing-modal
       v-if="!isStreaming && startState === 'begin_test'"
       startState="begin_test"
       confirmText="Next"
@@ -195,6 +204,8 @@ export default {
       if (state === 'speaker_test') {
         this.startState = 'done'
       }
+      if (state === 'closed')
+        this.$router.push(`/`)
     },
 
     startPublishing() {
@@ -207,6 +218,7 @@ export default {
         this.autoRepublishIntervalJob = null;
       }
       this.webRTCAdaptor.stop(this.streamId);
+      this.webRTCAdaptor.leaveFromRoom(this.roomName)
     },
 
     toogleAudio() {
@@ -437,15 +449,16 @@ export default {
               console.log("initialized: ", obj);
               // start_publish_button.disabled = false;
               // stop_publish_button.disabled = true;
+              if(!this.playStart) {
+                this.webRTCAdaptor.muteLocalMic()
+                this.webRTCAdaptor.turnOffLocalCamera()
+              }
               if (publishImmediately) {
                 // this.webRTCAdaptor.publish(this.streamId, this.token)
                 joinRoom();
               }
               else {
-                if(!this.playStart) {
-                  this.webRTCAdaptor.muteLocalMic()
-                  this.webRTCAdaptor.turnOffLocalCamera()
-                }
+                
                 joinRoom();
               }
               
@@ -583,6 +596,7 @@ export default {
               //stream is being finished
               console.log("publish finished");
               this.isStreaming = false;
+              this.startState = 'closed'
               // start_publish_button.disabled = false;
               // stop_publish_button.disabled = true;
             }
