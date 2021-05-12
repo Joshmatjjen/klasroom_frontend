@@ -1,7 +1,7 @@
 <template>
   <div class="bg-orange-100" style="height: calc(100vh - 80px)">
     <webinar-testing-modal
-      v-if="!isStreaming && startState === 'begin_test'"
+      v-if="startState === 'begin_test'"
       startState="begin_test"
       confirmText="Next"
       :confirm="confirm"
@@ -10,7 +10,7 @@
       :devicesOpt="devicesOpt"
     />
     <webinar-testing-modal
-      v-if="isStreaming && startState === 'mic_carmera_test'"
+      v-if="startState === 'mic_carmera_test'"
       startState="mic_carmera_test"
       confirmText="Next"
       :confirm="confirm"
@@ -19,7 +19,7 @@
       :devicesOpt="devicesOpt"
     />
     <webinar-testing-modal
-      v-else-if="isStreaming && startState === 'speaker_test'"
+      v-else-if="startState === 'speaker_test'"
       startState="speaker_test"
       confirmText="Continue to webinar"
       :confirm="confirm"
@@ -188,7 +188,7 @@ export default {
     confirm(state) {
       if (state === 'begin_test')
         this.startState = 'mic_carmera_test'
-
+        
       if (state === 'mic_carmera_test')
         this.startState = 'speaker_test'
       
@@ -274,14 +274,14 @@ export default {
     },
   },
   async mounted() {
-    this.streamId = String(this.$store.getters["auth/user"].userId),
+    this.streamId = this.$store.getters["auth/user"].userId,
     this.roomName = this.$route.query.roomName,
 
     // this.$store.getters["auth/user"]
 
     console.log('streamId: ', this.$store.getters["auth/user"].userId)
 
-    if (this.streamId === '24026') {
+    if (this.streamId === '1') {
       this.playStart = true;
       this.isCameraOff = false;
       this.isMute = false;
@@ -310,7 +310,7 @@ export default {
           this.webRTCAdaptor.stop(this.streamId);
           this.webRTCAdaptor.closePeerConnection(this.streamId);
           this.webRTCAdaptor.closeWebSocket();
-          initWebRTCAdaptor(true, this.autoRepublishEnabled);
+          initWebRTCAdaptor(this.playStart, this.autoRepublishEnabled);
         }	
     }
 
@@ -442,10 +442,8 @@ export default {
                 joinRoom();
               }
               else {
-                if(!this.playStart) {
-                  this.webRTCAdaptor.muteLocalMic()
-                  this.webRTCAdaptor.turnOffLocalCamera()
-                }
+                this.webRTCAdaptor.muteLocalMic()
+                this.webRTCAdaptor.turnOffLocalCamera()
                 joinRoom();
               }
               
@@ -508,8 +506,6 @@ export default {
               //stream is being published
               console.log("publish started: ", obj);
               this.isStreaming = true;
-              if (obj.streamId === String(this.$store.getters["auth/user"].userId))
-                this.startState = 'mic_carmera_test'
               // start_publish_button.disabled = true;
               // stop_publish_button.disabled = false;
               startAnimation();
@@ -618,14 +614,13 @@ export default {
               //obj is the PeerStats which has fields
               //averageOutgoingBitrate - kbits/sec
               //currentOutgoingBitrate - kbits/sec
-              console.log("Current obj: ", obj)
-              // console.log("Average outgoing bitrate " + obj.averageOutgoingBitrate + " kbits/sec"
-              //     + " Current outgoing bitrate: " + obj.currentOutgoingBitrate + " kbits/sec"
-              //     + " video source width: " + obj.resWidth + " video source height: " + obj.resHeight
-              //     + "frame width: " + obj.frameWidth + " frame height: " + obj.frameHeight
-              //     + " video packetLost: "  + obj.videoPacketsLost + " audio packetsLost: " + obj.audioPacketsLost
-              //     + " video RTT: " + obj.videoRoundTripTime + " audio RTT: " + obj.audioRoundTripTime 
-              //     + " video jitter: " + obj.videoJitter + " audio jitter: " + obj.audioJitter);
+              console.log("Average outgoing bitrate " + obj.averageOutgoingBitrate + " kbits/sec"
+                  + " Current outgoing bitrate: " + obj.currentOutgoingBitrate + " kbits/sec"
+                  + " video source width: " + obj.resWidth + " video source height: " + obj.resHeight
+                  + "frame width: " + obj.frameWidth + " frame height: " + obj.frameHeight
+                  + " video packetLost: "  + obj.videoPacketsLost + " audio packetsLost: " + obj.audioPacketsLost
+                  + " video RTT: " + obj.videoRoundTripTime + " audio RTT: " + obj.audioRoundTripTime 
+                  + " video jitter: " + obj.videoJitter + " audio jitter: " + obj.audioJitter);
     
             }
             else {
@@ -671,21 +666,21 @@ export default {
               errorMessage = "WebSocket Connection is disconnected.";
             }
             // alert(errorMessage);
-            Swal.fire({
-              position: 'top-end',
-              width: '350px',
-              text: errorMessage,
-              backdrop: false,
-              allowOutsideClick: false,
-              showConfirmButton: false,
-              showCloseButton: true,
-              timer: 3000,
-            });
+            // Swal.fire({
+            //   position: 'top-end',
+            //   width: '350px',
+            //   text: errorMessage,
+            //   backdrop: false,
+            //   allowOutsideClick: false,
+            //   showConfirmButton: false,
+            //   showCloseButton: true,
+            //   timer: 10000,
+            // });
           }
         });
       }
       //initialize the WebRTCAdaptor
-      initWebRTCAdaptor(true, this.autoRepublishEnabled);
+      initWebRTCAdaptor(this.playStart, this.autoRepublishEnabled);
       // joinRoom();
 
   },
