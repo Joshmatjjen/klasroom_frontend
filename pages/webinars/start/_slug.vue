@@ -218,18 +218,31 @@ export default {
         this.autoRepublishIntervalJob = null;
       }
       this.webRTCAdaptor.stop(this.streamId);
+      this.webRTCAdaptor.closeStream()
       this.webRTCAdaptor.leaveFromRoom(this.roomName)
     },
 
     toogleAudio() {
-      if (this.isMute) this.webRTCAdaptor.unmuteLocalMic()
-      else this.webRTCAdaptor.muteLocalMic()
+      if (this.isMute) {
+        this.webRTCAdaptor.unmuteLocalMic()
+        this.sendNotificationEvent("MIC_UNMUTED");
+      }
+      else {
+        this.webRTCAdaptor.muteLocalMic();
+        this.sendNotificationEvent("MIC_MUTED");
+      } 
       this.isMute = !this.isMute
     },
 
     toogleVideo() {
-      if (this.isCameraOff) this.webRTCAdaptor.turnOnLocalCamera()
-      else this.webRTCAdaptor.turnOffLocalCamera()
+      if (this.isCameraOff) { 
+        this.webRTCAdaptor.turnOnLocalCamera()
+        this.sendNotificationEvent("CAM_TURNED_ON");
+      }
+      else {
+        this.webRTCAdaptor.turnOffLocalCamera();
+        this.sendNotificationEvent("CAM_TURNED_OFF");
+      }
       this.isCameraOff = !this.isCameraOff
     },
 
@@ -334,9 +347,9 @@ export default {
     const playVideo = (obj) => {
       const room = this.roomOfStream[obj.streamId];
       console.log("new stream available with id: "
-          + obj.streamId + " on the room:" + room);
+          + obj.streamId + " on the room: " + room);
 
-      const video = document.getElementById("remoteVideo"+obj.streamId);
+      let video = document.getElementById("remoteVideo"+obj.streamId);
 
       if (video == null) {
         createRemoteVideo(obj.streamId);
@@ -347,10 +360,6 @@ export default {
     }
 
     const createRemoteVideo = (streamId) => {
-      // const player = document.createElement("div");
-      // player.className = "col-sm-3";
-      // player.id = "player"+streamId;
-      // player.innerHTML = '<video id="remoteVideo'+streamId+'"controls autoplay playsinline></video>';
       const player = '<video id="remoteVideo'+streamId+'"autoplay playsinline></video>';
       document.getElementById("players").innerHTML += player;
     }
@@ -358,7 +367,6 @@ export default {
     const removeRemoteVideo = (streamId) => {
       const video = document.getElementById("remoteVideo"+streamId);
       if (video != null) {
-        // const player = document.getElementById("player" + streamId);
         video.srcObject = null;
         document.getElementById("players").removeChild(video);
       }
@@ -498,8 +506,11 @@ export default {
               }, 5000);
             }
             else if (info == "newStreamAvailable") {
-              console.log( '++++ newStreamAvailable' + obj);
+              console.log( '++++ newStreamAvailable: ', obj);
 						  playVideo(obj);
+            } 
+            else if (info == "bitrateMeasurement") {
+              console.log( '++++ bitrateMeasurement: ', obj);
 					  }
             else if (info == "available_devices") {
               devices = obj.map((d) => {
@@ -538,6 +549,7 @@ export default {
             else if (info == "leavedFromRoom") {
               const room = obj.ATTR_ROOM_NAME;
               console.debug("leaved from the room:" + room);
+              console.debug("obj after leaved from the room: ", obj);
               if (this.roomTimerId != null)
               {
                 clearInterval(this.roomTimerId);
@@ -588,7 +600,8 @@ export default {
               console.log("+++ Data Channel closed for stream id", obj );
               this.isDataChannelOpen = false;
             } 
-            else if(info == "data_received") {
+            else if (info == "data_received") {
+              console.log("+++ Data obj received: ", obj);
               handleNotificationEvent(obj);
             }
 
@@ -643,7 +656,7 @@ export default {
     
             }
             else {
-              console.log( info + " notification received");
+              console.log('*** ' + info + " notification received");
             }
           },
           callbackError : function(error, message) {

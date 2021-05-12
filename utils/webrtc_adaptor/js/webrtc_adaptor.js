@@ -1439,7 +1439,7 @@ export class WebRTCAdaptor
 
 	getStats(streamId)
 	{
-		console.log("peerstatsgetstats = " + this.remotePeerConnectionStats[streamId]);
+		console.log("peerstatsgetstats = ", this.remotePeerConnectionStats[streamId]);
 
 		this.remotePeerConnection[streamId].getStats(null).then(stats =>
 		{
