@@ -33,7 +33,7 @@
               <div class="flex text-center md:pt-8 md:pb-4 sm:pb-8">
                 <span class="flex mr-3">
                   <nuxt-link
-                    to="/tutor/webinars/create"
+                    to="/student/webinars/create"
                     class="btn2 p-3 lg:px-5 text-xs sm:text-xs md:text-xs lg:text-sm xl:text-sm text-white bg-blue-500 shadow"
                   >
                     <img src="/icon/webinars.svg" class="inline h-5 mr-2" />

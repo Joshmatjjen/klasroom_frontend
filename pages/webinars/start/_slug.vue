@@ -491,7 +491,7 @@ export default {
 
     const rtmpForward =
       'rtmp://klasroom-RTMPLoad-1FSGS5HI2J4RX-1215248151.us-west-2.elb.amazonaws.com/WebRTCAppEE/'
-    const websocketPath = 'media.klasroom.com/klasroomLive/websocket'
+    const websocketPath = 'media.klasroom.com'
 
     const appName = location.pathname.substring(
       0,
