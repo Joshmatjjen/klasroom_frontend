@@ -215,7 +215,7 @@ export default {
     console.log('Starting connection to WebSocket Server')
     if (process.client) {
       this.connection = new WebSocket(
-        `wss://1e879751f9b3.ngrok.io/ws/public-chats/?token=${this.token}&webinar_id=25216`
+        `wss://74671b6522bf.ngrok.io/ws/public-chats/?token=${this.token}&webinar_id=25216`
       )
 
       this.connection.onmessage = (event) => {
@@ -265,7 +265,7 @@ export default {
         clearInterval(this.autoRepublishIntervalJob)
         this.autoRepublishIntervalJob = null
       }
-      this.webRTCAdaptor.stop(this.streamId);
+      this.webRTCAdaptor.stop(this.streamId)
       this.webRTCAdaptor.closeStream()
       this.webRTCAdaptor.leaveFromRoom(this.roomName)
     },
@@ -273,23 +273,21 @@ export default {
     toogleAudio() {
       if (this.isMute) {
         this.webRTCAdaptor.unmuteLocalMic()
-        this.sendNotificationEvent("MIC_UNMUTED");
+        this.sendNotificationEvent('MIC_UNMUTED')
+      } else {
+        this.webRTCAdaptor.muteLocalMic()
+        this.sendNotificationEvent('MIC_MUTED')
       }
-      else {
-        this.webRTCAdaptor.muteLocalMic();
-        this.sendNotificationEvent("MIC_MUTED");
-      } 
       this.isMute = !this.isMute
     },
 
     toogleVideo() {
-      if (this.isCameraOff) { 
+      if (this.isCameraOff) {
         this.webRTCAdaptor.turnOnLocalCamera()
-        this.sendNotificationEvent("CAM_TURNED_ON");
-      }
-      else {
-        this.webRTCAdaptor.turnOffLocalCamera();
-        this.sendNotificationEvent("CAM_TURNED_OFF");
+        this.sendNotificationEvent('CAM_TURNED_ON')
+      } else {
+        this.webRTCAdaptor.turnOffLocalCamera()
+        this.sendNotificationEvent('CAM_TURNED_OFF')
       }
       this.isCameraOff = !this.isCameraOff
     },
@@ -347,9 +345,9 @@ export default {
   async mounted() {
     // this.streamId = String(this.$store.getters['auth/user'].userId)
     this.roomName = this.$route.query.roomName
-      // this.$store.getters["auth/user"]
+    // this.$store.getters["auth/user"]
 
-      console.log('streamId: ', this.streamId)
+    console.log('streamId: ', this.streamId)
 
     if (this.streamId === '24026') {
       this.playStart = true
@@ -393,11 +391,15 @@ export default {
     }
 
     const playVideo = (obj) => {
-      const room = this.roomOfStream[obj.streamId];
-      console.log("new stream available with id: "
-          + obj.streamId + " on the room: " + room);
+      const room = this.roomOfStream[obj.streamId]
+      console.log(
+        'new stream available with id: ' +
+          obj.streamId +
+          ' on the room: ' +
+          room
+      )
 
-      let video = document.getElementById("remoteVideo"+obj.streamId);
+      let video = document.getElementById('remoteVideo' + obj.streamId)
 
       if (video == null) {
         createRemoteVideo(obj.streamId)
@@ -408,15 +410,16 @@ export default {
     }
 
     const createRemoteVideo = (streamId) => {
-      const player = '<video id="remoteVideo'+streamId+'"autoplay playsinline></video>';
-      document.getElementById("players").innerHTML += player;
+      const player =
+        '<video id="remoteVideo' + streamId + '"autoplay playsinline></video>'
+      document.getElementById('players').innerHTML += player
     }
 
     const removeRemoteVideo = (streamId) => {
       const video = document.getElementById('remoteVideo' + streamId)
       if (video != null) {
-        video.srcObject = null;
-        document.getElementById("players").removeChild(video);
+        video.srcObject = null
+        document.getElementById('players').removeChild(video)
       }
       this.webRTCAdaptor.stop(streamId)
     }
@@ -535,7 +538,6 @@ export default {
             } else {
               joinRoom()
             }
-
           } else if (info == 'joinedTheRoom') {
             const room = obj.ATTR_ROOM_NAME
             this.roomOfStream[obj.streamId] = room
@@ -571,8 +573,8 @@ export default {
           } else if (info == 'newStreamAvailable') {
             console.log('++++ newStreamAvailable' + obj)
             playVideo(obj)
-          } else if (info == "bitrateMeasurement") {
-              console.log( '++++ bitrateMeasurement: ', obj);
+          } else if (info == 'bitrateMeasurement') {
+            console.log('++++ bitrateMeasurement: ', obj)
           } else if (info == 'available_devices') {
             devices = obj.map((d) => {
               // console.log("found device", d)
@@ -611,7 +613,6 @@ export default {
             }
             this.webRTCAdaptor.enableStats(obj.streamId)
             // enableAudioLevel();
-
           } else if (info == 'leavedFromRoom') {
             const room = obj.ATTR_ROOM_NAME
             console.debug('leaved from the room:' + room)
@@ -658,7 +659,7 @@ export default {
             console.log('+++ Data Channel closed for stream id', obj)
             this.isDataChannelOpen = false
           } else if (info == 'data_received') {
-            console.log("+++ Data obj received: ", obj);
+            console.log('+++ Data obj received: ', obj)
             handleNotificationEvent(obj)
           } else if (info == 'publish_finished') {
             //stream is being finished
@@ -691,7 +692,6 @@ export default {
             //obj is the PeerStats which has fields
             //averageOutgoingBitrate - kbits/sec
             //currentOutgoingBitrate - kbits/sec
- 
             // console.log("Average outgoing bitrate " + obj.averageOutgoingBitrate + " kbits/sec"
             //     + " Current outgoing bitrate: " + obj.currentOutgoingBitrate + " kbits/sec"
             //     + " video source width: " + obj.resWidth + " video source height: " + obj.resHeight
@@ -700,7 +700,7 @@ export default {
             //     + " video RTT: " + obj.videoRoundTripTime + " audio RTT: " + obj.audioRoundTripTime
             //     + " video jitter: " + obj.videoJitter + " audio jitter: " + obj.audioJitter);
           } else {
-            console.log('*** ' + info + " notification received");
+            console.log('*** ' + info + ' notification received')
           }
         },
         callbackError: function (error, message) {
