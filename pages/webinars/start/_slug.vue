@@ -5,7 +5,7 @@
       startState="closed"
       confirmText="Go Home"
       :confirm="confirm"
-      title="Webinar Ended"
+      :title="endMsg"
       :devices="devices"
       :devicesOpt="devicesOpt"
     />
@@ -164,8 +164,9 @@
 
 <script>
 import { mapState } from 'vuex'
-import { WebRTCAdaptor } from '~/utils/webrtc_adaptor/js/webrtc_adaptor'
 import Swal from 'sweetalert2'
+import { WebRTCAdaptor } from '~/utils/webrtc_adaptor/js/webrtc_adaptor'
+import { getAccessTokenHeader } from '~/utils'
 
 export default {
   layout: 'webinar',
@@ -175,6 +176,7 @@ export default {
   },
   data: () => ({
     startState: 'begin_test',
+    endMsg: 'Webinar Ended',
     maxVideoBitrateKbps: 900,
     subscriberId: '123', // getUrlParameter("subscriberId"),
     subscriberCode: '123sdef', // getUrlParameter("subscriberCode"),
@@ -344,15 +346,33 @@ export default {
   },
   async mounted() {
     // this.streamId = String(this.$store.getters['auth/user'].userId)
-    this.roomName = this.$route.query.roomName
+    this.roomName = this.$route.params.slug
     // this.$store.getters["auth/user"]
 
     console.log('streamId: ', this.streamId)
+    console.log('$route: ', this.$route.params.slug)
 
-    if (this.streamId === '24026') {
-      this.playStart = true
-      this.isCameraOff = false
-      this.isMute = false
+    try {
+      const { data: newData, message } = await this.$axios.$post(
+        `https://streaming.staging.klasroom.com/v1/webinars/${this.roomName}/join`,
+        {},
+        {
+          headers: getAccessTokenHeader(this.token),
+        }
+      )
+      console.log('newData: ', newData, message)
+
+      if (this.streamId === newData.hostId) {
+        this.playStart = true
+        this.isCameraOff = false
+        this.isMute = false
+      }
+    } catch (e) {
+      this.isStreaming = false
+      this.endMsg = 'Could not connect to webinar'
+      this.startState = 'closed'
+      console.log(e)
+      return
     }
 
     // function confirm(state) {
@@ -494,7 +514,8 @@ export default {
 
     const rtmpForward =
       'rtmp://klasroom-RTMPLoad-1FSGS5HI2J4RX-1215248151.us-west-2.elb.amazonaws.com/WebRTCAppEE/'
-    const websocketPath = 'media.klasroom.com/klasroomLive/websocket'
+    // const websocketPath = `media.klasroom.com/${this.roomName}/${this.streamId}`
+    const websocketPath = `klasr-appli-tmxddztxzehf-460579020.us-west-2.elb.amazonaws.com/klasroomLive/websocket`
 
     const appName = location.pathname.substring(
       0,
@@ -541,9 +562,7 @@ export default {
           } else if (info == 'joinedTheRoom') {
             const room = obj.ATTR_ROOM_NAME
             this.roomOfStream[obj.streamId] = room
-            console.log(
-              '++++ joinedTheRoom: ' + this.roomOfStream[obj.streamId]
-            )
+            console.log('+++ joinedTheRoom: ' + this.roomOfStream[obj.streamId])
             console.log(obj)
 
             console.log('+++ roomOfStream: ', this.roomOfStream)
@@ -571,10 +590,10 @@ export default {
               this.webRTCAdaptor.getRoomInfo(this.roomName, this.streamId)
             }, 5000)
           } else if (info == 'newStreamAvailable') {
-            console.log('++++ newStreamAvailable' + obj)
+            console.log('+++ newStreamAvailable' + obj)
             playVideo(obj)
           } else if (info == 'bitrateMeasurement') {
-            console.log('++++ bitrateMeasurement: ', obj)
+            console.log('+++ bitrateMeasurement: ', obj)
           } else if (info == 'available_devices') {
             devices = obj.map((d) => {
               // console.log("found device", d)
@@ -746,21 +765,21 @@ export default {
               'You are not allowed to reach devices from an insecure origin, please enable ssl'
           } else if (error.indexOf('ScreenSharePermissionDenied') != -1) {
             errorMessage = 'You are not allowed to access screen share'
-            // $(".video-source").first().prop("checked", true);
           } else if (error.indexOf('WebSocketNotConnected') != -1) {
-            errorMessage = 'WebSocket Connection is disconnected.'
+            errorMessage = null // 'WebSocket Connection is disconnected.'
           }
           // alert(errorMessage);
-          Swal.fire({
-            position: 'top-end',
-            width: '350px',
-            text: errorMessage,
-            backdrop: false,
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            showCloseButton: true,
-            timer: 3000,
-          })
+          if (errorMessage)
+            Swal.fire({
+              position: 'top-end',
+              width: '350px',
+              text: errorMessage,
+              backdrop: false,
+              allowOutsideClick: false,
+              showConfirmButton: false,
+              showCloseButton: true,
+              timer: 3000,
+            })
         },
       })
     }
