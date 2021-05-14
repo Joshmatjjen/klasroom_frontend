@@ -35,12 +35,15 @@ export default {
   props: {
     webinar: { type: Object, required: true },
     session: { type: Boolean, default: false },
+    userType: { type: String, required: false },
   },
   computed: {
     view_route() {
       const slug = _.get(this.webinar, 'slug', '')
       return this.session
-        ? '/student/webinars/view/' + slug
+        ? this.userType === 'tutor'
+          ? '/tutor/webinars/view/' + slug
+          : '/student/webinars/view/' + slug
         : '/webinars/' + slug
     },
   },

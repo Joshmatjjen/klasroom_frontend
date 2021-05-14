@@ -82,19 +82,6 @@
               <hr class="mt-8 mb-5" />
               
               <form id="signup-form">
-
-                <!-- <div class="form-group mb-5">
-                  <label for="input-password">Password</label>
-                  <div>
-                    <input
-                      id="input-password"
-                      type="password"
-                      class="form-input"
-                      placeholder="Enter your password here"
-                      v-model="signupForm.password"
-                    />
-                  </div>
-                </div> -->
                 <div class="form-group">
                   <label for="input-courseCategories">Course Categories</label>
                   <div>
@@ -103,9 +90,11 @@
                       placeholder="Select Course Categories"
                       multiple 
                       v-model="signupForm.courseCategories" 
-                      :options="coursesCategories" 
+                      :options="coursesCategories"
+                      @input="checkFormError"
                     />
                   </div>
+                  <span v-if="formError" class="text-sm text-red-700">Course categories is required</span>
                 </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
@@ -138,9 +127,9 @@ export default {
     isLogin: true,
     loading: false,
     signupForm: {
-      password: "",
       courseCategories: []
     },
+    formError: false,
   }),
   computed: {
     ...mapState({
@@ -159,8 +148,15 @@ export default {
   //   },
   // },
   methods: {
+    checkFormError() {
+      this.formError = false;
+    },
     onSignUp(e, userType) {
       if (e) e.preventDefault()
+      if (!this.signupForm.courseCategories.length) {
+        this.formError = true;
+        return;
+      }
       this.loading = true
       const data = {
         ...this.signupForm
@@ -188,8 +184,7 @@ export default {
     },
     clearInput() {
       this.signupForm = {
-        password: "",
-        courseCategories: ""
+        courseCategories: []
       }
     }
   },

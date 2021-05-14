@@ -53,7 +53,7 @@ export default ({ $axios, app, store, redirect, route }) => {
         allowOutsideClick: false,
         showConfirmButton: false,
         showCloseButton: true,
-        timer: 5000,
+        timer: 10000,
       })
     }
 
@@ -69,7 +69,7 @@ export default ({ $axios, app, store, redirect, route }) => {
         allowOutsideClick: false,
         showConfirmButton: false,
         showCloseButton: true,
-        timer: 5000,
+        timer: 10000,
         // reverseButtons: true,
         // confirmButtonText: app.i18n.t('login'),
         // cancelButtonText: app.i18n.t('cancel')
@@ -88,7 +88,7 @@ export default ({ $axios, app, store, redirect, route }) => {
         allowOutsideClick: false,
         showConfirmButton: false,
         showCloseButton: true,
-        timer: 5000,
+        timer: 10000,
       })
       // .then(() => {
       //   redirect({ name: 'index' })

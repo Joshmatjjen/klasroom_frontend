@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'bg-orange-100': darkMenu }">
-    <div class="container mx-auto">
+    <div class="container mx-auto h-20">
       <nav class="flex items-center justify-between flex-wrap py-4 md:py-6">
         <nuxt-link
           to="/"

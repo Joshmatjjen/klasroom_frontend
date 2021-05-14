@@ -102,8 +102,10 @@
                       class="form-input"
                       placeholder="Enter your email here"
                       v-model="loginForm.userIdentity"
+                      @input="checkLoginFormError('userIdentity')"
                     />
                   </div>
+                  <span v-if="loginFormError.find(i => i === 'userIdentity')" class="text-sm text-red-700">Email address is required</span>
                 </div>
                 <div class="form-group">
                   <label for="input-password">Password</label>
@@ -114,15 +116,17 @@
                       class="form-input"
                       placeholder="Enter your password here"
                       v-model="loginForm.password"
+                      @input="checkLoginFormError('password')"
                     />
                   </div>
+                  <span v-if="loginFormError.find(i => i === 'password')" class="text-sm text-red-700">Password is required</span>
                 </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="(e) => onLogin(e, showLogin.userType)"
+                      @click.prevent="(e) => onLogin(e, showLogin.userType)"
                     >
                       Sign in
                       <loader v-if="loading" color="white" />
@@ -151,8 +155,10 @@
                       class="form-input"
                       placeholder="Enter your name here"
                       v-model="signupForm.name"
+                      @input="checkSignupFormError('name')"
                     />
                   </div>
+                  <span v-if="signupFormError.find(i => i === 'name')" class="text-sm text-red-700">Name is required</span>
                 </div>
                 <div class="form-group mb-5">
                   <label for="input-email">Email address</label>
@@ -163,8 +169,10 @@
                       class="form-input"
                       placeholder="Enter your email here"
                       v-model="signupForm.email"
+                      @input="checkSignupFormError('email')"
                     />
                   </div>
+                  <span v-if="signupFormError.find(i => i === 'email')" class="text-sm text-red-700">Email address is required</span>
                 </div>
                 <div v-if="!isStudent" class="form-group mb-5">
                   <label for="input-email">Phone</label>
@@ -175,8 +183,10 @@
                       class="form-input"
                       placeholder="Enter your phone number here"
                       v-model="signupForm.phone"
+                      @input="checkSignupFormError('phone')"
                     />
                   </div>
+                  <span v-if="signupFormError.find(i => i === 'phone')" class="text-sm text-red-700">Phone is required</span>
                 </div>
                 <div class="form-group mb-5">
                   <label for="input-password">Password</label>
@@ -187,8 +197,10 @@
                       class="form-input"
                       placeholder="Enter your password here"
                       v-model="signupForm.password"
+                      @input="checkSignupFormError('password')"
                     />
                   </div>
+                  <span v-if="signupFormError.find(i => i === 'password')" class="text-sm text-red-700">Password is required</span>
                 </div>
                 <div v-if="showLogin.userType === 'tutor'" class="form-group">
                   <label for="input-courseCategories">Course Categories</label>
@@ -198,9 +210,11 @@
                       placeholder="Select Course Categories"
                       multiple 
                       v-model="signupForm.courseCategories" 
-                      :options="coursesCategories" 
+                      :options="coursesCategories"
+                      @input="checkSignupFormError('courseCategories')"
                     />
                   </div>
+                  <span v-if="signupFormError.find(i => i === 'courseCategories')" class="text-sm text-red-700">Course categories is required</span>
                 </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
@@ -263,7 +277,9 @@ export default {
     loginForm: {
       userIdentity: "",
       password: ""
-    }
+    },
+    loginFormError: [],
+    signupFormError: [],
   }),
   computed: {
     ...mapState({
@@ -280,8 +296,23 @@ export default {
       },
       immediate: true,
     },
+    isLogin(value) {
+      this.loginFormError = [];
+      this.signupFormError = [];
+      this.isStudent = false;
+      this.clearInput()
+    },
+    isStudent(value) {
+      this.signupFormError = [];
+    },
   },
   methods: {
+    checkLoginFormError(value) {
+      this.loginFormError = this.loginFormError.filter(i => i !== value);
+    },
+    checkSignupFormError(value) {
+      this.signupFormError = this.signupFormError.filter(i => i !== value);
+    },
     forgotPassword(e) {
       if (e) e.preventDefault()
       this.$store.commit('app/FORGOT_PASSWORD_MODAL', true)
@@ -290,9 +321,28 @@ export default {
     onSignUp(e, userType) {
       if (e) e.preventDefault()
       this.loading = true
-      const data = {
-        ...this.signupForm
+
+      const {name, email, phone, password, courseCategories} = this.signupForm;
+
+      const data = this.isStudent ? {
+        email, password, courseCategories
+      } : userType === 'student' ? {
+        name, email, phone, password
+      } : {
+        name, email, phone, password, courseCategories
       }
+
+      for (let i in data) {
+        console.log(i)
+        if (data[i].length === 0) {       
+          this.signupFormError.push(i);
+        }
+      }
+      if (this.signupFormError.length) {
+        this.loading = false;
+        return;
+      }
+
       this.$store.dispatch("auth/signUpUser", {
         ...data,
         userType,
@@ -308,10 +358,23 @@ export default {
     },
     onLogin(e, userType) {
       if (e) e.preventDefault()
-      this.loading = true
+      this.loading = true;
+
       const data = {
         ...this.loginForm
       }
+      
+      for (let i in data) {
+        console.log(i)
+        if (data[i].length === 0) {
+          this.loginFormError.push(i);
+        }
+      }
+      if (this.loginFormError.length) {
+        this.loading = false;
+        return;
+      }
+      
       this.$store.dispatch("auth/loginUser", {
         ...data,
         userType

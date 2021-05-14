@@ -87,8 +87,10 @@
                       class="form-input"
                       placeholder="Enter code that was sent to your email"
                       v-model="form.token"
+                      @input="checkFormError('token')"
                     />
                   </div>
+                  <span v-if="formError.find(i => i === 'token')" class="text-sm text-red-700">Code is required</span>
                 </div>
                 <div class="form-group mb-5">
                   <label for="input-password">New Password</label>
@@ -99,9 +101,13 @@
                       class="form-input"
                       placeholder="Enter your password here"
                       v-model="form.password"
-                      @input="checkConfirmPassword"
+                      @input="() => {
+                        checkFormError('password')
+                        checkConfirmPassword()
+                      }"
                     />
                   </div>
+                  <span v-if="formError.find(i => i === 'password')" class="text-sm text-red-700">Password categories is required</span>
                 </div>
                 <div class="form-group">
                   <label for="input-re_password">Confirm Password</label>
@@ -112,11 +118,15 @@
                       class="form-input"
                       placeholder="Confirm password"
                       v-model="form.confirmPassword"
-                      @input="checkConfirmPassword"
+                      @input="() => {
+                        checkFormError('confirmPassword')
+                        checkConfirmPassword()
+                      }"
                     />
                   </div>
+                  <span v-if="formError.find(i => i === 'confirmPassword')" class="text-sm text-red-700 block">Confirm password categories is required</span>
+                  <span v-if="showConfirmPasswordErr" class="text-sm text-red-700">Confirm password dosen't match</span>
                 </div>
-                <span v-if="showConfirmPasswordErr" class="text-sm text-red-700">Confirm password dosen't match</span>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
                     <button
@@ -160,6 +170,7 @@ export default {
       token: ''
     },
     loading: false,
+    formError: [],
     showConfirmPasswordErr: false,
   }),
   computed: {
@@ -168,8 +179,11 @@ export default {
     }),
   },
   methods: {
-    checkConfirmPassword(e) {
+    checkConfirmPassword() {
       this.showConfirmPasswordErr = false;
+    },
+    checkFormError(value) {
+      this.formError = this.formError.filter(i => i !== value);
     },
     resetPassword(e) {
       if (e) e.preventDefault()
@@ -177,7 +191,19 @@ export default {
         this.showConfirmPasswordErr = true;
         return;
       }
-      this.loading = true
+      this.loading = true;
+
+      for (let i in this.form) {
+        console.log(i)
+        if (this.form[i].length === 0) {
+          this.formError.push(i);
+        }
+      }
+
+      if (this.formError.length) {
+        this.loading = false;
+        return;
+      }
 
       this.$store.dispatch("auth/resetPassword", {
         ...this.form,
@@ -207,12 +233,15 @@ export default {
       this.$store.commit('app/RESET_PASSWORD_MODAL', false)
     },
     forgotPassword() {
+      this.clearInput();
+      this.formError = [];
       this.$store.commit('app/FORGOT_PASSWORD_MODAL', true)
       this.$store.commit('app/RESET_PASSWORD_MODAL', false)
     },
     clearInput() {
       this.form = {
         password: "",
+        confirmPassword: '',
         token: ''
       }
     },
