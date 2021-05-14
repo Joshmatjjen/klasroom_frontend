@@ -64,7 +64,7 @@
                                   type="text"
                                   class="form-input"
                                   placeholder="Enter webinar name here"
-                                  v-model="createWebinar.name"
+                                  v-model="createWebinar.title"
                                 />
                               </div>
                             </div>
@@ -1281,6 +1281,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import Swal from 'sweetalert2'
 import moment from 'moment'
 import UserChip from '~/components/chip/UserChip.vue'
 
@@ -1300,7 +1301,7 @@ export default {
     undoneTasks: _.take(courses, 3),
     isWebinarSwitch: 0,
     createWebinar: {
-      name: '',
+      title: '',
       subtitle: '',
       introduction: '',
       date: '',
@@ -1334,7 +1335,7 @@ export default {
     },
     createNewWebinar() {
       this.loading = true;
-      const {name, subtitle, introduction, date, startTime, endTime} = this.createWebinar;
+      const {title, subtitle, introduction, date, startTime, endTime} = this.createWebinar;
       const data = {
         ...this.createWebinar,
         webinarStart: moment(date + " " + startTime).format("YYYY-MM-DDTHH:mm:ss"),
@@ -1347,6 +1348,16 @@ export default {
       .then((res) => {
         this.loading = false
         if (res) {
+          Swal.fire({
+            position: 'top-end',
+            width: '350px',
+            text: res.message,
+            backdrop: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            showCloseButton: true,
+            timer: 3000,
+          });
           if (this.userDash === 'tutor')
             this.gotoWebinar('tutor');
           else
