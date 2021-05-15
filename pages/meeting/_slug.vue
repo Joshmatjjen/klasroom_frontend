@@ -103,11 +103,83 @@
               (tab === 1 && tabs.length === 5)
             "
           >
-            <chat-messages
-              no-card
-              :sendMessage="sendMessage"
-              :messages="messages"
-            />
+            <div
+              class="pt-5"
+              :class="{ ' border border-gray-300': !isPrivateChat }"
+            >
+              <toggle-switch
+                v-model="isPrivateChat"
+                active="Public chat"
+                inactive="Private messages"
+                class="mb-6"
+              />
+            </div>
+            <div v-if="isPrivateChat">
+              <div class="flex flex-row px-5 justify-between items-center">
+                <div class="flex flex-row cursor-pointer">
+                  <svg
+                    width="20"
+                    height="20"
+                    viewBox="0 0 20 20"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M15 19L6 10L15 1"
+                      stroke="#8A8A8A"
+                      stroke-width="1.5"
+                    />
+                  </svg>
+                  Back
+                </div>
+                <search-box placeholder="Search people" :small="true" />
+              </div>
+              <div class="chat-list py-5">
+                <div
+                  class="flex flex-row mx-10 my-5 justify-between items-center"
+                >
+                  <div class="flex flex-row">
+                    <img src="/avatar.jpg" class="rounded-lg w-10 h-10 mr-3" />
+                    <div class="flex-grow my-auto">
+                      <p class="text-xs text-gray-700 font-bold">Amina Bello</p>
+                      <p class="text-xs leading-tight text-gray-600">
+                        Hello good afternoon I was wondering if you are .....
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="bg-orange-500 h-5 w-5 rounded-full flex justify-center"
+                  >
+                    <p class="text-xs text-center text-white">1</p>
+                  </div>
+                </div>
+                <div
+                  class="flex flex-row mx-10 my-5 justify-between items-center"
+                >
+                  <div class="flex flex-row">
+                    <img src="/avatar.jpg" class="rounded-lg w-10 h-10 mr-3" />
+                    <div class="flex-grow my-auto">
+                      <p class="text-xs text-gray-700 font-bold">Amina Bello</p>
+                      <p class="text-xs leading-tight text-gray-600">
+                        Hello good afternoon I was wondering if you are .....
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    class="bg-orange-500 h-5 w-5 rounded-full flex justify-center"
+                  >
+                    <p class="text-xs text-center text-white">1</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else>
+              <chat-messages
+                no-card
+                :sendMessage="sendMessage"
+                :messages="messages"
+              />
+            </div>
           </div>
           <div
             v-if="
@@ -176,7 +248,7 @@ export default {
   },
   data: () => ({
     startState: 'begin_test',
-    endMsg: "Meeting Ended",
+    endMsg: 'Meeting Ended',
     maxVideoBitrateKbps: 900,
     subscriberId: '123', // getUrlParameter("subscriberId"),
     subscriberCode: '123sdef', // getUrlParameter("subscriberCode"),
@@ -206,6 +278,7 @@ export default {
     connection: null,
     inputMessage: null,
     messages: [],
+    isPrivateChat: false,
   }),
   computed: {
     ...mapState({
@@ -217,7 +290,7 @@ export default {
     console.log('Starting connection to WebSocket Server')
     if (process.client) {
       this.connection = new WebSocket(
-        `wss://1e879751f9b3.ngrok.io/ws/public-chats/?token=${this.token}&webinar_id=25216`
+        `wss://74671b6522bf.ngrok.io/ws/public-chats/?token=${this.token}&webinar_id=25216`
       )
 
       this.connection.onmessage = (event) => {
@@ -267,31 +340,30 @@ export default {
         clearInterval(this.autoRepublishIntervalJob)
         this.autoRepublishIntervalJob = null
       }
-      this.webRTCAdaptor.stop(this.streamId);
+      this.webRTCAdaptor.stop(this.streamId)
       this.webRTCAdaptor.closeStream()
       this.webRTCAdaptor.leaveFromRoom(this.roomName)
     },
 
     toogleAudio() {
+      console.log(this.streamsList)
       if (this.isMute) {
         this.webRTCAdaptor.unmuteLocalMic()
-        this.sendNotificationEvent("MIC_UNMUTED");
+        this.sendNotificationEvent('MIC_UNMUTED')
+      } else {
+        this.webRTCAdaptor.muteLocalMic()
+        this.sendNotificationEvent('MIC_MUTED')
       }
-      else {
-        this.webRTCAdaptor.muteLocalMic();
-        this.sendNotificationEvent("MIC_MUTED");
-      } 
       this.isMute = !this.isMute
     },
 
     toogleVideo() {
-      if (this.isCameraOff) { 
+      if (this.isCameraOff) {
         this.webRTCAdaptor.turnOnLocalCamera()
-        this.sendNotificationEvent("CAM_TURNED_ON");
-      }
-      else {
-        this.webRTCAdaptor.turnOffLocalCamera();
-        this.sendNotificationEvent("CAM_TURNED_OFF");
+        this.sendNotificationEvent('CAM_TURNED_ON')
+      } else {
+        this.webRTCAdaptor.turnOffLocalCamera()
+        this.sendNotificationEvent('CAM_TURNED_OFF')
       }
       this.isCameraOff = !this.isCameraOff
     },
@@ -349,30 +421,31 @@ export default {
   async mounted() {
     // this.streamId = String(this.$store.getters['auth/user'].userId)
     this.roomName = this.$route.params.slug
-      // this.$store.getters["auth/user"]
+    // this.$store.getters["auth/user"]
 
-      console.log('streamId: ', this.streamId)
-      console.log('$route: ', this.$route.params.slug)
+    console.log('streamId: ', this.streamId)
+    console.log('$route: ', this.$route.params.slug)
 
     try {
-      
-      const { data: newData, message } = await this.$axios.$get(`https://streaming.staging.klasroom.com/v1/meetings/${this.roomName}/join`, {
-        headers: getAccessTokenHeader(this.token)
-      })
-      console.log("newData: ", newData, message)
+      const { data: newData, message } = await this.$axios.$get(
+        `https://streaming.staging.klasroom.com/v1/meetings/${this.roomName}/join`,
+        {
+          headers: getAccessTokenHeader(this.token),
+        }
+      )
+      console.log('newData: ', newData, message)
 
       if (this.streamId === newData.hostId) {
         this.playStart = true
         this.isCameraOff = false
         this.isMute = false
       }
-
     } catch (e) {
       this.isStreaming = false
-      this.endMsg = "Could not connect to meeting"
+      this.endMsg = 'Could not connect to meeting'
       this.startState = 'closed'
       console.log(e)
-      return;
+      return
     }
 
     // function confirm(state) {
@@ -411,11 +484,15 @@ export default {
     }
 
     const playVideo = (obj) => {
-      const room = this.roomOfStream[obj.streamId];
-      console.log("new stream available with id: "
-          + obj.streamId + " on the room: " + room);
+      const room = this.roomOfStream[obj.streamId]
+      console.log(
+        'new stream available with id: ' +
+          obj.streamId +
+          ' on the room: ' +
+          room
+      )
 
-      let video = document.getElementById("remoteVideo"+obj.streamId);
+      let video = document.getElementById('remoteVideo' + obj.streamId)
 
       if (video == null) {
         createRemoteVideo(obj.streamId)
@@ -426,15 +503,16 @@ export default {
     }
 
     const createRemoteVideo = (streamId) => {
-      const player = '<video id="remoteVideo'+streamId+'"autoplay playsinline></video>';
-      document.getElementById("players").innerHTML += player;
+      const player =
+        '<video id="remoteVideo' + streamId + '"autoplay playsinline></video>'
+      document.getElementById('players').innerHTML += player
     }
 
     const removeRemoteVideo = (streamId) => {
       const video = document.getElementById('remoteVideo' + streamId)
       if (video != null) {
-        video.srcObject = null;
-        document.getElementById("players").removeChild(video);
+        video.srcObject = null
+        document.getElementById('players').removeChild(video)
       }
       this.webRTCAdaptor.stop(streamId)
     }
@@ -554,7 +632,6 @@ export default {
             } else {
               joinRoom()
             }
-
           } else if (info == 'joinedTheRoom') {
             const room = obj.ATTR_ROOM_NAME
             this.roomOfStream[obj.streamId] = room
@@ -590,8 +667,8 @@ export default {
           } else if (info == 'newStreamAvailable') {
             console.log('++++ newStreamAvailable' + obj)
             playVideo(obj)
-          } else if (info == "bitrateMeasurement") {
-              console.log( '++++ bitrateMeasurement: ', obj);
+          } else if (info == 'bitrateMeasurement') {
+            console.log('++++ bitrateMeasurement: ', obj)
           } else if (info == 'available_devices') {
             devices = obj.map((d) => {
               // console.log("found device", d)
@@ -630,7 +707,6 @@ export default {
             }
             this.webRTCAdaptor.enableStats(obj.streamId)
             // enableAudioLevel();
-
           } else if (info == 'leavedFromRoom') {
             const room = obj.ATTR_ROOM_NAME
             console.debug('leaved from the room:' + room)
@@ -654,6 +730,7 @@ export default {
           } else if (info == 'roomInformation') {
             console.log('+++ roomInformation')
             console.log('+++ streamsList: ', this.streamsList)
+            console.log('+++ obj: ', obj)
             console.log('+++ obj.streams: ', obj.streams)
 
             //Checks if any new stream has added, if yes, plays.
@@ -677,7 +754,7 @@ export default {
             console.log('+++ Data Channel closed for stream id', obj)
             this.isDataChannelOpen = false
           } else if (info == 'data_received') {
-            console.log("+++ Data obj received: ", obj);
+            console.log('+++ Data obj received: ', obj)
             handleNotificationEvent(obj)
           } else if (info == 'publish_finished') {
             //stream is being finished
@@ -710,7 +787,6 @@ export default {
             //obj is the PeerStats which has fields
             //averageOutgoingBitrate - kbits/sec
             //currentOutgoingBitrate - kbits/sec
- 
             // console.log("Average outgoing bitrate " + obj.averageOutgoingBitrate + " kbits/sec"
             //     + " Current outgoing bitrate: " + obj.currentOutgoingBitrate + " kbits/sec"
             //     + " video source width: " + obj.resWidth + " video source height: " + obj.resHeight
@@ -719,7 +795,7 @@ export default {
             //     + " video RTT: " + obj.videoRoundTripTime + " audio RTT: " + obj.audioRoundTripTime
             //     + " video jitter: " + obj.videoJitter + " audio jitter: " + obj.audioJitter);
           } else {
-            console.log('*** ' + info + " notification received");
+            console.log('*** ' + info + ' notification received')
           }
         },
         callbackError: function (error, message) {
@@ -779,7 +855,7 @@ export default {
               showConfirmButton: false,
               showCloseButton: true,
               timer: 3000,
-            });
+            })
         },
       })
     }
@@ -791,6 +867,10 @@ export default {
 </script>
 
 <style>
+.chat-list {
+  height: calc(100vh - 16.5rem);
+}
+
 .main-video {
   padding: 10px;
   height: calc(80vh - 80px);
