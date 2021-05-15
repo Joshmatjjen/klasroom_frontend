@@ -249,6 +249,7 @@ export default {
   data: () => ({
     startState: 'begin_test',
     endMsg: 'Meeting Ended',
+    isHost: false,
     maxVideoBitrateKbps: 900,
     subscriberId: '123', // getUrlParameter("subscriberId"),
     subscriberCode: '123sdef', // getUrlParameter("subscriberCode"),
@@ -397,9 +398,14 @@ export default {
   watch: {
     async startState(value) {
       await this.$nextTick()
-      if (value === 'done') {
-        const video = this.$refs.localVideo
-        // video.srcObject = this.stream;
+      const link = `meeting/${this.roomName}`
+      const copyLink = `${location.origin}/${link}`
+      if (value === 'done' && this.isHost) {
+        this.$store.commit('app/MEETING_CREATE_MODAL', {
+          title: 'Your meeting is ready',
+          text: `You can share this meeting link with others you want in the meeting.`,
+          copyLink,
+        })
       }
       // this.doConnectStream(value)
     },
@@ -436,6 +442,7 @@ export default {
       console.log('newData: ', newData, message)
 
       if (this.streamId === newData.hostId) {
+        this.isHost = true
         this.playStart = true
         this.isCameraOff = false
         this.isMute = false

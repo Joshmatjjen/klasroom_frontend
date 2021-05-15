@@ -1344,6 +1344,7 @@ export default {
       console.log('data: ', data);
       this.$store.dispatch("webinar/createWebinar", {
         ...data,
+        publishNow: true
       })
       .then((res) => {
         this.loading = false
