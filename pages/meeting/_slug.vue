@@ -41,7 +41,7 @@
       <div
         class="video-player col-span-full lg:col-span-9 xl:col-span-9 flex flex-col"
       >
-        <div class="main-video">
+        <div id="players" class="main-video flex">
           <video
             ref="localVideo"
             id="localVideo"
@@ -52,7 +52,7 @@
           ></video>
           <div class="player-control bg-white flex p-4">
             <div class="flex w-1/3">
-              <img src="/webinar/record.svg" class="mr-2 cursor-pointer" />
+              <!-- <img src="/webinar/record.svg" class="mr-2 cursor-pointer" /> -->
               <img
                 @click="() => switchVideoMode('screenwithcamera')"
                 src="/webinar/sharescreen.svg"
@@ -73,7 +73,7 @@
                   () => (isStreaming ? stopPublishing() : startPublishing())
                 "
               >
-                {{ isStreaming ? 'End Sream' : 'Start Sream' }}
+                {{ isStreaming ? 'Leave Meeting' : 'Join Meeting' }}
               </button>
               <img
                 @click="toogleVideo"
@@ -85,7 +85,7 @@
             <div class="flex w-1/3"></div>
           </div>
         </div>
-        <div id="players" class="players flex"></div>
+        <!-- <div id="players" class="players flex"></div> -->
       </div>
 
       <div class="col-span-full lg:col-span-3 xl:col-span-3">
@@ -269,7 +269,7 @@ export default {
         this.autoRepublishIntervalJob = null
       }
       this.webRTCAdaptor.stop(this.streamId);
-      this.webRTCAdaptor.closeStream()
+      this.webRTCAdaptor.leave(this.streamId)
       this.webRTCAdaptor.leaveFromRoom(this.roomName)
     },
 
@@ -336,6 +336,11 @@ export default {
         })
       }
       // this.doConnectStream(value)
+    },
+    async isStreaming(value) {
+      await this.$nextTick();
+      console.log('isStreaming: ', value)
+ 
     },
     async webRTCAdaptor(value) {
       await this.$nextTick()
@@ -621,12 +626,13 @@ export default {
             // document.querySelector('video#localVideoTest').srcObject = stream;
           } else if (info == 'publish_started') {
             //stream is being published
-            console.log('publish started: ', obj)
             this.isStreaming = true
+            console.log('publish started: ', obj, String(this.$store.getters['auth/user'].userId))
             if (
               obj.streamId === String(this.$store.getters['auth/user'].userId)
-            )
+            ) {
               this.startState = 'mic_carmera_test'
+            }
             // start_publish_button.disabled = true;
             // stop_publish_button.disabled = false;
             startAnimation()
@@ -690,7 +696,7 @@ export default {
             //stream is being finished
             console.log('publish finished')
             this.isStreaming = false
-            // ANCHOR uncomment  // this.startState = 'closed'
+            this.startState = 'closed'
           } else if (info == 'browser_screen_share_supported') {
             // $(".video-source").prop("disabled", false);
 
@@ -701,7 +707,7 @@ export default {
             // $(".video-source").first().prop("checked", true);
             // console.log("screen share stopped");
           } else if (info == 'closed') {
-            //console.log("Connection closed");
+            console.log("Connection closed");
             this.isStreaming = false
             if (typeof obj != 'undefined') {
               console.log('Connecton closed: ' + JSON.stringify(obj))
@@ -800,7 +806,7 @@ export default {
 <style>
 .main-video {
   padding: 10px;
-  height: calc(80vh - 80px);
+  height: calc(100vh - 80px);
   width: 100%;
   position: relative;
 }
