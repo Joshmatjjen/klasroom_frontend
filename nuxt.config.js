@@ -83,6 +83,7 @@ export default {
     'nuxt-sweetalert2',
     // nux socket io
     'nuxt-socket-io',
+    'nuxt-clipboard2',
   ],
   // nux socket io
   io: {

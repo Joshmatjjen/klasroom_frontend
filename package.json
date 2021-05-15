@@ -43,6 +43,7 @@
     "libphonenumber-js": "^1.8.4",
     "moment": "^2.29.1",
     "nuxt": "^2.14.12",
+    "nuxt-clipboard2": "^0.2.1",
     "nuxt-socket-io": "^1.1.17",
     "nuxt-sweetalert2": "^1.0.0",
     "simple-peer": "^9.11.0",

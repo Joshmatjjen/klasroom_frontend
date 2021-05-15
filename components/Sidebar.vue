@@ -179,7 +179,7 @@ export default {
   flex-direction: column;
   width: 260px;
   min-width: 260px;
-  z-index: 2001;
+  z-index: 9;
   min-height: 100%;
   background: #ffffff;
   box-shadow: 0 0 24px rgba(0, 0, 0, 0.04);

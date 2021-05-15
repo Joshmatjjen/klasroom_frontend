@@ -12,6 +12,7 @@
     <reset-password-modal />
     <purchase-modal />
     <notice-modal />
+    <meeting-create-modal />
   </section>
 </template>
 

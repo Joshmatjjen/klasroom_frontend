@@ -9639,6 +9639,13 @@ num2fraction@^1.2.2:
   resolved "https://registry.yarnpkg.com/num2fraction/-/num2fraction-1.2.2.tgz#6f682b6a027a4e9ddfa4564cd2589d1d4e669ede"
   integrity sha1-b2gragJ6Tp3fpFZM0lidHU5mnt4=
 
+nuxt-clipboard2@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/nuxt-clipboard2/-/nuxt-clipboard2-0.2.1.tgz#1ee042085d96fe819122ba12171b03d440c342a3"
+  integrity sha512-NZl9UpcLjePt3CRhYSmJiv7af5IiI1DRrmesGawapjImmWZ2cO+UqflimIlBqIXjJSnz3ZsaPxX4639UgkxYTA==
+  dependencies:
+    vue-clipboard2 "0.2.1"
+
 nuxt-socket-io@^1.1.17:
   version "1.1.17"
   resolved "https://registry.yarnpkg.com/nuxt-socket-io/-/nuxt-socket-io-1.1.17.tgz#b823a60df64fdcfd8afd1b9aadd25002bed0a537"
@@ -13990,6 +13997,13 @@ vue-client-only@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/vue-client-only/-/vue-client-only-2.0.0.tgz#ddad8d675ee02c761a14229f0e440e219de1da1c"
   integrity sha512-arhk1wtWAfLsJyxGMoEYhoBowM87/i6HLSG2LH/03Yog6i2d9JEN1peMP0Ceis+/n9DxdenGYZZTxbPPJyHciA==
+
+vue-clipboard2@0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/vue-clipboard2/-/vue-clipboard2-0.2.1.tgz#9f06690af1c98aef344be1fc4beb00cdc5307ee1"
+  integrity sha512-n6ie/0g0bKohmLlC/5ja1esq2Q0jQ5hWmhNSZcvCsWfDeDnVARjl6cBB9p72XV1nlVfuqsZcfV8HTjjZAIlLBA==
+  dependencies:
+    clipboard "^2.0.0"
 
 vue-draggable-resizable@^2.2.0:
   version "2.2.0"
