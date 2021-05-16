@@ -79,6 +79,7 @@
                       class="form-input style-chooser"
                       placeholder="Select mic"
                       v-model="devicesOpt.mic"
+                      disabled
                       :options="devices.filter(i => i.kind === 'audioinput' && i.deviceId !== 'default')" 
                     />
                   </div>
@@ -101,7 +102,8 @@
                     <v-select 
                       class="form-input style-chooser"
                       placeholder="Select carmera"
-                      v-model="devicesOpt.carmera" 
+                      v-model="devicesOpt.carmera"
+                      disabled 
                       :options="devices.filter(i => i.kind === 'videoinput')" 
                     />
                   </div>
@@ -129,6 +131,7 @@
                       class="form-input style-chooser"
                       placeholder="Select audio"
                       v-model="devicesOpt.audio"
+                      disabled
                       :options="devices.filter(i => i.kind === 'audiooutput' && i.deviceId !== 'default')" 
                     />
                   </div>
@@ -177,6 +180,7 @@ export default {
       carmera: null,
       audio: null
     },
+    devices: [],
     stream: null,
   }),
   props: {
@@ -196,22 +200,14 @@ export default {
       type: Function,
       required: true
     },
-    devices: {
-      type: Array,
-      required: true
-    },
+    // devices: {
+    //   type: Array,
+    //   required: true
+    // },
     // devicesOpt: {
     //   type: Object,
     //   required: true
     // },
-    // stream: {
-    //   type: Object,
-    //   default: null,
-    // },
-    muted: {
-      type: Boolean,
-      default: false,
-    },
   },
   watch: {
     async startState(value) {

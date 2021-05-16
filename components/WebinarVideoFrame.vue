@@ -25,7 +25,7 @@
       >
         Add to Calendar
       </button> -->
-      <nuxt-link to="/webinars/start/8-starting/?roomName=webinar"
+      <nuxt-link to="/meeting/13673-13673"
         ><button class="btn btn-primary mx-auto my-auto">
           Start
         </button></nuxt-link
