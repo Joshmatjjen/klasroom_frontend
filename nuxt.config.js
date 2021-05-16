@@ -20,13 +20,17 @@ export default {
         name: 'description',
         content: process.env.npm_package_description || '',
       },
-      { "http-equiv": 'Content-Security-Policy', content: "img-src 'self' data: *; default-src 'self' data: 'unsafe-inline' 'unsafe-eval' https://*; connect-src 'self' https://* ws://* wss://*" },
+      {
+        'http-equiv': 'Content-Security-Policy',
+        content:
+          "img-src 'self' data: *; default-src 'self' data: 'unsafe-inline' 'unsafe-eval' https://*; connect-src 'self' http://* https://* ws://* wss://*",
+      },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     script: [
-      { src:"https://webrtc.github.io/adapter/adapter-latest.js" },
+      { src: 'https://webrtc.github.io/adapter/adapter-latest.js' },
       // { src:"js/webrtc_adaptor.js" }
-    ]
+    ],
   },
   /*
    ** Global CSS
@@ -77,7 +81,33 @@ export default {
     // Doc: https://github.com/nuxt/content
     '@nuxt/content',
     'nuxt-sweetalert2',
+    // nux socket io
+    'nuxt-socket-io',
+    'nuxt-clipboard2',
   ],
+  // nux socket io
+  io: {
+    sockets: [
+      // Required
+      {
+        // At least one entry is required
+        name: 'home',
+        url:
+          'ws://e7a46558e455.ngrok.io/ws/public-chats/?token=BUSY8QLS3gyCUBhf0DrrtjXTZmqEp8Zisjq0_YiPaJs&webinar_id=25216',
+        default: true,
+        vuex: {
+          /* see section below */
+        },
+        namespaces: {
+          /* see section below */
+        },
+      },
+      // { name: 'work', url: 'http://somedomain1:3000' },
+      // { name: 'car', url: 'http://somedomain2:3000' },
+      // { name: 'tv', url: 'http://somedomain3:3000' },
+      // { name: 'test', url: 'http://localhost:4000' }
+    ],
+  },
   /*
    ** Axios module configuration
    ** See https://axios.nuxtjs.org/options
@@ -102,7 +132,7 @@ export default {
       new webpack.ProvidePlugin({
         _: 'lodash',
         moment: 'moment',
-        adapter: 'webrtc-adapter'
+        adapter: 'webrtc-adapter',
         // $: 'jquery',
         // jQuery: 'jquery'
       }),
