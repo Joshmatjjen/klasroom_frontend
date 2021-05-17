@@ -597,8 +597,8 @@ export default {
 
     const rtmpForward =
       'rtmp://klasroom-RTMPLoad-1FSGS5HI2J4RX-1215248151.us-west-2.elb.amazonaws.com/WebRTCAppEE/'
-    // const websocketPath = `media.klasroom.com/klasroomLive/websocket/${this.roomName}/${this.streamId}`
-    const websocketPath = `klasr-appli-tmxddztxzehf-460579020.us-west-2.elb.amazonaws.com/klasroomLive/websocket`
+    const websocketPath = `media.klasroom.com/klasroomLive/websocket`
+    // const websocketPath = `klasr-appli-tmxddztxzehf-460579020.us-west-2.elb.amazonaws.com/klasroomLive/websocket`
 
     const appName = location.pathname.substring(
       0,
@@ -611,11 +611,11 @@ export default {
       appName +
       'websocket?rtmpForward=' +
       rtmpForward
-    let websocketURL = 'ws://' + websocketPath
+    let websocketURL = 'wss://' + websocketPath
 
-    if (location.protocol.startsWith('https')) {
-      websocketURL = 'wss://' + websocketPath
-    }
+    // if (location.protocol.startsWith('https')) {
+    //   websocketURL = 'wss://' + websocketPath
+    // }
 
     const initWebRTCAdaptor = (publishImmediately, autoRepublishEnabled) => {
       this.webRTCAdaptor = new WebRTCAdaptor({
@@ -630,9 +630,8 @@ export default {
         callback: (info, obj) => {
           if (info == 'initialized') {
             console.log('initialized: ', obj)
-            this.startState = 'begin_test'
-            // start_publish_button.disabled = false;
-            // stop_publish_button.disabled = true;
+            // this.startState = 'begin_test'
+
             if (!this.playStart) {
               this.webRTCAdaptor.muteLocalMic()
               this.webRTCAdaptor.turnOffLocalCamera()
@@ -649,11 +648,11 @@ export default {
             console.log('++++ joinedTheRoom: ' + room)
             console.log(obj)
 
-            if (
-              obj.streamId === String(this.$store.getters['auth/user'].userId)
-            ) {
-              this.confirm('begin_test')
-            }
+            // if (
+            //   obj.streamId === String(this.$store.getters['auth/user'].userId)
+            // ) {
+            //   this.confirm('begin_test')
+            // }
 
             // console.log('+++ roomOfStream: ', this.roomOfStream)
 
