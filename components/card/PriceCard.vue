@@ -1,6 +1,6 @@
 <template>
   <div
-    class="block bg-white rounded-xl border-2 border-t-8 shadow-hover relative pb-12"
+    class="block bg-white rounded-xl border-2 border-t-8 shadow-hover relative pb-5"
     :class="'border-' + priceData.color"
     :style="{
       borderLeft: '1px solid rgba(0, 0, 0, 0.1)',
@@ -9,7 +9,7 @@
     }"
   >
     <div
-      class="sm:px-5 lg:px-5 md:px-5 sm:py-5 md:py-10 md:p-6 mx-auto text-center"
+      class="sm:px-5 lg:px-5 md:px-5 sm:py-5 md:py-2 md:p-6 mx-auto text-center"
     >
       <p class="text-sm text-gray-700 font-semibold mt-2 mb-3">
         {{ priceData.name }}
@@ -49,7 +49,7 @@
         <p class="text-sm text-gray-900 font-thin">{{ item }}</p>
       </div>
     </div>
-    <div class="grid w-full bottom-0 mt-5 justify-center">
+    <div class="grid w-full bottom-0 mt-0 justify-center">
       <button
         type="button"
         class="btn text-white shadow-lg mx-5"

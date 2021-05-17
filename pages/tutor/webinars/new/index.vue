@@ -14,7 +14,7 @@
     <section class="bg-orange-100">
       <div class="mx-auto flex items-center align-middle justify-center">
         <div
-          class="grid grid-cols-12 mt-8 md:mb-6 lg:mb-20 xl:mb-24 md:mx-0 lg:mx-5 xl:mx-0"
+          class="grid grid-cols-12 mt-8 md:mb-6 lg:mb-8 xl:mb-8 md:mx-0 lg:mx-5 xl:mx-0"
         >
           <!-- Left -->
           <div class="col-span-12 md:col-span-6 px-4 lg:px-0">
@@ -178,28 +178,30 @@ export default {
       this.priceSwitch = priceState
     },
     async createMeeting(type) {
-      this.toggleMeetingOpt();
+      this.toggleMeetingOpt()
 
-      let data;
+      let data
 
       try {
-        
-        const { data: newData, message } = await this.$axios.$post(`https://streaming.staging.klasroom.com/v1/meetings`, {}, {
-          headers: getAccessTokenHeader(this.$store.getters['auth/token'])
-        })
+        const { data: newData, message } = await this.$axios.$post(
+          `https://streaming.staging.klasroom.com/v1/meetings`,
+          {},
+          {
+            headers: getAccessTokenHeader(this.$store.getters['auth/token']),
+          }
+        )
         // console.log("newData: ", newData, message, location.hostname)
-        data = newData;
-
+        data = newData
       } catch (e) {
         console.log(e)
-        return;
+        return
       }
 
       const link = `meeting/${data.roomName}`
       const copyLink = `${location.origin}/${link}`
 
       if (type === 'instant') {
-        this.$router.push(`/${link}`);
+        this.$router.push(`/${link}`)
       }
       if (type === 'later') {
         this.$store.commit('app/MEETING_CREATE_MODAL', {
@@ -208,7 +210,7 @@ export default {
           copyLink,
         })
       }
-    }
+    },
   },
 }
 </script>

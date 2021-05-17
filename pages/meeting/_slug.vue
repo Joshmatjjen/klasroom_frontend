@@ -36,7 +36,7 @@
       :devices="devices"
       :devicesOpt="devicesOpt"
     />
-    
+
     <!-- content -->
     <div class="grid grid-cols-12">
       <div
@@ -53,39 +53,37 @@
           ></video>
         </div>
         <div v-if="startState" class="player-control bg-white flex p-4">
-            <div class="flex w-1/3">
-              <!-- <img src="/webinar/record.svg" class="mr-2 cursor-pointer" /> -->
-              <img
-                @click="() => switchVideoMode('screenwithcamera')"
-                src="/webinar/sharescreen.svg"
-                class="cursor-pointer"
-              />
-            </div>
-
-            <div class="flex w-1/3">
-              <img
-                @click="toogleAudio"
-                :src="`/webinar/${isMute ? 'mute' : 'unmute'}.svg`"
-                class="mx-auto cursor-pointer"
-              />
-              <button
-                type="button"
-                class="btn btn-primary shadow"
-                @click.prevent="
-                  () => stopPublishing()
-                "
-              >
-                Leave Meeting
-              </button>
-              <img
-                @click="toogleVideo"
-                :src="`/webinar/${isCameraOff ? 'videooff' : 'video'}.svg`"
-                class="mx-auto cursor-pointer"
-              />
-            </div>
-
-            <div class="flex w-1/3"></div>
+          <div class="flex w-1/3">
+            <!-- <img src="/webinar/record.svg" class="mr-2 cursor-pointer" /> -->
+            <img
+              @click="() => switchVideoMode('screenwithcamera')"
+              src="/webinar/sharescreen.svg"
+              class="cursor-pointer"
+            />
           </div>
+
+          <div class="flex w-1/3">
+            <img
+              @click="toogleAudio"
+              :src="`/webinar/${isMute ? 'mute' : 'unmute'}.svg`"
+              class="mx-auto cursor-pointer"
+            />
+            <button
+              type="button"
+              class="btn btn-primary shadow"
+              @click.prevent="() => stopPublishing()"
+            >
+              Leave Meeting
+            </button>
+            <img
+              @click="toogleVideo"
+              :src="`/webinar/${isCameraOff ? 'videooff' : 'video'}.svg`"
+              class="mx-auto cursor-pointer"
+            />
+          </div>
+
+          <div class="flex w-1/3"></div>
+        </div>
         <!-- <div id="players" class="players flex">
         
         </div> -->
@@ -169,7 +167,7 @@
                     </div>
                   </div>
                   <div
-                    class="bg-orange-500 h-5 w-5 rounded-full flex justify-center"
+                    class="bg-orange-500 h-5 w-6 rounded-full flex justify-center align-middle"
                   >
                     <p class="text-xs text-center text-white">1</p>
                   </div>
@@ -253,7 +251,7 @@ export default {
     startState: null,
     endMsg: 'Meeting Ended',
     isHost: false,
-    maxVideoBitrateKbps: "unlimited",
+    maxVideoBitrateKbps: 'unlimited',
     subscriberId: '123', // getUrlParameter("subscriberId"),
     subscriberCode: '123sdef', // getUrlParameter("subscriberCode"),
     stream: null,
@@ -340,14 +338,19 @@ export default {
     },
 
     stopPublishing() {
-      console.log('clearInterval -> autoRepublishIntervalJob: ', this.autoRepublishIntervalJob)
+      console.log(
+        'clearInterval -> autoRepublishIntervalJob: ',
+        this.autoRepublishIntervalJob
+      )
       if (this.autoRepublishIntervalJob != null) {
         clearInterval(this.autoRepublishIntervalJob)
         this.autoRepublishIntervalJob = null
       }
-      this.webRTCAdaptor.stop(this.streamId);
+
+      this.webRTCAdaptor.stop(this.streamId)
       this.webRTCAdaptor.leaveFromRoom(this.roomName)
       this.webRTCAdaptor.closePeerConnection(this.streamId)
+
       // this.webRTCAdaptor.leave(this.streamId)
       // this.webRTCAdaptor.closeStream()
     },
@@ -416,13 +419,12 @@ export default {
       }
     },
     async isStreaming(value) {
-      await this.$nextTick();
+      await this.$nextTick()
       console.log('isStreaming: ', value)
- 
     },
   },
   async beforeUnmount() {
-    this.stopPublishing();
+    this.stopPublishing()
   },
   async mounted() {
     // this.streamId = String(this.$store.getters['auth/user'].userId)
@@ -641,13 +643,10 @@ export default {
             } else {
               joinRoom()
             }
-            
           } else if (info == 'joinedTheRoom') {
             const room = obj.ATTR_ROOM_NAME
             // this.roomOfStream[obj.streamId] = room
-            console.log(
-              '++++ joinedTheRoom: ' + room
-            )
+            console.log('++++ joinedTheRoom: ' + room)
             console.log(obj)
 
             if (
@@ -778,7 +777,8 @@ export default {
             //stream is being finished
             console.log('publish finished')
             this.isStreaming = false
-            this.startState = 'closed'
+            // ANCHOR uncomment line in bottom
+            // this.startState = 'closed'
           } else if (info == 'browser_screen_share_supported') {
             // $(".video-source").prop("disabled", false);
 
@@ -789,7 +789,7 @@ export default {
             // $(".video-source").first().prop("checked", true);
             // console.log("screen share stopped");
           } else if (info == 'closed') {
-            console.log("Connection closed");
+            console.log('Connection closed')
             this.isStreaming = false
             if (typeof obj != 'undefined') {
               console.log('Connecton closed: ' + JSON.stringify(obj))
@@ -798,7 +798,7 @@ export default {
             //ping/pong message are sent to and received from server to make the connection alive all the time
             //It's especially useful when load balancer or firewalls close the websocket connection due to inactivity
           } else if (info == 'refreshConnestreamsListction') {
-            console.log("refreshConnestreamsListction");
+            console.log('refreshConnestreamsListction')
             checkAndRepublishIfRequired()
           } else if (info == 'ice_connection_state_changed') {
             console.log('iceConnectionState Changed: ', JSON.stringify(obj))
@@ -862,8 +862,7 @@ export default {
             errorMessage = 'You are not allowed to access screen share'
           } else if (error.indexOf('WebSocketNotConnected') != -1) {
             errorMessage = null // 'WebSocket Connection is disconnected.'
-          } 
-          else if (error.indexOf('streamIdInUse') != -1) {
+          } else if (error.indexOf('streamIdInUse') != -1) {
             errorMessage = null // 'WebSocket Connection is disconnected.'
           }
           // alert(errorMessage);
