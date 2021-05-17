@@ -167,7 +167,7 @@
                     </div>
                   </div>
                   <div
-                    class="bg-orange-500 h-5 w-5 rounded-full flex justify-center"
+                    class="bg-orange-500 h-5 w-6 rounded-full flex justify-center align-middle"
                   >
                     <p class="text-xs text-center text-white">1</p>
                   </div>
@@ -346,9 +346,11 @@ export default {
         clearInterval(this.autoRepublishIntervalJob)
         this.autoRepublishIntervalJob = null
       }
+
       this.webRTCAdaptor.stop(this.streamId)
       this.webRTCAdaptor.leaveFromRoom(this.roomName)
       this.webRTCAdaptor.closePeerConnection(this.streamId)
+
       // this.webRTCAdaptor.leave(this.streamId)
       // this.webRTCAdaptor.closeStream()
     },
@@ -775,7 +777,8 @@ export default {
             //stream is being finished
             console.log('publish finished')
             this.isStreaming = false
-            this.startState = 'closed'
+            // ANCHOR uncomment line in bottom
+            // this.startState = 'closed'
           } else if (info == 'browser_screen_share_supported') {
             // $(".video-source").prop("disabled", false);
 
