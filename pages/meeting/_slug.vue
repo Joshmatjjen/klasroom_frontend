@@ -452,7 +452,7 @@ export default {
     } catch (e) {
       this.isStreaming = false
       this.endMsg = 'Could not connect to meeting'
-      this.startState = 'closed'
+      // this.startState = 'closed'
       console.log(e)
       return
     }
@@ -597,8 +597,8 @@ export default {
 
     const rtmpForward =
       'rtmp://klasroom-RTMPLoad-1FSGS5HI2J4RX-1215248151.us-west-2.elb.amazonaws.com/WebRTCAppEE/'
-    // const websocketPath = `media.klasroom.com/klasroomLive/websocket/${this.roomName}/${this.streamId}`
-    const websocketPath = `klasr-appli-tmxddztxzehf-460579020.us-west-2.elb.amazonaws.com/klasroomLive/websocket`
+    const websocketPath = `media.klasroom.com/klasroomLive/websocket`
+    // const websocketPath = `klasr-appli-tmxddztxzehf-460579020.us-west-2.elb.amazonaws.com/klasroomLive/websocket`
 
     const appName = location.pathname.substring(
       0,
@@ -611,7 +611,7 @@ export default {
       appName +
       'websocket?rtmpForward=' +
       rtmpForward
-    let websocketURL = 'ws://' + websocketPath
+    let websocketURL = 'wss://' + websocketPath
 
     // if (location.protocol.startsWith('https')) {
     //   websocketURL = 'wss://' + websocketPath
@@ -630,9 +630,8 @@ export default {
         callback: (info, obj) => {
           if (info == 'initialized') {
             console.log('initialized: ', obj)
-            this.startState = 'begin_test'
-            // start_publish_button.disabled = false;
-            // stop_publish_button.disabled = true;
+            // this.startState = 'begin_test'
+
             if (!this.playStart) {
               this.webRTCAdaptor.muteLocalMic()
               this.webRTCAdaptor.turnOffLocalCamera()
@@ -649,11 +648,11 @@ export default {
             console.log('++++ joinedTheRoom: ' + room)
             console.log(obj)
 
-            if (
-              obj.streamId === String(this.$store.getters['auth/user'].userId)
-            ) {
-              this.confirm('begin_test')
-            }
+            // if (
+            //   obj.streamId === String(this.$store.getters['auth/user'].userId)
+            // ) {
+            //   this.confirm('begin_test')
+            // }
 
             // console.log('+++ roomOfStream: ', this.roomOfStream)
 
@@ -778,16 +777,11 @@ export default {
             console.log('publish finished')
             this.isStreaming = false
             // ANCHOR uncomment line in bottom
-            // this.startState = 'closed'
+            this.startState = 'closed'
           } else if (info == 'browser_screen_share_supported') {
-            // $(".video-source").prop("disabled", false);
-
             console.log('browser screen share supported')
-            // browser_screen_share_doesnt_support.style.display = "none";
           } else if (info == 'screen_share_stopped') {
-            //choose the first video source. It may not be correct for all cases.
-            // $(".video-source").first().prop("checked", true);
-            // console.log("screen share stopped");
+            console.log('screen share stopped')
           } else if (info == 'closed') {
             console.log('Connection closed')
             this.isStreaming = false
