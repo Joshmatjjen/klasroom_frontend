@@ -612,9 +612,9 @@ export default {
       rtmpForward
     let websocketURL = 'ws://' + websocketPath
 
-    // if (location.protocol.startsWith('https')) {
-    //   websocketURL = 'wss://' + websocketPath
-    // }
+    if (location.protocol.startsWith('https')) {
+      websocketURL = 'wss://' + websocketPath
+    }
 
     const initWebRTCAdaptor = (publishImmediately, autoRepublishEnabled) => {
       this.webRTCAdaptor = new WebRTCAdaptor({
