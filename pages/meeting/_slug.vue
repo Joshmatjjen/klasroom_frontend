@@ -452,7 +452,7 @@ export default {
     } catch (e) {
       this.isStreaming = false
       this.endMsg = 'Could not connect to meeting'
-      this.startState = 'closed'
+      // this.startState = 'closed'
       console.log(e)
       return
     }
@@ -778,16 +778,11 @@ export default {
             console.log('publish finished')
             this.isStreaming = false
             // ANCHOR uncomment line in bottom
-            // this.startState = 'closed'
+            this.startState = 'closed'
           } else if (info == 'browser_screen_share_supported') {
-            // $(".video-source").prop("disabled", false);
-
             console.log('browser screen share supported')
-            // browser_screen_share_doesnt_support.style.display = "none";
           } else if (info == 'screen_share_stopped') {
-            //choose the first video source. It may not be correct for all cases.
-            // $(".video-source").first().prop("checked", true);
-            // console.log("screen share stopped");
+            console.log('screen share stopped')
           } else if (info == 'closed') {
             console.log('Connection closed')
             this.isStreaming = false
