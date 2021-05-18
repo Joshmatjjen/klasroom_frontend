@@ -42,15 +42,11 @@
       <div
         class="video-player col-span-full lg:col-span-9 xl:col-span-9 flex flex-col"
       >
-        <div id="players" class="main-video flex">
-          <video
-            ref="localVideo"
-            id="localVideo"
-            autoplay
-            muted
-            playsinline
-            class="mx-auto"
-          ></video>
+        <div
+          id="players"
+          class="main-video flex scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch"
+        >
+          <video ref="localVideo" id="localVideo" autoplay playsinline></video>
         </div>
         <div v-if="startState" class="player-control bg-white flex p-4">
           <div class="flex w-1/3">
@@ -167,7 +163,7 @@
                     </div>
                   </div>
                   <div
-                    class="bg-orange-500 h-5 w-5 rounded-full flex justify-center"
+                    class="bg-orange-500 h-5 w-6 rounded-full flex justify-center align-middle"
                   >
                     <p class="text-xs text-center text-white">1</p>
                   </div>
@@ -346,9 +342,11 @@ export default {
         clearInterval(this.autoRepublishIntervalJob)
         this.autoRepublishIntervalJob = null
       }
+
       this.webRTCAdaptor.stop(this.streamId)
       this.webRTCAdaptor.leaveFromRoom(this.roomName)
       this.webRTCAdaptor.closePeerConnection(this.streamId)
+
       // this.webRTCAdaptor.leave(this.streamId)
       // this.webRTCAdaptor.closeStream()
     },
@@ -451,7 +449,7 @@ export default {
     } catch (e) {
       this.isStreaming = false
       this.endMsg = 'Could not connect to webinar'
-      this.startState = 'closed'
+      // this.startState = 'closed'
       console.log(e)
       return
     }
@@ -495,7 +493,7 @@ export default {
     const playVideo = (obj) => {
       // const room = this.roomOfStream[obj.streamId]
       console.log(
-        'new stream available with id: ' +
+        'Creating video for new stream available with id: ' +
           obj.streamId +
           ' on the room: ' +
           this.roomName
@@ -504,17 +502,24 @@ export default {
       let video = document.getElementById('remoteVideo' + obj.streamId)
 
       if (video == null) {
-        createRemoteVideo(obj.streamId)
-        video = document.getElementById('remoteVideo' + obj.streamId)
+        video = createRemoteVideo(obj.streamId)
+        // video = document.getElementById('remoteVideo' + obj.streamId)
+        document.getElementById('players').appendChild(video)
       }
 
       video.srcObject = obj.stream
     }
 
     const createRemoteVideo = (streamId) => {
-      const player =
-        '<video id="remoteVideo' + streamId + '"autoplay playsinline></video>'
-      document.getElementById('players').innerHTML += player
+      const video = document.createElement('video')
+      video.id = 'remoteVideo' + streamId
+      video.autoplay = true
+      video.playsinline = true
+
+      // const player =
+      //   '<video id="remoteVideo' + streamId + '"autoplay playsinline></video>'
+      // document.getElementById('players').innerHTML += player
+      return video
     }
 
     const removeRemoteVideo = (streamId) => {
@@ -615,6 +620,7 @@ export default {
     // if (location.protocol.startsWith('https')) {
     //   websocketURL = 'wss://' + websocketPath
     // }
+    this.startState = 'begin_test'
 
     const initWebRTCAdaptor = (publishImmediately, autoRepublishEnabled) => {
       this.webRTCAdaptor = new WebRTCAdaptor({
@@ -629,9 +635,8 @@ export default {
         callback: (info, obj) => {
           if (info == 'initialized') {
             console.log('initialized: ', obj)
-            this.startState = 'begin_test'
-            // start_publish_button.disabled = false;
-            // stop_publish_button.disabled = true;
+            // this.startState = 'begin_test'
+
             if (!this.playStart) {
               this.webRTCAdaptor.muteLocalMic()
               this.webRTCAdaptor.turnOffLocalCamera()
@@ -648,11 +653,11 @@ export default {
             console.log('++++ joinedTheRoom: ' + room)
             console.log(obj)
 
-            if (
-              obj.streamId === String(this.$store.getters['auth/user'].userId)
-            ) {
-              this.confirm('begin_test')
-            }
+            // if (
+            //   obj.streamId === String(this.$store.getters['auth/user'].userId)
+            // ) {
+            //   this.confirm('begin_test')
+            // }
 
             // console.log('+++ roomOfStream: ', this.roomOfStream)
 
@@ -682,7 +687,7 @@ export default {
             console.log('++++ newStreamAvailable' + obj)
             playVideo(obj)
           } else if (info == 'bitrateMeasurement') {
-            console.log('++++ bitrateMeasurement: ', obj)
+            // console.log('++++ bitrateMeasurement: ', obj)
           } else if (info == 'available_devices') {
             devices = obj.map((d) => {
               // console.log("found device", d)
@@ -742,10 +747,8 @@ export default {
             console.log('+++ streamInformation')
             streamInformation(obj)
           } else if (info == 'roomInformation') {
-            console.log('+++ roomInformation')
+            console.log('+++ roomInformation: ', obj)
             console.log('+++ streamsList: ', this.streamsList)
-            console.log('+++ obj: ', obj)
-            console.log('+++ obj.streams: ', obj.streams)
 
             // this.webRTCAdaptor.play(this.streamId, this.token, this.roomName)
 
@@ -776,19 +779,16 @@ export default {
             //stream is being finished
             console.log('publish finished')
             this.isStreaming = false
+            // ANCHOR uncomment line in bottom
             this.startState = 'closed'
           } else if (info == 'browser_screen_share_supported') {
-            // $(".video-source").prop("disabled", false);
-
             console.log('browser screen share supported')
-            // browser_screen_share_doesnt_support.style.display = "none";
           } else if (info == 'screen_share_stopped') {
-            //choose the first video source. It may not be correct for all cases.
-            // $(".video-source").first().prop("checked", true);
-            // console.log("screen share stopped");
+            console.log('screen share stopped')
           } else if (info == 'closed') {
             console.log('Connection closed')
             this.isStreaming = false
+            this.startState = 'closed'
             if (typeof obj != 'undefined') {
               console.log('Connecton closed: ' + JSON.stringify(obj))
             }
@@ -799,7 +799,7 @@ export default {
             console.log('refreshConnestreamsListction')
             checkAndRepublishIfRequired()
           } else if (info == 'ice_connection_state_changed') {
-            console.log('iceConnectionState Changed: ', JSON.stringify(obj))
+            // console.log('iceConnectionState Changed: ', JSON.stringify(obj))
           } else if (info == 'updated_stats') {
             //obj is the PeerStats which has fields
             //averageOutgoingBitrate - kbits/sec
@@ -894,6 +894,7 @@ export default {
   height: calc(100vh - 180px);
   width: 100%;
   position: relative;
+  overflow: auto;
 }
 .main-video > video {
   width: 100%;
