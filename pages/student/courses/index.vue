@@ -2,7 +2,7 @@
   <div class="min-h-screen mb-24">
     <section class="bg-orange-100">
       <div class="container mx-auto mb-10 px-4 lg:px-0">
-        <div class="md:grid grid-cols-4 gap-5 space-y-3 md:space-y-0">
+        <div class="lg:grid grid-cols-4 gap-5 space-y-3 md:space-y-0">
           <dash-item-metrics
             title="5 courses"
             label="In progress"
@@ -35,7 +35,9 @@
               title="In progress"
               more="/student/my-courses"
             >
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              <div
+                class="flex flex-row overflow-x-auto gap-5 scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch"
+              >
                 <course-item
                   v-for="(course, key) in courses"
                   :key="key"
@@ -57,7 +59,9 @@
               title="Saved Courses"
               more="/student/saved-courses"
             >
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              <div
+                class="flex flex-row overflow-x-auto gap-5 scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch"
+              >
                 <course-item
                   v-for="(course, key) in courses"
                   :key="key"
@@ -79,7 +83,9 @@
               title="Suggested Courses"
               more="/student/suggested-courses"
             >
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              <div
+                class="flex flex-row overflow-x-auto gap-5 scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch"
+              >
                 <course-item
                   v-for="(course, key) in courses"
                   :key="key"
