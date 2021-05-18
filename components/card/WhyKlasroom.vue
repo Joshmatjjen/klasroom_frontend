@@ -9,7 +9,7 @@
           >1</span
         >
         <p class="ml-4 md:mt-5 md:ml-0">
-          Learn at your own pace and from anywhere
+          Largest platform of learners ready to take your course
         </p>
       </div>
       <div class="flex md:block">
@@ -18,7 +18,7 @@
           >2</span
         >
         <p class="ml-4 md:mt-5 md:ml-0">
-          Flexible payment options that allows for pay as you go.
+          Easy and seamless course onboarding and monitoring.
         </p>
       </div>
       <div class="flex md:block">
@@ -26,7 +26,7 @@
           >3</span
         >
         <p class="ml-4 md:mt-5 md:ml-0">
-          Learn from Africa’s most successful Entrepreneurs
+          One stop platform for successful Entrepreneurs and Tutors
         </p>
       </div>
     </div>
