@@ -40,13 +40,27 @@
     <!-- content -->
     <div class="grid grid-cols-12">
       <div
-        class="video-player col-span-full lg:col-span-9 xl:col-span-9 flex flex-col"
+        class="video-player col-span-full flex flex-col"
+        :class="webinarSideBar && 'lg:col-span-9 xl:col-span-9'"
       >
         <div
           id="players"
           class="main-video flex scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch"
         >
-          <video ref="localVideo" id="localVideo" autoplay playsinline></video>
+          <div class="relative">
+            <img
+              @click.prevent="toogleFullScreen"
+              src="/webinar/push-pin.svg"
+              class="pin"
+              title="Pin to fullscreen"
+            />
+            <video
+              ref="localVideo"
+              id="localVideo"
+              autoplay
+              playsinline
+            ></video>
+          </div>
         </div>
         <div v-if="startState" class="player-control bg-white flex p-4">
           <div class="flex w-1/3">
@@ -85,7 +99,10 @@
         </div> -->
       </div>
 
-      <div class="col-span-full lg:col-span-3 xl:col-span-3">
+      <div
+        v-if="webinarSideBar"
+        class="col-span-full lg:col-span-3 xl:col-span-3"
+      >
         <div
           class="flex flex-col flex-1 bg-white rounded-xl border border-gray-300 overflow-hidden"
           style="height: auto"
@@ -282,6 +299,7 @@ export default {
     ...mapState({
       token: (state) => state.auth.token,
       streamId: (state) => String(state.auth.user.userId),
+      webinarSideBar: (state) => state.app.webinarSideBar,
     }),
   },
   created: function () {
@@ -331,6 +349,19 @@ export default {
         this.subscriberId,
         this.subscriberCode
       )
+    },
+
+    toogleFullScreen(e) {
+      console.log(e.target.parentNode.className)
+      console.log(e.target.title)
+
+      if (e.target.title === 'Pin to fullscreen') {
+        e.target.title = 'Unpin from fullscreen'
+      } else e.target.title = 'Pin to fullscreen'
+
+      if (e.target.parentNode.className === 'relative') {
+        e.target.parentNode.className = 'absolute z-10'
+      } else e.target.parentNode.className = 'relative'
     },
 
     stopPublishing() {
@@ -431,9 +462,8 @@ export default {
     console.log('$route: ', this.$route.params.slug)
 
     try {
-      const { data: newData, message } = await this.$axios.$post(
-        `https://streaming.staging.klasroom.com/v1/webinars/${this.roomName}/join`,
-        {},
+      const { data: newData, message } = await this.$axios.$get(
+        `https://streaming.staging.klasroom.com/v1/meetings/${this.roomName}/join`,
         {
           headers: getAccessTokenHeader(this.token),
         }
@@ -453,14 +483,6 @@ export default {
       console.log(e)
       return
     }
-
-    // function confirm(state) {
-    //   if (state === 'mic_carmera_test')
-    //     this.startState = 'speaker_test'
-
-    //   if (state === 'speaker_test')
-    //     this.startState = 'done'
-    // }
 
     let devices = []
 
@@ -502,16 +524,30 @@ export default {
       let video = document.getElementById('remoteVideo' + obj.streamId)
 
       if (video == null) {
-        video = createRemoteVideo(obj.streamId)
+        const data = createRemoteVideo(obj.streamId)
+        video = data.video
+        const videoPlayer = data.videoPlayer
         // video = document.getElementById('remoteVideo' + obj.streamId)
-        document.getElementById('players').appendChild(video)
+        videoPlayer.appendChild(video)
+        document.getElementById('players').appendChild(videoPlayer)
       }
 
       video.srcObject = obj.stream
     }
 
     const createRemoteVideo = (streamId) => {
+      const videoPlayer = document.createElement('div')
       const video = document.createElement('video')
+
+      videoPlayer.className = 'relative'
+      videoPlayer.id = 'remoteVideoDiv' + streamId
+      videoPlayer.innerHTML = `<img
+              src="/webinar/push-pin.svg"
+              class="pin"
+              title="Pin to fullscreen"
+            />`
+      videoPlayer.onclick = this.toogleFullScreen
+
       video.id = 'remoteVideo' + streamId
       video.autoplay = true
       video.playsinline = true
@@ -519,11 +555,11 @@ export default {
       // const player =
       //   '<video id="remoteVideo' + streamId + '"autoplay playsinline></video>'
       // document.getElementById('players').innerHTML += player
-      return video
+      return { video, videoPlayer }
     }
 
     const removeRemoteVideo = (streamId) => {
-      const video = document.getElementById('remoteVideo' + streamId)
+      const video = document.getElementById('remoteVideoDiv' + streamId)
       if (video != null) {
         video.srcObject = null
         document.getElementById('players').removeChild(video)
@@ -784,7 +820,7 @@ export default {
           } else if (info == 'browser_screen_share_supported') {
             console.log('browser screen share supported')
           } else if (info == 'screen_share_stopped') {
-            console.log('screen share stopped')
+            console.log('screen share stopped ', obj)
           } else if (info == 'closed') {
             console.log('Connection closed')
             this.isStreaming = false
@@ -896,7 +932,24 @@ export default {
   position: relative;
   overflow: auto;
 }
-.main-video > video {
+.main-video div {
+  width: 100%;
+  height: 100%;
+}
+
+.main-video .pin {
+  cursor: pointer;
+  width: 2.8rem;
+  position: absolute;
+  top: calc(50% - 1.4rem);
+  left: calc(50% - 1.4rem);
+  background-color: orange;
+  z-index: 1;
+  padding: 0.75rem;
+  opacity: 0;
+  border-radius: 10px;
+}
+.main-video video {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -910,7 +963,7 @@ export default {
   padding: 0 10px 10px 10px;
 }
 
-.players > video {
+.players video {
   width: 260px;
   height: 100%;
   object-fit: cover;
@@ -929,5 +982,9 @@ export default {
 .main-video:hover .player-control {
   opacity: 1;
   z-index: 1;
+}
+
+.main-video:hover .pin {
+  opacity: 1;
 }
 </style>
