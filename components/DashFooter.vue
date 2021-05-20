@@ -13,6 +13,7 @@
     <purchase-modal />
     <notice-modal />
     <meeting-create-modal />
+    <edit-profile-modal />
   </section>
 </template>
 

@@ -20,7 +20,12 @@
                       <p class="text-sm text-gray-700">Amina Bello</p>
                     </div>
                     <div class="col-span-5 text-right">
-                      <button class="btn btn-light btn-sm">Edit</button>
+                      <button
+                        v-on:click.prevent="toggleEditProfile()"
+                        class="btn btn-light btn-sm"
+                      >
+                        Edit
+                      </button>
                     </div>
                   </div>
                   <div class="grid grid-cols-12 mb-5">
@@ -153,6 +158,14 @@ export default {
     webinars: _.take(webinars, 4),
     undoneTasks: _.take(webinars, 3),
   }),
+  methods: {
+    toggleEditProfile() {
+      console.log('Clicking hgere for profile')
+      this.$store.commit('app/EDIT_PROFILE_MODAL', {
+        status: true,
+      })
+    },
+  },
 }
 </script>
 
