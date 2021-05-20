@@ -40,7 +40,8 @@
     <!-- content -->
     <div class="grid grid-cols-12">
       <div
-        class="video-player col-span-full lg:col-span-9 xl:col-span-9 flex flex-col"
+        class="video-player col-span-full flex flex-col"
+        :class="webinarSideBar && 'lg:col-span-9 xl:col-span-9'"
       >
         <div
           id="players"
@@ -98,7 +99,10 @@
         </div> -->
       </div>
 
-      <div class="col-span-full lg:col-span-3 xl:col-span-3">
+      <div
+        v-if="webinarSideBar"
+        class="col-span-full lg:col-span-3 xl:col-span-3"
+      >
         <div
           class="flex flex-col flex-1 bg-white rounded-xl border border-gray-300 overflow-hidden"
           style="height: auto"
@@ -295,6 +299,7 @@ export default {
     ...mapState({
       token: (state) => state.auth.token,
       streamId: (state) => String(state.auth.user.userId),
+      webinarSideBar: (state) => state.app.webinarSideBar,
     }),
   },
   created: function () {
@@ -479,14 +484,6 @@ export default {
       console.log(e)
       return
     }
-
-    // function confirm(state) {
-    //   if (state === 'mic_carmera_test')
-    //     this.startState = 'speaker_test'
-
-    //   if (state === 'speaker_test')
-    //     this.startState = 'done'
-    // }
 
     let devices = []
 
