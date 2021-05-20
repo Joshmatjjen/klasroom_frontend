@@ -17,7 +17,7 @@
                   <div class="grid grid-cols-12 mb-5">
                     <div class="col-span-7">
                       <p class="text-sm font-bold text-gray-700 mb-3">Name</p>
-                      <p class="text-sm text-gray-700">Amina Bello</p>
+                      <p class="text-sm text-gray-700">{{ user.name }}</p>
                     </div>
                     <div class="col-span-5 text-right">
                       <button
@@ -31,19 +31,19 @@
                   <div class="grid grid-cols-12 mb-5">
                     <div class="col-span-7">
                       <p class="text-sm font-bold text-gray-700 mb-3">Phone</p>
-                      <p class="text-sm text-gray-700">+234 123 4567</p>
+                      <p class="text-sm text-gray-700">{{ user.phone }}</p>
                     </div>
                   </div>
                   <div class="grid grid-cols-12 mb-5">
                     <div class="col-span-7">
                       <p class="text-sm font-bold text-gray-700 mb-3">Email</p>
-                      <p class="text-sm text-gray-700">damilare@gmail.com</p>
+                      <p class="text-sm text-gray-700">{{ user.email }}</p>
                     </div>
                   </div>
                   <div class="grid grid-cols-12">
                     <div class="col-span-7">
                       <p class="text-sm font-bold text-gray-700 mb-3">Gender</p>
-                      <p class="text-sm text-gray-700">Female</p>
+                      <p class="text-sm text-gray-700">{{ user.gender }}</p>
                     </div>
                   </div>
                   <hr class="mt-4 mb-6" />
@@ -146,6 +146,8 @@
 <script>
 import Vue from 'vue'
 
+import { mapState } from 'vuex'
+
 const webinars = require('@/static/json/webinars.json')
 
 export default {
@@ -158,6 +160,13 @@ export default {
     webinars: _.take(webinars, 4),
     undoneTasks: _.take(webinars, 3),
   }),
+
+  computed: {
+    ...mapState({
+      user: (state) => state.auth.user,
+    }),
+  },
+
   methods: {
     toggleEditProfile() {
       console.log('Clicking hgere for profile')

@@ -91,8 +91,8 @@
                       type="text"
                       class="form-input"
                       placeholder="Enter your name here"
-                      v-model="editProfileForm.name"
-                      @input="checkEditProfileFormError('name')"
+                      :value="(editProfileForm.name = user.name)"
+                      @input="editProfileForm.name = $event.target.value"
                     />
                   </div>
                   <span
@@ -109,8 +109,8 @@
                       type="number"
                       class="form-input"
                       placeholder="Enter your phone number here"
-                      v-model="editProfileForm.phone"
-                      @input="checkEditProfileFormError('phone')"
+                      :value="(editProfileForm.phone = user.phone)"
+                      @input="editProfileForm.phone = $event.target.value"
                     />
                   </div>
                   <span
@@ -127,8 +127,8 @@
                       type="email"
                       class="form-input"
                       placeholder="Enter your email here"
-                      v-model="editProfileForm.email"
-                      @input="checkEditProfileFormError('email')"
+                      :value="(editProfileForm.email = user.email)"
+                      @input="editProfileForm.email = $event.target.value"
                     />
                   </div>
                   <span
@@ -138,12 +138,30 @@
                   >
                 </div>
 
+                <div class="form-group mb-5">
+                  <label for="input-email">Gender</label>
+                  <div>
+                    <v-select
+                      class="form-input style-chooser cursor-pointer"
+                      placeholder="Select Course Categories"
+                      :value="editProfileForm.gender || user.gender"
+                      @input="onGenderChange"
+                      :options="['Male', 'Female']"
+                    />
+                  </div>
+                  <span
+                    v-if="editProfileFormError.find((i) => i === 'email')"
+                    class="text-sm text-red-700"
+                    >Gender is required</span
+                  >
+                </div>
+
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click.prevent="(e) => onLogin(e, showLogin.userType)"
+                      @click.prevent="(e) => onLogin(e, user.userId)"
                     >
                       Save
                       <loader v-if="loading" color="white" />
@@ -177,17 +195,6 @@ export default {
     editProfileFormError: [],
   }),
 
-  created() {
-    this.data = {
-      editProfileForm: {
-        name: this.user.name,
-        phone: this.user.phone,
-        email: this.user.email,
-        gender: '',
-      },
-    }
-  },
-
   computed: {
     ...mapState({
       showEditProfile: (state) => state.app.editProfileModal,
@@ -215,6 +222,9 @@ export default {
     // },
   },
   methods: {
+    onGenderChange(value) {
+      this.editProfileForm.gender = value
+    },
     checkEditProfileFormError(value) {
       this.editProfileFormError = this.editProfileFormError.filter(
         (i) => i !== value
@@ -278,35 +288,36 @@ export default {
         })
         .catch((e) => console.log('e: ', e))
     },
-    onLogin(e, userType) {
+    onLogin(e, userId) {
+      // console.log('Hello >>', this.editProfileForm)
       if (e) e.preventDefault()
       this.loading = true
 
       const data = {
-        ...this.loginForm,
+        ...this.editProfileForm,
       }
 
-      for (let i in data) {
-        console.log(i)
-        if (data[i].length === 0) {
-          this.editProfileFormError.push(i)
-        }
-      }
-      if (this.editProfileFormError.length) {
-        this.loading = false
-        return
-      }
+      // for (let i in data) {
+      //   console.log(i)
+      //   if (data[i].length === 0) {
+      //     this.editProfileFormError.push(i)
+      //   }
+      // }
+      // if (this.editProfileFormError.length) {
+      //   this.loading = false
+      //   return
+      // }
 
       this.$store
-        .dispatch('auth/loginUser', {
+        .dispatch('auth/updateUser', {
           ...data,
-          userType,
+          userId,
         })
         .then((res) => {
           this.loading = false
+          console.log(res)
           if (res) {
-            if (res.isTutor && userType === 'tutor') this.gotoDashboard('tutor')
-            else this.gotoDashboard('student')
+            this.showSuccess(res)
           }
         })
         .catch((e) => console.log('e: ', e))
@@ -316,9 +327,7 @@ export default {
         title: 'All done!',
         text: res.message
           ? res.message
-          : `You have successfully signed up to klasroom.com. 
-          Please check your email and click the link in it to 
-          complete your registration.`,
+          : `You have successfully updated your profile`,
       })
       this.close()
     },
