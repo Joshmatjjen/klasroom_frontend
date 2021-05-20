@@ -48,10 +48,12 @@
             <button
               aria-label="Close panel"
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
-              @click="() => {
-                clearInput()
-                close()
-              }"
+              @click="
+                () => {
+                  clearInput()
+                  close()
+                }
+              "
             >
               <!-- Heroicon name: x -->
               <svg
@@ -85,7 +87,7 @@
                 {{
                   isLogin
                     ? 'Sign into your account'
-                    : isStudent && !isLogin 
+                    : isStudent && !isLogin
                     ? `Become a Tutor`
                     : `Create a ${showLogin.userType} account`
                 }}
@@ -105,7 +107,11 @@
                       @input="checkLoginFormError('userIdentity')"
                     />
                   </div>
-                  <span v-if="loginFormError.find(i => i === 'userIdentity')" class="text-sm text-red-700">Email address is required</span>
+                  <span
+                    v-if="loginFormError.find((i) => i === 'userIdentity')"
+                    class="text-sm text-red-700"
+                    >Email address is required</span
+                  >
                 </div>
                 <div class="form-group">
                   <label for="input-password">Password</label>
@@ -119,7 +125,11 @@
                       @input="checkLoginFormError('password')"
                     />
                   </div>
-                  <span v-if="loginFormError.find(i => i === 'password')" class="text-sm text-red-700">Password is required</span>
+                  <span
+                    v-if="loginFormError.find((i) => i === 'password')"
+                    class="text-sm text-red-700"
+                    >Password is required</span
+                  >
                 </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
@@ -158,7 +168,11 @@
                       @input="checkSignupFormError('name')"
                     />
                   </div>
-                  <span v-if="signupFormError.find(i => i === 'name')" class="text-sm text-red-700">Name is required</span>
+                  <span
+                    v-if="signupFormError.find((i) => i === 'name')"
+                    class="text-sm text-red-700"
+                    >Name is required</span
+                  >
                 </div>
                 <div class="form-group mb-5">
                   <label for="input-email">Email address</label>
@@ -172,7 +186,11 @@
                       @input="checkSignupFormError('email')"
                     />
                   </div>
-                  <span v-if="signupFormError.find(i => i === 'email')" class="text-sm text-red-700">Email address is required</span>
+                  <span
+                    v-if="signupFormError.find((i) => i === 'email')"
+                    class="text-sm text-red-700"
+                    >Email address is required</span
+                  >
                 </div>
                 <div v-if="!isStudent" class="form-group mb-5">
                   <label for="input-email">Phone</label>
@@ -186,7 +204,11 @@
                       @input="checkSignupFormError('phone')"
                     />
                   </div>
-                  <span v-if="signupFormError.find(i => i === 'phone')" class="text-sm text-red-700">Phone is required</span>
+                  <span
+                    v-if="signupFormError.find((i) => i === 'phone')"
+                    class="text-sm text-red-700"
+                    >Phone is required</span
+                  >
                 </div>
                 <div class="form-group mb-5">
                   <label for="input-password">Password</label>
@@ -200,21 +222,29 @@
                       @input="checkSignupFormError('password')"
                     />
                   </div>
-                  <span v-if="signupFormError.find(i => i === 'password')" class="text-sm text-red-700">Password is required</span>
+                  <span
+                    v-if="signupFormError.find((i) => i === 'password')"
+                    class="text-sm text-red-700"
+                    >Password is required</span
+                  >
                 </div>
                 <div v-if="showLogin.userType === 'tutor'" class="form-group">
                   <label for="input-courseCategories">Course Categories</label>
                   <div>
-                    <v-select 
-                      class="form-input style-chooser"
+                    <v-select
+                      class="form-input style-chooser cursor-pointer"
                       placeholder="Select Course Categories"
-                      multiple 
-                      v-model="signupForm.courseCategories" 
+                      multiple
+                      v-model="signupForm.courseCategories"
                       :options="coursesCategories"
                       @input="checkSignupFormError('courseCategories')"
                     />
                   </div>
-                  <span v-if="signupFormError.find(i => i === 'courseCategories')" class="text-sm text-red-700">Course categories is required</span>
+                  <span
+                    v-if="signupFormError.find((i) => i === 'courseCategories')"
+                    class="text-sm text-red-700"
+                    >Course categories is required</span
+                  >
                 </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
@@ -268,15 +298,15 @@ export default {
     loading: false,
     isStudent: false,
     signupForm: {
-      name: "",
-      email: "",
-      phone: "",
-      password: "",
-      courseCategories: ""
+      name: '',
+      email: '',
+      phone: '',
+      password: '',
+      courseCategories: '',
     },
     loginForm: {
-      userIdentity: "",
-      password: ""
+      userIdentity: '',
+      password: '',
     },
     loginFormError: [],
     signupFormError: [],
@@ -297,21 +327,21 @@ export default {
       immediate: true,
     },
     isLogin(value) {
-      this.loginFormError = [];
-      this.signupFormError = [];
-      this.isStudent = false;
+      this.loginFormError = []
+      this.signupFormError = []
+      this.isStudent = false
       this.clearInput()
     },
     isStudent(value) {
-      this.signupFormError = [];
+      this.signupFormError = []
     },
   },
   methods: {
     checkLoginFormError(value) {
-      this.loginFormError = this.loginFormError.filter(i => i !== value);
+      this.loginFormError = this.loginFormError.filter((i) => i !== value)
     },
     checkSignupFormError(value) {
-      this.signupFormError = this.signupFormError.filter(i => i !== value);
+      this.signupFormError = this.signupFormError.filter((i) => i !== value)
     },
     forgotPassword(e) {
       if (e) e.preventDefault()
@@ -322,77 +352,94 @@ export default {
       if (e) e.preventDefault()
       this.loading = true
 
-      const {name, email, phone, password, courseCategories} = this.signupForm;
+      const { name, email, phone, password, courseCategories } = this.signupForm
 
-      const data = this.isStudent ? {
-        email, password, courseCategories
-      } : userType === 'student' ? {
-        name, email, phone, password
-      } : {
-        name, email, phone, password, courseCategories
-      }
+      const data = this.isStudent
+        ? {
+            email,
+            password,
+            courseCategories,
+          }
+        : userType === 'student'
+        ? {
+            name,
+            email,
+            phone,
+            password,
+          }
+        : {
+            name,
+            email,
+            phone,
+            password,
+            courseCategories,
+          }
 
-      for (let i in data) {
-        console.log(i)
-        if (data[i].length === 0) {       
-          this.signupFormError.push(i);
-        }
-      }
-      if (this.signupFormError.length) {
-        this.loading = false;
-        return;
-      }
-
-      this.$store.dispatch("auth/signUpUser", {
-        ...data,
-        userType,
-        isStudent: this.isStudent
-      })
-      .then((res) => {
-        this.loading = false
-        if (res) {
-          this.clearInput()
-          this.showSuccess(res)
-        }
-      }).catch(e => console.log('e: ', e));
-    },
-    onLogin(e, userType) {
-      if (e) e.preventDefault()
-      this.loading = true;
-
-      const data = {
-        ...this.loginForm
-      }
-      
       for (let i in data) {
         console.log(i)
         if (data[i].length === 0) {
-          this.loginFormError.push(i);
+          this.signupFormError.push(i)
+        }
+      }
+      if (this.signupFormError.length) {
+        this.loading = false
+        return
+      }
+
+      this.$store
+        .dispatch('auth/signUpUser', {
+          ...data,
+          userType,
+          isStudent: this.isStudent,
+        })
+        .then((res) => {
+          this.loading = false
+          if (res) {
+            this.clearInput()
+            this.showSuccess(res)
+          }
+        })
+        .catch((e) => console.log('e: ', e))
+    },
+    onLogin(e, userType) {
+      if (e) e.preventDefault()
+      this.loading = true
+
+      const data = {
+        ...this.loginForm,
+      }
+
+      for (let i in data) {
+        console.log(i)
+        if (data[i].length === 0) {
+          this.loginFormError.push(i)
         }
       }
       if (this.loginFormError.length) {
-        this.loading = false;
-        return;
-      }
-      
-      this.$store.dispatch("auth/loginUser", {
-        ...data,
-        userType
-      })
-      .then((res) => {
         this.loading = false
-        if (res) {
-          if (res.isTutor && userType === 'tutor')
-            this.gotoDashboard('tutor');
-          else
-            this.gotoDashboard('student');
-        }
-      }).catch(e => console.log('e: ', e));
+        return
+      }
+
+      this.$store
+        .dispatch('auth/loginUser', {
+          ...data,
+          userType,
+        })
+        .then((res) => {
+          this.loading = false
+          if (res) {
+            if (res.isTutor && userType === 'tutor') this.gotoDashboard('tutor')
+            else this.gotoDashboard('student')
+          }
+        })
+        .catch((e) => console.log('e: ', e))
     },
     showSuccess(res) {
       this.$store.commit('app/NOTICE_MODAL', {
         title: 'All done!',
-        text: res.message ? res.message : `You have successfully signed up to klasroom.com. 
+        text: res.message
+          ? res.message
+          : `You have successfully signed up to klasroom.com. 
           Please check your email and click the link in it to 
           complete your registration.`,
       })
@@ -400,12 +447,10 @@ export default {
     },
     gotoDashboard(type) {
       console.log('callback: ', this.showLogin.callback)
-      if (this.showLogin.callback){
+      if (this.showLogin.callback) {
         console.log('callback')
         this.showLogin.callback()
-      }
-      else
-        this.$router.push(`/${type}/dashboard`)
+      } else this.$router.push(`/${type}/dashboard`)
       this.close()
     },
     close() {
@@ -414,39 +459,39 @@ export default {
     },
     clearInput() {
       this.signupForm = {
-        name: "",
-        email: "",
-        phone: "",
-        password: "",
-        courseCategories: []
+        name: '',
+        email: '',
+        phone: '',
+        password: '',
+        courseCategories: [],
       }
 
       this.loginForm = {
-        userIdentity: "",
-        password: ""
+        userIdentity: '',
+        password: '',
       }
-    }
+    },
   },
 }
 </script>
 
 <style>
-  .style-chooser .vs__search::placeholder,
-  .style-chooser .vs__dropdown-toggle,
-  .style-chooser .vs__dropdown-menu {
-    background: #f5f5f3;
-    border: none;
-    font-size: 0.875rem;
-    color: #8a8a8a;
-  }
+.style-chooser .vs__search::placeholder,
+.style-chooser .vs__dropdown-toggle,
+.style-chooser .vs__dropdown-menu {
+  background: #f5f5f3;
+  border: none;
+  font-size: 0.875rem;
+  color: #8a8a8a;
+}
 
-  .style-chooser .vs__dropdown-menu {
-    overflow: auto;
-    height: 150px;
-  }
+.style-chooser .vs__dropdown-menu {
+  overflow: auto;
+  height: 150px;
+}
 
-  .style-chooser .vs__clear,
-  .style-chooser .vs__open-indicator {
-    fill: #8a8a8a;
-  }
+.style-chooser .vs__clear,
+.style-chooser .vs__open-indicator {
+  fill: #8a8a8a;
+}
 </style>

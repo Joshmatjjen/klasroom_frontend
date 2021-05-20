@@ -1,7 +1,7 @@
 <template>
   <nuxt-link
     :to="view_route"
-    class="block bg-white rounded-lg border border-gray-300 shadow-hover relative md:pb-12"
+    class="card-box block bg-white rounded-lg border border-gray-300 shadow-hover relative md:pb-12"
   >
     <div class="absolute mt-3 ml-3">
       <span class="top-tag">Course</span>
@@ -46,6 +46,9 @@ export default {
 </script>
 
 <style scoped>
+.card-box {
+  min-width: 13rem;
+}
 .top-tag {
   background-color: rgba(0, 0, 0, 0.25);
   padding: 4px 20px 4px 8px;

@@ -12,12 +12,13 @@ export default ({ $axios, app, store, redirect, route }) => {
     request.baseURL = process.env.baseUrl
 
     request.headers.common['Secret'] = process.env.secret
-    request.headers.common["Content-Type"] = "application/json"
+    request.headers.common['Content-Type'] = 'application/json'
 
     let token = store.getters['auth/token']
     // console.log('Axios token:', token)
     if (token) {
-      request.headers.common.Authorization = `Bearer ${token}`
+      // request.headers.common.Authorization = `Bearer ${token}`
+      request.headers.common['Access-Token'] = token
     } else {
       delete request.headers.common.Authorization
     }
@@ -48,7 +49,9 @@ export default ({ $axios, app, store, redirect, route }) => {
       Swal.fire({
         position: 'top-end',
         width: '350px',
-        text: error.response.data.message ? error.response.data.message : 'Something went wrong. Try again',
+        text: error.response.data.message
+          ? error.response.data.message
+          : 'Something went wrong. Try again',
         backdrop: false,
         allowOutsideClick: false,
         showConfirmButton: false,
@@ -58,13 +61,14 @@ export default ({ $axios, app, store, redirect, route }) => {
     }
 
     if (status === 401 && store.getters['auth/check']) {
-
       store.dispatch('auth/logout')
 
       Swal.fire({
         position: 'top-end',
         width: '350px',
-        text: error.response.data.message ? error.response.data.message : 'Your session has expired',
+        text: error.response.data.message
+          ? error.response.data.message
+          : 'Your session has expired',
         backdrop: false,
         allowOutsideClick: false,
         showConfirmButton: false,
@@ -79,7 +83,6 @@ export default ({ $axios, app, store, redirect, route }) => {
     }
 
     if (status === 400 || status === 409 || status === 404 || status === 403) {
-
       Swal.fire({
         position: 'top-end',
         width: '350px',
@@ -104,12 +107,15 @@ export default ({ $axios, app, store, redirect, route }) => {
   })
 
   $axios.onResponse((res) => {
-    const { status, data } = res;
+    const { status, data } = res
     console.log('new data: ', data)
-    if (status === 200
-      && (data.message === "Check your email for confirmation link before proceeding"
-        || data.message === "A text message was sent to the email associated with your account.")) {
-
+    if (
+      status === 200 &&
+      (data.message ===
+        'Check your email for confirmation link before proceeding' ||
+        data.message ===
+          'A text message was sent to the email associated with your account.')
+    ) {
       Swal.fire({
         position: 'top-end',
         width: '350px',
@@ -122,7 +128,6 @@ export default ({ $axios, app, store, redirect, route }) => {
       }).then(() => {
         redirect({ name: 'login' })
       })
-
     }
   })
 }
