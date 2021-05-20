@@ -467,6 +467,11 @@ table.vgt-table {
   border: 2px solid #e2e8f0;
 }
 
+/* Vue-Select */
+.vs--searchable .vs__dropdown-toggle {
+  cursor: pointer !important;
+}
+
 /* ------------------------------ Media Queries ----------------------------- */
 
 @media (min-width: 768px) {
