@@ -55,7 +55,12 @@
                       <p class="text-sm text-gray-700">*****************</p>
                     </div>
                     <div class="col-span-5 text-right">
-                      <button class="btn btn-light btn-sm">Change</button>
+                      <button
+                        class="btn btn-light btn-sm"
+                        v-on:click.prevent="toggleChangePassword()"
+                      >
+                        Change
+                      </button>
                     </div>
                   </div>
                   <hr class="mt-4 mb-6" />
@@ -113,10 +118,7 @@
                     </label>
                   </li>
                   <li>
-                    <label
-                      class="checkbox"
-                      @click="$router.push('/student/dashboard')"
-                    >
+                    <label class="checkbox" @click="toggleChangePassword">
                       <span class="text-sm">Change password</span>
                       <input type="checkbox" value="intermediate" disabled />
                       <span class="checkmark"></span>
@@ -169,8 +171,12 @@ export default {
 
   methods: {
     toggleEditProfile() {
-      console.log('Clicking hgere for profile')
       this.$store.commit('app/EDIT_PROFILE_MODAL', {
+        status: true,
+      })
+    },
+    toggleChangePassword() {
+      this.$store.commit('app/CHANGE_PASSWORD_MODAL', {
         status: true,
       })
     },

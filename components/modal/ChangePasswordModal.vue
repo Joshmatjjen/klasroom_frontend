@@ -3,7 +3,7 @@
     Tailwind UI components require Tailwind CSS v1.8 and the @tailwindcss/ui plugin.
     Read the documentation to get started: https://tailwindui.com/documentation
   -->
-  <div v-if="showEditProfile" class="fixed z-10 inset-0 overflow-y-auto">
+  <div v-if="showChangePassword" class="fixed z-10 inset-0 overflow-y-auto">
     <div
       class="flex items-start justify-center min-h-screen pt-4 px-4 pb-4 lg:pb-20 text-center sm:block sm:p-0"
     >
@@ -78,81 +78,49 @@
                 id="modal-headline"
                 class="text-sm font-semibold text-left text-gray-800"
               >
-                Account Details
+                Change Password
               </p>
               <hr class="mt-8 mb-5" />
               <!-- Login form -->
               <form v-if="isLogin" id="login-form">
                 <div class="form-group mb-5">
-                  <label for="input-email">Name</label>
+                  <label for="input-password">Old Password</label>
                   <div>
                     <input
-                      id="input-name"
-                      type="text"
+                      id="new-password"
+                      type="password"
                       class="form-input"
-                      placeholder="Enter your name here"
-                      :value="(editProfileForm.name = user.name)"
-                      @input="editProfileForm.name = $event.target.value"
+                      placeholder="Enter your old password here"
+                      v-model="changePasswordForm.oldPassword"
+                      @input="checkchangePasswordFormError('oldPassword')"
                     />
                   </div>
                   <span
-                    v-if="editProfileFormError.find((i) => i === 'name')"
+                    v-if="
+                      changePasswordFormError.find((i) => i === 'oldPassword')
+                    "
                     class="text-sm text-red-700"
-                    >Name is required</span
+                    >Old Password is required</span
                   >
                 </div>
                 <div class="form-group mb-5">
-                  <label for="input-email">Phone</label>
+                  <label for="input-password">New Password</label>
                   <div>
                     <input
-                      id="input-phone"
-                      type="number"
+                      id="new-password"
+                      type="password"
                       class="form-input"
-                      placeholder="Enter your phone number here"
-                      :value="(editProfileForm.phone = user.phone)"
-                      @input="editProfileForm.phone = $event.target.value"
+                      placeholder="Enter your new password here"
+                      v-model="changePasswordForm.newPassword"
+                      @input="checkchangePasswordFormError('newPassword')"
                     />
                   </div>
                   <span
-                    v-if="editProfileFormError.find((i) => i === 'phone')"
+                    v-if="
+                      changePasswordFormError.find((i) => i === 'newPassword')
+                    "
                     class="text-sm text-red-700"
-                    >Phone number is required</span
-                  >
-                </div>
-                <div class="form-group mb-5">
-                  <label for="input-email">Email address</label>
-                  <div>
-                    <input
-                      id="input-email"
-                      type="email"
-                      class="form-input"
-                      placeholder="Enter your email here"
-                      :value="(editProfileForm.email = user.email)"
-                      @input="editProfileForm.email = $event.target.value"
-                    />
-                  </div>
-                  <span
-                    v-if="editProfileFormError.find((i) => i === 'email')"
-                    class="text-sm text-red-700"
-                    >Email address is required</span
-                  >
-                </div>
-
-                <div class="form-group mb-5">
-                  <label for="input-gender">Gender</label>
-                  <div>
-                    <v-select
-                      class="form-input style-chooser cursor-pointer"
-                      placeholder="Select Course Categories"
-                      :value="editProfileForm.gender || user.gender"
-                      @input="onGenderChange"
-                      :options="['Male', 'Female']"
-                    />
-                  </div>
-                  <span
-                    v-if="editProfileFormError.find((i) => i === 'email')"
-                    class="text-sm text-red-700"
-                    >Gender is required</span
+                    >New Password is required</span
                   >
                 </div>
 
@@ -186,18 +154,16 @@ export default {
     isLogin: true,
     loading: false,
     isStudent: false,
-    editProfileForm: {
-      name: '',
-      phone: '',
-      email: '',
-      gender: '',
+    changePasswordForm: {
+      oldPassword: '',
+      newPassword: '',
     },
-    editProfileFormError: [],
+    changePasswordFormError: [],
   }),
 
   computed: {
     ...mapState({
-      showEditProfile: (state) => state.app.editProfileModal,
+      showChangePassword: (state) => state.app.changePasswordModal,
       user: (state) => state.auth.user,
     }),
   },
@@ -212,7 +178,7 @@ export default {
     //   immediate: true,
     // },
     // isLogin(value) {
-    //   this.editProfileFormError = []
+    //   this.changePasswordFormError = []
     //   this.signupFormError = []
     //   this.isStudent = false
     //   this.clearInput()
@@ -223,10 +189,10 @@ export default {
   },
   methods: {
     onGenderChange(value) {
-      this.editProfileForm.gender = value
+      this.changePasswordForm.gender = value
     },
-    checkEditProfileFormError(value) {
-      this.editProfileFormError = this.editProfileFormError.filter(
+    checkchangePasswordFormError(value) {
+      this.changePasswordFormError = this.changePasswordFormError.filter(
         (i) => i !== value
       )
     },
@@ -236,29 +202,28 @@ export default {
       this.$store.commit('app/LOGIN_MODAL', null)
     },
     onSave(e, userId) {
-      // console.log('Hello >>', this.editProfileForm)
+      // console.log('Hello >>', this.changePasswordForm)
       if (e) e.preventDefault()
       this.loading = true
 
       const data = {
-        ...this.editProfileForm,
+        ...this.changePasswordForm,
       }
 
       // for (let i in data) {
       //   console.log(i)
       //   if (data[i].length === 0) {
-      //     this.editProfileFormError.push(i)
+      //     this.changePasswordFormError.push(i)
       //   }
       // }
-      // if (this.editProfileFormError.length) {
+      // if (this.changePasswordFormError.length) {
       //   this.loading = false
       //   return
       // }
 
       this.$store
-        .dispatch('auth/updateUser', {
+        .dispatch('auth/changePassword', {
           ...data,
-          userId,
         })
         .then((res) => {
           this.loading = false
@@ -274,12 +239,12 @@ export default {
         title: 'All done!',
         text: res.message
           ? res.message
-          : `You have successfully updated your profile`,
+          : `You have successfully updated your password`,
       })
       this.close()
     },
     close() {
-      this.$store.commit('app/EDIT_PROFILE_MODAL', null)
+      this.$store.commit('app/CHANGE_PASSWORD_MODAL', null)
     },
     clearInput() {
       this.signupForm = {

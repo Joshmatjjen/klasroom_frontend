@@ -216,6 +216,37 @@ export const actions = {
     }
   },
 
+  async changePassword(vuexContext, passwordData) {
+    console.log('Data >>', passwordData)
+    try {
+      const { data } = await this.$axios.$post('/changepassword', passwordData)
+      if (data) {
+        console.log('password changed success: ', data)
+        // vuexContext.commit('UPDATE_USER', data)
+        // localStorage.setItem('user', JSON.stringify(data))
+        // Cookie.set('user', JSON.stringify(data))
+        // const expirationDate = new Date().getTime() + 86400 * 1000 // 24 hrs duration
+        // vuexContext.commit('SET_TOKEN', data.accessToken)
+        // vuexContext.commit('FETCH_USER_SUCCESS', data)
+        // vuexContext.commit('SET_EXPIRATION_DATE', expirationDate)
+
+        // localStorage.setItem('token', data.accessToken)
+        // localStorage.setItem('tokenExpiration', expirationDate)
+        // localStorage.setItem('user', JSON.stringify(data))
+
+        // Cookie.set('jwt', data.accessToken)
+        // Cookie.set('expirationDate', expirationDate)
+        // Cookie.set('user', JSON.stringify(data))
+
+        return data
+      }
+      return false
+    } catch (e) {
+      // console.log('fetch user failed: ', e)
+      return false
+    }
+  },
+
   async fetchBank({ commit, state }) {
     try {
       const uid = state.user.id
