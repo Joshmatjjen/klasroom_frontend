@@ -76,9 +76,9 @@
             <div class="sm:ml-0">
               <p
                 id="modal-headline"
-                class="text-sm font-normal text-left text-gray-800"
+                class="text-sm font-semibold text-left text-gray-800"
               >
-                Account details
+                Account Details
               </p>
               <hr class="mt-8 mb-5" />
               <!-- Login form -->
@@ -279,7 +279,6 @@ export default {
       this.close()
     },
     close() {
-      this.isStudent = false
       this.$store.commit('app/EDIT_PROFILE_MODAL', null)
     },
     clearInput() {
