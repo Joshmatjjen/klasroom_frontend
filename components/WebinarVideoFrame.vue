@@ -19,12 +19,17 @@
           seconds
         </div>
       </div>
-      <button
+      <!-- <button
         class="btn btn-primary mx-auto my-auto"
         @click.prevent="addToCalendar"
       >
         Add to Calendar
-      </button>
+      </button> -->
+      <nuxt-link to="/meeting/13673-13673"
+        ><button class="btn btn-primary mx-auto my-auto">
+          Start
+        </button></nuxt-link
+      >
     </div>
     <div v-else-if="status === 'paused'"></div>
     <div v-else class="video-frame flex w-full h-full">

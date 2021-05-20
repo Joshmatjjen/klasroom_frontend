@@ -7,7 +7,7 @@
           <div class="col-span-full lg:col-span-7 xl:col-span-8">
             <section>
               <div
-                class="switcher flex flex-row gap-10 place-items-start px-5 border-b-2 border-gray-200 overflow-scroll scrollbar-thumb-orange"
+                class="switcher whitespace-no-wrap flex flex-row gap-10 place-items-start px-5 border-b-2 border-gray-200 overflow-scroll scrollbar-thumb-orange"
               >
                 <button
                   v-on:click="switcher(0)"
@@ -63,8 +63,8 @@
                                   id="input-name"
                                   type="text"
                                   class="form-input"
-                                  placeholder="Enter course name here"
-                                  v-model="createWebinar.name"
+                                  placeholder="Enter webinar name here"
+                                  v-model="createWebinar.title"
                                 />
                               </div>
                             </div>
@@ -76,7 +76,7 @@
                                   id="input-name"
                                   type="text"
                                   class="form-input"
-                                  placeholder="Enter course subtitle here"
+                                  placeholder="Enter webinar subtitle here"
                                   v-model="createWebinar.subtitle"
                                 />
                               </div>
@@ -90,12 +90,12 @@
                                   id="input-name"
                                   type="text"
                                   class="form-input"
-                                  placeholder="Enter course introduction here"
+                                  placeholder="Enter webinar introduction here"
                                   v-model="createWebinar.introduction"
                                 />
                               </div>
                             </div>
-                            <div class="grid grid-cols-2 gap-10">
+                            <div class="grid grid-cols-3 gap-10">
                               <div class="form-group mb-5">
                                 <label for="input-name">Webinar date</label>
                                 <div>
@@ -103,20 +103,32 @@
                                     id="input-name"
                                     type="date"
                                     class="form-input"
-                                    placeholder="Enter course introduction here"
-                                    v-model="createWebinar.introduction"
+                                    placeholder="Enter webinar date"
+                                    v-model="createWebinar.date"
                                   />
                                 </div>
                               </div>
                               <div class="form-group mb-5">
-                                <label for="input-name">Webinar time</label>
+                                <label for="input-name">Webinar start time</label>
                                 <div>
                                   <input
                                     id="input-name"
                                     type="time"
                                     class="form-input"
-                                    placeholder="Enter course introduction here"
-                                    v-model="createWebinar.introduction"
+                                    placeholder="Enter webinar startTime"
+                                    v-model="createWebinar.startTime"
+                                  />
+                                </div>
+                              </div>
+                              <div class="form-group mb-5">
+                                <label for="input-name">Webinar end time</label>
+                                <div>
+                                  <input
+                                    id="input-name"
+                                    type="time"
+                                    class="form-input"
+                                    placeholder="Enter webinar endTime"
+                                    v-model="createWebinar.endTime"
                                   />
                                 </div>
                               </div>
@@ -808,7 +820,7 @@
                               <p
                                 class="text-sm text-left font-bold text-gray-800"
                               >
-                                Enter course price
+                                Enter webinar price
                               </p>
                               <!-- Nigeria price -->
                               <div class="flex flex-row justify-between my-4">
@@ -1194,7 +1206,7 @@
                   <li class="lg:pb-8 flex flex-row justify-between relative">
                     <button
                       class="btn btn-primary mr-5 flex flex-row justify-between align-middle items-center"
-                      @click.capture.stop="togglePubOptMenu"
+                      @click.prevent="createNewWebinar"
                     >
                       <span class="text-xs">Publish webinar</span>
                       <!-- <svg
@@ -1268,7 +1280,9 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import { mapState } from 'vuex'
+import Swal from 'sweetalert2'
+import moment from 'moment'
 import UserChip from '~/components/chip/UserChip.vue'
 
 const courses = require('@/static/json/courses.json')
@@ -1287,12 +1301,27 @@ export default {
     undoneTasks: _.take(courses, 3),
     isWebinarSwitch: 0,
     createWebinar: {
-      name: '',
+      title: '',
       subtitle: '',
+      introduction: '',
+      date: '',
+      startTime: '',
+      endTime: '',
+      tags: []
     },
     publishOpt: false,
     timeLength: '',
+    loading: false,
   }),
+  computed: {
+    ...mapState({
+      user: (state) => state.auth.user,
+      userType: (state) => state.auth.user && state.auth.user.isTutor ? "tutor" : "student",
+    }),
+    userDash() {
+      return this.$route.path.split('/')[1]
+    }
+  },
   methods: {
     switcher: function (value) {
       this.isWebinarSwitch = value
@@ -1303,6 +1332,43 @@ export default {
     },
     callLog() {
       console.log('adding new')
+    },
+    createNewWebinar() {
+      this.loading = true;
+      const {title, subtitle, introduction, date, startTime, endTime} = this.createWebinar;
+      const data = {
+        ...this.createWebinar,
+        webinarStart: moment(date + " " + startTime).format("YYYY-MM-DDTHH:mm:ss"),
+        webinarEnd: moment(date + " " + endTime).format("YYYY-MM-DDTHH:mm:ss"),
+      }
+      console.log('data: ', data);
+      this.$store.dispatch("webinar/createWebinar", {
+        ...data,
+        publishNow: true
+      })
+      .then((res) => {
+        this.loading = false
+        if (res) {
+          Swal.fire({
+            position: 'top-end',
+            width: '350px',
+            text: res.message,
+            backdrop: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            showCloseButton: true,
+            timer: 3000,
+          });
+          if (this.userDash === 'tutor')
+            this.gotoWebinar('tutor');
+          else
+            this.gotoWebinar('student');
+        }
+      }).catch(e => console.log('e: ', e));
+    },
+    gotoWebinar(type) {
+      this.$router.push(`/${type}/webinars`)
+      this.close()
     },
   },
 }

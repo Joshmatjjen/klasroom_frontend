@@ -1,13 +1,15 @@
 <template>
   <div class="layout">
     <sidebar />
-    <div class="content-wrapper dashboard">
+    <div
+      class="content-wrapper dashboard md:px-5 sm:px-0 flex flex-col justify-between"
+    >
       <dash-navbar-mobile :key="$route.fullPath" v-if="$device.isMobile" />
       <dash-navbar :key="$route.fullPath" v-else />
-      <div class="container mx-auto px-2 mt-8 mb-5">
+      <div class="container mx-auto px-2 my-5">
         <Nuxt />
-        <dash-footer />
       </div>
+      <dash-footer />
     </div>
   </div>
 </template>

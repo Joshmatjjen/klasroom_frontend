@@ -9,6 +9,7 @@ export const state = () => ({
   resetPasswordModal: false,
   modal: false,
   noticeModal: null,
+  createMeetingModal: null,
   redirectUrl: null,
   pageTitle: 'Dashboard',
   pageType: null,
@@ -73,6 +74,9 @@ export const mutations = {
   },
   NOTICE_MODAL(state, options) {
     state.noticeModal = options
+  },
+  MEETING_CREATE_MODAL(state, options) {
+    state.createMeetingModal = options
   },
   SET_TYPE(state, type) {
     state.pageType = type

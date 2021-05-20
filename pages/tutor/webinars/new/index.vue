@@ -14,7 +14,7 @@
     <section class="bg-orange-100">
       <div class="mx-auto flex items-center align-middle justify-center">
         <div
-          class="grid grid-cols-12 mt-8 md:mb-6 lg:mb-20 xl:mb-24 md:mx-0 lg:mx-5 xl:mx-0"
+          class="grid grid-cols-12 mt-8 md:mb-6 lg:mb-8 xl:mb-8 md:mx-0 lg:mx-5 xl:mx-0"
         >
           <!-- Left -->
           <div class="col-span-12 md:col-span-6 px-4 lg:px-0">
@@ -62,18 +62,21 @@
                   <a
                     href="#"
                     class="pop-up-item hover:bg-gray-200 md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                    @click.prevent="() => createMeeting('later')"
                   >
                     <p>Create a meeting for later</p>
                   </a>
                   <a
                     href="#"
                     class="pop-up-item hover:bg-gray-200 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                    @click.prevent="() => createMeeting('instant')"
                   >
                     <p>Start an instant meeting</p>
                   </a>
                   <a
                     href="#"
                     class="pop-up-item hover:bg-gray-200 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                    @click.prevent="toggleMeetingOpt"
                   >
                     <p>Schedule a meeting</p>
                   </a>
@@ -125,11 +128,11 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import { getAccessTokenHeader } from '~/utils'
 
 export default {
   layout: 'dashboard',
-  middleware: ['check-auth', 'auth', 'isTutor'],
+  middleware: ['check-auth', 'auth'],
   data: () => ({
     meetingOpt: false,
     isAnnually: false,
@@ -173,6 +176,40 @@ export default {
     togglePrice(priceState) {
       console.log(priceState)
       this.priceSwitch = priceState
+    },
+    async createMeeting(type) {
+      this.toggleMeetingOpt()
+
+      let data
+
+      try {
+        const { data: newData, message } = await this.$axios.$post(
+          `https://streaming.staging.klasroom.com/v1/meetings`,
+          {},
+          {
+            headers: getAccessTokenHeader(this.$store.getters['auth/token']),
+          }
+        )
+        // console.log("newData: ", newData, message, location.hostname)
+        data = newData
+      } catch (e) {
+        console.log(e)
+        return
+      }
+
+      const link = `meeting/${data.roomName}`
+      const copyLink = `${location.origin}/${link}`
+
+      if (type === 'instant') {
+        this.$router.push(`/${link}`)
+      }
+      if (type === 'later') {
+        this.$store.commit('app/MEETING_CREATE_MODAL', {
+          title: `Here's is the link to your meeting`,
+          text: `Copy this link and send it to people you want to meet with. Be sure to save it so you can use it later, too.`,
+          copyLink,
+        })
+      }
     },
   },
 }

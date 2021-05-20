@@ -2,9 +2,10 @@
   <div class="min-h-screen mb-24">
     <section class="bg-orange-100">
       <div class="container mx-auto mb-10 px-4 lg:px-0">
-        <section>
+        <!-- Top Section -->
+        <section class="col-span-full lg:col-span-7 xl:col-span-8">
           <div
-            class="flex flex-row gap-10 place-items-start px-10 border-b-2 border-gray-200 mb-8"
+            class="switcher whitespace-no-wrap flex flex-row gap-6 md:gap-10 place-items-start mx-2 border-b-2 border-gray-200 overflow-scroll scrollbar-thumb-orange"
           >
             <button
               v-on:click="switcher('preview')"
@@ -33,7 +34,9 @@
             name="Edit Webinar"
           />
         </section>
-        <div class="grid grid-cols-12 gap-5">
+
+        <!-- Webinar Preview Tab -->
+        <div class="grid grid-cols-12 gap-5" v-if="isWebinars.preview">
           <div
             v-if="!$device.isMobile"
             class="col-span-full lg:col-span-8 xl:col-span-8"
@@ -110,6 +113,55 @@
             </div>
           </div>
         </div>
+
+        <!-- SignUps Tab -->
+        <div class="grid grid-cols-12 gap-5" v-if="isWebinars.signups">
+          <div class="col-span-full lg:col-span-8 xl:col-span-9">
+            <div class="col-span-12">
+              <list-table-1
+                :columns="columnsStudent"
+                :rows="rowsStudent"
+                type="Students"
+              />
+            </div>
+          </div>
+          <div class="col-span-full lg:col-span-4 xl:col-span-3">
+            <div
+              class="flex flex-col flex-1 bg-white rounded-xl border border-gray-300 min-h-content-screen"
+            >
+              <div
+                class="profile-card rounded-lg w-full h-full text-center px-12 pt-40 pb-16"
+              ></div>
+              <div class="mt-6 mx-auto w-full px-5">
+                <p class="text-lg font-semibold mx-auto text-center my-3">
+                  Amina Bello
+                </p>
+                <p class="text-xs font-normal mx-auto text-center mb-32">
+                  Lagos, Nigeria
+                </p>
+                <hr />
+              </div>
+              <div class="mx-auto my-5">
+                <button class="btn2 btn2-light text-xs py-3 px-5">
+                  Message Admins
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ratings and Reviews -->
+        <div class="grid grid-cols-12 gap-5" v-if="isWebinars.ratingReview">
+          <div class="col-span-full">
+            <div class="col-span-12">
+              <list-table-1
+                :columns="columnsReviews"
+                :rows="rowsReviews"
+                type="Reviews"
+              />
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -121,6 +173,8 @@ import EditChip from '~/components/chip/EditChip.vue'
 
 const webinars = require('@/static/json/latest-webinars.json')
 const youLearn = require('@/static/json/courses-you-learn.json')
+const students = require('@/static/json/student-signups.json')
+const reviews = require('@/static/json/webinar-reviews.json')
 
 export default {
   components: { EditChip },
@@ -141,6 +195,47 @@ export default {
       signups: false,
       ratingReview: false,
     },
+    columnsStudent: [
+      {
+        label: 'Name',
+        field: 'name',
+      },
+      {
+        label: 'Payment date',
+        field: 'paymentDate',
+        type: 'date',
+        dateInputFormat: 'yyyy-MM-dd',
+        dateOutputFormat: 'MMM do yy',
+      },
+      {
+        label: 'Last Active',
+        field: 'lastActive',
+      },
+    ],
+    rowsStudent: _.take(students, 6),
+
+    columnsReviews: [
+      {
+        label: 'Name',
+        field: 'name',
+      },
+      {
+        label: 'Date',
+        field: 'date',
+        type: 'date',
+        dateInputFormat: 'yyyy-MM-dd',
+        dateOutputFormat: 'MMM do yy',
+      },
+      {
+        label: 'Review',
+        field: 'review',
+      },
+      {
+        label: 'Rating',
+        field: 'rating',
+      },
+    ],
+    rowsReviews: _.take(reviews, 10),
   }),
   mounted() {
     if (this.$device.isMobile) {
@@ -192,6 +287,20 @@ export default {
 }
 </script>
 <style scoped>
+.banner-card {
+  background-image: url('/webinar-view-bg.jpg');
+  background-repeat: no-repeat;
+  background-position: 0;
+  background-size: cover;
+  @apply bg-gray-200 overflow-hidden;
+}
+.switcher {
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+.switcher::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
 .menu-btn {
   border-top: 5px solid;
   border-bottom: 5px solid;
@@ -204,5 +313,13 @@ export default {
 .menu-btn.active {
   border-bottom-color: #f99e42;
   font-weight: 700;
+}
+
+.profile-card {
+  background-image: url('/webinar-view-bg.jpg');
+  background-repeat: no-repeat;
+  background-position: 0;
+  background-size: cover;
+  @apply bg-gray-200 overflow-hidden;
 }
 </style>

@@ -376,6 +376,11 @@ label.checkbox input:checked ~ span.checkmark::after {
     max-height: calc(100vh - 170px);
   }
 }
+.vl {
+  height: 100%;
+  width: 1px;
+  @apply bg-gray-300;
+}
 
 /* Vue Good Table */
 .vgt-right-align {
@@ -532,4 +537,31 @@ table.vgt-table {
   h6 {
     @apply text-lg;
   } /* 18px */
+}
+
+/* body.swal2-no-backdrop .swal2-container.swal2-top-end, body.swal2-no-backdrop .swal2-container.swal2-top-right {
+  background-color: rgba(63,255,106,0.69) !important;
+  border: 3px solid white;
+  position: relative !important;
+} */
+
+.swal2-popup {
+  border: 3px solid #000000;
+  @apply bg-blue-500 !important;
+}
+
+.swal2-content {
+  color: #ffffff !important;
+}
+
+.swal2-close {
+  color: #ffffff !important;
+}
+
+.swal2-close:focus {
+  box-shadow: none !important;
+}
+
+.swal2-close:hover {
+  color: #f27474 !important;
 }
