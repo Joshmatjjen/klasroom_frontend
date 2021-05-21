@@ -47,6 +47,7 @@ export default {
     '~plugins/axios',
     '~plugins/vue2-filters',
     '~plugins/webrtc-adaptor',
+    '~plugins/vue-cropper',
     { src: '~plugins/validate', mode: 'client' },
     { src: '~plugins/datepicker', mode: 'client' },
     { src: '~plugins/vue-select', mode: 'client' },
