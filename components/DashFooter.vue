@@ -13,6 +13,8 @@
     <purchase-modal />
     <notice-modal />
     <meeting-create-modal />
+    <edit-profile-modal />
+    <change-password-modal />
   </section>
 </template>
 

@@ -22,6 +22,8 @@ export const state = () => ({
   banks: [],
   userDetails: null,
   accounts: null,
+  editProfileModal: null,
+  changePasswordModal: null,
 })
 
 // getters
@@ -81,6 +83,12 @@ export const mutations = {
   },
   MEETING_CREATE_MODAL(state, options) {
     state.createMeetingModal = options
+  },
+  EDIT_PROFILE_MODAL(state, profileData) {
+    state.editProfileModal = profileData
+  },
+  CHANGE_PASSWORD_MODAL(state, passwordData) {
+    state.changePasswordModal = passwordData
   },
   SET_TYPE(state, type) {
     state.pageType = type
