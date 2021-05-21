@@ -26,6 +26,7 @@
       title="Testing your mic and camera"
       :devices="devices"
       :devicesOpt="devicesOpt"
+      :stream="stream"
     />
     <webinar-testing-modal
       v-if="startState === 'speaker_test'"
@@ -52,12 +53,14 @@
               @click.prevent="toogleFullScreen"
               src="/webinar/push-pin.svg"
               class="pin"
+              id="pin"
               title="Pin to fullscreen"
             />
             <video
               ref="localVideo"
               id="localVideo"
               autoplay
+              muted
               playsinline
             ></video>
           </div>
@@ -377,6 +380,8 @@ export default {
       this.webRTCAdaptor.stop(this.streamId)
       this.webRTCAdaptor.leaveFromRoom(this.roomName)
       this.webRTCAdaptor.closePeerConnection(this.streamId)
+      this.webRTCAdaptor.closeStream()
+      // this.webRTCAdaptor.closeWebSocket()
 
       // this.webRTCAdaptor.leave(this.streamId)
       // this.webRTCAdaptor.closeStream()
@@ -409,11 +414,19 @@ export default {
       if (value == 'screen') {
         //this.webRTCAdaptor.switchDesktopWithMicAudio(this.streamId);
         this.webRTCAdaptor.switchDesktopCapture(this.streamId)
+        this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
       } else if (value == 'screenwithcamera') {
         this.webRTCAdaptor.switchDesktopCaptureWithCamera(this.streamId)
+        this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
+        this.clickElement('pin')
       } else {
         this.webRTCAdaptor.switchVideoCameraCapture(this.streamId, value)
+        this.sendNotificationEvent('SWITCH_VIDEO_CAM')
       }
+    },
+
+    clickElement(id) {
+      document.getElementById(id).click()
     },
 
     switchAudioMode(value) {
@@ -421,8 +434,14 @@ export default {
     },
     sendNotificationEvent(eventType) {
       if (this.isDataChannelOpen) {
+        // const iceState = this.webRTCAdaptor.iceConnectionState(this.streamId)
+        // if (
+        //   iceState != null &&
+        //   iceState != 'failed' &&
+        //   iceState != 'disconnected'
+        // ) {
         const notEvent = { streamId: this.streamId, eventType: eventType }
-
+        console.log('Sending data...')
         this.webRTCAdaptor.sendData(this.streamId, JSON.stringify(notEvent))
       } else {
         console.log(
@@ -462,13 +481,14 @@ export default {
     console.log('$route: ', this.$route.params.slug)
 
     try {
-      const { data: newData, message } = await this.$axios.$get(
-        `https://streaming.staging.klasroom.com/v1/meetings/${this.roomName}/join`,
+      const { data: newData, message } = await this.$axios.$post(
+        `https://streaming.staging.klasroom.com/v1/webinars/${this.roomName}/join`,
+        {},
         {
           headers: getAccessTokenHeader(this.token),
         }
       )
-      console.log('newData: ', newData, message)
+      console.log(message) //console.log('newData: ', newData, message)
 
       if (this.streamId === newData.hostId) {
         this.isHost = true
@@ -486,6 +506,10 @@ export default {
 
     let devices = []
 
+    // this.playStart = true
+    // this.isCameraOff = false
+    // this.isMute = false
+
     /**
      * If publishing stops for any reason, it tries to republish again.
      */
@@ -494,13 +518,15 @@ export default {
      */
     const checkAndRepublishIfRequired = () => {
       const iceState = this.webRTCAdaptor.iceConnectionState(this.streamId)
-      console.log('Ice state checked = ' + iceState)
+      // console.log('Ice state checked = ' + iceState)
+      console.log('Ice state checked')
 
       if (
         iceState == null ||
         iceState == 'failed' ||
         iceState == 'disconnected'
       ) {
+        console.log('Ice state refreshing...')
         this.webRTCAdaptor.stop(this.streamId)
         this.webRTCAdaptor.closePeerConnection(this.streamId)
         this.webRTCAdaptor.closeWebSocket()
@@ -544,12 +570,14 @@ export default {
       videoPlayer.innerHTML = `<img
               src="/webinar/push-pin.svg"
               class="pin"
+              id="pin${streamId}"
               title="Pin to fullscreen"
             />`
       videoPlayer.onclick = this.toogleFullScreen
 
       video.id = 'remoteVideo' + streamId
       video.autoplay = true
+      // video.muted = true
       video.playsinline = true
 
       // const player =
@@ -609,6 +637,9 @@ export default {
           console.log('Microphone muted for : ', eventStreamId)
         } else if (eventTyp == 'MIC_UNMUTED') {
           console.log('Microphone unmuted for : ', eventStreamId)
+        } else if (eventTyp == 'SWITCH_SCREEN_SHARE') {
+          console.log('Screen share for : ', eventStreamId)
+          this.clickElement(`pin${eventStreamId}`)
         }
       }
     }
@@ -667,7 +698,7 @@ export default {
         localVideoId: 'localVideo',
         isPlayMode: false,
         debug: true,
-        bandwidth: this.maxVideoBitrateKbps,
+        // bandwidth: this.maxVideoBitrateKbps,
         callback: (info, obj) => {
           if (info == 'initialized') {
             console.log('initialized: ', obj)
@@ -687,27 +718,9 @@ export default {
             const room = obj.ATTR_ROOM_NAME
             // this.roomOfStream[obj.streamId] = room
             console.log('++++ joinedTheRoom: ' + room)
-            console.log(obj)
+            // console.log(obj)
 
-            // if (
-            //   obj.streamId === String(this.$store.getters['auth/user'].userId)
-            // ) {
-            //   this.confirm('begin_test')
-            // }
-
-            // console.log('+++ roomOfStream: ', this.roomOfStream)
-
-            // publishStreamId = obj.streamId
             publish(obj.streamId, this.token)
-
-            // if(this.playStart) {
-
-            //   this.isCameraOff = false;
-            //   publish(obj.streamId, this.token);
-            // }
-            // else {
-            //   this.isCameraOff = true;
-            // }
 
             if (obj.streams != null) {
               obj.streams.forEach((item) => {
@@ -746,6 +759,9 @@ export default {
             // document.querySelector('video#localVideoTest').srcObject = stream;
           } else if (info == 'publish_started') {
             //stream is being published
+
+            this.stream = this.webRTCAdaptor.localStream
+
             this.isStreaming = true
             console.log('publish started: ')
             if (
@@ -754,12 +770,12 @@ export default {
               this.confirm('begin_test')
             }
 
-            startAnimation()
-            if (autoRepublishEnabled && this.autoRepublishIntervalJob == null) {
-              this.autoRepublishIntervalJob = setInterval(() => {
-                checkAndRepublishIfRequired()
-              }, 3000)
-            }
+            // startAnimation()
+            // if (autoRepublishEnabled && this.autoRepublishIntervalJob == null) {
+            //   this.autoRepublishIntervalJob = setInterval(() => {
+            //     checkAndRepublishIfRequired()
+            //   }, 3000)
+            // }
             this.webRTCAdaptor.enableStats(obj.streamId)
             // enableAudioLevel();
           } else if (info == 'leavedFromRoom') {
@@ -783,8 +799,8 @@ export default {
             console.log('+++ streamInformation')
             streamInformation(obj)
           } else if (info == 'roomInformation') {
-            console.log('+++ roomInformation: ', obj)
-            console.log('+++ streamsList: ', this.streamsList)
+            // console.log('+++ roomInformation: ', obj)
+            console.log('+++ roomInformation - streamsList: ', this.streamsList)
 
             // this.webRTCAdaptor.play(this.streamId, this.token, this.roomName)
 
@@ -820,7 +836,9 @@ export default {
           } else if (info == 'browser_screen_share_supported') {
             console.log('browser screen share supported')
           } else if (info == 'screen_share_stopped') {
-            console.log('screen share stopped ', obj)
+            console.log('screen share stopped')
+            this.clickElement('pin')
+            this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
           } else if (info == 'closed') {
             console.log('Connection closed')
             this.isStreaming = false
@@ -833,7 +851,7 @@ export default {
             //It's especially useful when load balancer or firewalls close the websocket connection due to inactivity
           } else if (info == 'refreshConnestreamsListction') {
             console.log('refreshConnestreamsListction')
-            checkAndRepublishIfRequired()
+            // checkAndRepublishIfRequired()
           } else if (info == 'ice_connection_state_changed') {
             // console.log('iceConnectionState Changed: ', JSON.stringify(obj))
           } else if (info == 'updated_stats') {
@@ -851,7 +869,7 @@ export default {
             console.log('*** ' + info + ' notification received')
           }
         },
-        callbackError: function (error, message) {
+        callbackError: (error, message) => {
           //some of the possible errors, NotFoundError, SecurityError,PermissionDeniedError
 
           if (
@@ -894,6 +912,8 @@ export default {
               'You are not allowed to reach devices from an insecure origin, please enable ssl'
           } else if (error.indexOf('ScreenSharePermissionDenied') != -1) {
             errorMessage = 'You are not allowed to access screen share'
+            this.clickElement('pin')
+            this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
           } else if (error.indexOf('WebSocketNotConnected') != -1) {
             errorMessage = null // 'WebSocket Connection is disconnected.'
           } else if (error.indexOf('streamIdInUse') != -1) {
@@ -915,7 +935,7 @@ export default {
       })
     }
     //initialize the WebRTCAdaptor
-    initWebRTCAdaptor(true, this.autoRepublishEnabled)
+    if (process.client) initWebRTCAdaptor(true, this.autoRepublishEnabled)
   },
 }
 </script>
