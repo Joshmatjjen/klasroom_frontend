@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-orange-100" style="height: calc(100vh - 80px)">
+  <div class="bg-orange-100" style="height: calc(100vh)">
     <webinar-testing-modal
       v-if="startState === 'closed'"
       startState="closed"
@@ -68,11 +68,19 @@
         <div v-if="startState" class="player-control bg-white flex p-4">
           <div class="flex w-1/3">
             <!-- <img src="/webinar/record.svg" class="mr-2 cursor-pointer" /> -->
-            <img
-              @click="() => switchVideoMode('screenwithcamera')"
-              src="/webinar/sharescreen.svg"
-              class="cursor-pointer"
-            />
+            <div
+              class="screen-share flex flex-col justify-between"
+              @click="
+                () =>
+                  presenting === streamId
+                    ? switchVideoMode('camera')
+                    : switchVideoMode('screenwithcamera')
+              "
+            >
+              <img src="/webinar/sharescreen.svg" class="cursor-pointer" />
+              <p v-if="presenting === streamId">Stop Presenting</p>
+              <p v-else>Start Presenting</p>
+            </div>
           </div>
 
           <div class="flex w-1/3">
@@ -95,7 +103,16 @@
             />
           </div>
 
-          <div class="flex w-1/3"></div>
+          <div class="flex w-1/3 flex-row-reverse border-red-600">
+            <span
+              class="flex items-center justify-center px-3 cursor-pointer"
+              @click="toggleSidebar"
+            >
+              <img
+                :src="webinarSideBar ? '/close.svg' : '/icon/hamburger.svg'"
+              />
+            </span>
+          </div>
         </div>
         <!-- <div id="players" class="players flex">
         
@@ -267,6 +284,7 @@ export default {
     startState: null,
     endMsg: 'Webinar Ended',
     isHost: false,
+    presenting: null,
     maxVideoBitrateKbps: 'unlimited',
     subscriberId: '123', // getUrlParameter("subscriberId"),
     subscriberCode: '123sdef', // getUrlParameter("subscriberCode"),
@@ -333,6 +351,12 @@ export default {
     },
 
     // Chat End
+
+    toggleSidebar() {
+      if (this.webinarSideBar)
+        this.$store.commit('app/SET_WEBINAR_SIDEBAR', null)
+      else this.$store.commit('app/SET_WEBINAR_SIDEBAR', true)
+    },
 
     confirm(state) {
       if (state === 'begin_test') this.startState = 'mic_carmera_test'
@@ -418,10 +442,14 @@ export default {
       } else if (value == 'screenwithcamera') {
         this.webRTCAdaptor.switchDesktopCaptureWithCamera(this.streamId)
         this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
+        this.presenting = this.streamId
         this.clickElement('pin')
       } else {
         this.webRTCAdaptor.switchVideoCameraCapture(this.streamId, value)
         this.sendNotificationEvent('SWITCH_VIDEO_CAM')
+        this.presenting = null
+        this.clickElement('pin')
+        this.sendNotificationEvent('STOP_SCREEN_SHARE')
       }
     },
 
@@ -639,7 +667,13 @@ export default {
           console.log('Microphone unmuted for : ', eventStreamId)
         } else if (eventTyp == 'SWITCH_SCREEN_SHARE') {
           console.log('Screen share for : ', eventStreamId)
+          if (this.presenting !== eventStreamId)
+            this.clickElement(`pin${eventStreamId}`)
+          this.presenting = eventStreamId
+        } else if (eventTyp == 'STOP_SCREEN_SHARE') {
+          console.log('Stop screen share for : ', eventStreamId)
           this.clickElement(`pin${eventStreamId}`)
+          this.presenting = null
         }
       }
     }
@@ -717,7 +751,7 @@ export default {
           } else if (info == 'joinedTheRoom') {
             const room = obj.ATTR_ROOM_NAME
             // this.roomOfStream[obj.streamId] = room
-            console.log('++++ joinedTheRoom: ' + room)
+            console.log('++++ joinedTheRoom: ' + obj)
             // console.log(obj)
 
             publish(obj.streamId, this.token)
@@ -730,11 +764,17 @@ export default {
               this.streamsList = obj.streams
             }
             this.roomTimerId = setInterval(() => {
-              this.webRTCAdaptor.getRoomInfo(this.roomName, this.streamId)
+              this.webRTCAdaptor.getRoomInfo(
+                this.roomName,
+                this.streamId,
+                this.presenting
+              )
             }, 5000)
           } else if (info == 'newStreamAvailable') {
             console.log('++++ newStreamAvailable' + obj)
             playVideo(obj)
+            if (this.presenting === this.streamId)
+              this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
           } else if (info == 'bitrateMeasurement') {
             // console.log('++++ bitrateMeasurement: ', obj)
           } else if (info == 'available_devices') {
@@ -799,8 +839,8 @@ export default {
             console.log('+++ streamInformation')
             streamInformation(obj)
           } else if (info == 'roomInformation') {
-            // console.log('+++ roomInformation: ', obj)
-            console.log('+++ roomInformation - streamsList: ', this.streamsList)
+            console.log('+++ roomInformation: ', obj)
+            console.log('+++ streamsList: ', this.streamsList)
 
             // this.webRTCAdaptor.play(this.streamId, this.token, this.roomName)
 
@@ -837,8 +877,9 @@ export default {
             console.log('browser screen share supported')
           } else if (info == 'screen_share_stopped') {
             console.log('screen share stopped')
+            this.presenting = null
             this.clickElement('pin')
-            this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
+            this.sendNotificationEvent('STOP_SCREEN_SHARE')
           } else if (info == 'closed') {
             console.log('Connection closed')
             this.isStreaming = false
@@ -913,7 +954,8 @@ export default {
           } else if (error.indexOf('ScreenSharePermissionDenied') != -1) {
             errorMessage = 'You are not allowed to access screen share'
             this.clickElement('pin')
-            this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
+            this.presenting = null
+            this.sendNotificationEvent('STOP_SCREEN_SHARE')
           } else if (error.indexOf('WebSocketNotConnected') != -1) {
             errorMessage = null // 'WebSocket Connection is disconnected.'
           } else if (error.indexOf('streamIdInUse') != -1) {
@@ -946,8 +988,7 @@ export default {
 }
 
 .main-video {
-  padding: 10px;
-  height: calc(100vh - 180px);
+  height: calc(100vh - 100px);
   width: 100%;
   position: relative;
   overflow: auto;
@@ -973,7 +1014,7 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border: 2px solid #cccccc;
+  border: 1px solid #000000;
 }
 
 .players {
@@ -991,12 +1032,17 @@ export default {
 }
 
 .player-control {
-  width: calc(100% - 20px);
+  width: calc(100%);
   height: 100px;
-  margin: 0 auto;
   bottom: 10px;
   border: 1px solid #cccccc;
   z-index: 1;
+}
+
+.screen-share {
+  padding: 8px;
+  border: 1px solid #cccccc;
+  font-size: 0.7rem;
 }
 
 .main-video:hover .player-control {
