@@ -247,6 +247,43 @@ export const actions = {
     }
   },
 
+  async changeProfileImage(vuexContext, imageData) {
+    console.log('Data >>', imageData)
+    const formData = new FormData()
+    formData.append('image', imageData, '.png')
+    try {
+      console.log(formData)
+      const { data } = await this.$axios.$post(
+        '/uploads/profile-image',
+        formData
+      )
+      if (data) {
+        console.log('profile-image changed success: ', data)
+        // vuexContext.commit('UPDATE_USER', data)
+        // localStorage.setItem('user', JSON.stringify(data))
+        // Cookie.set('user', JSON.stringify(data))
+        // const expirationDate = new Date().getTime() + 86400 * 1000 // 24 hrs duration
+        // vuexContext.commit('SET_TOKEN', data.accessToken)
+        // vuexContext.commit('FETCH_USER_SUCCESS', data)
+        // vuexContext.commit('SET_EXPIRATION_DATE', expirationDate)
+
+        // localStorage.setItem('token', data.accessToken)
+        // localStorage.setItem('tokenExpiration', expirationDate)
+        // localStorage.setItem('user', JSON.stringify(data))
+
+        // Cookie.set('jwt', data.accessToken)
+        // Cookie.set('expirationDate', expirationDate)
+        // Cookie.set('user', JSON.stringify(data))
+
+        return data
+      }
+      return false
+    } catch (e) {
+      // console.log('fetch user failed: ', e)
+      return false
+    }
+  },
+
   async fetchBank({ commit, state }) {
     try {
       const uid = state.user.id

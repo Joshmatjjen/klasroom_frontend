@@ -93,7 +93,12 @@
                     <div
                       class="change-picture col-span-12 text-white mx-auto my-auto"
                     >
-                      <button class="focus:outline-none">Change Picture</button>
+                      <button
+                        class="focus:outline-none"
+                        v-on:click.prevent="toggleEditImage()"
+                      >
+                        Change Picture
+                      </button>
                     </div>
                   </div>
                   <div
@@ -172,6 +177,11 @@ export default {
   methods: {
     toggleEditProfile() {
       this.$store.commit('app/EDIT_PROFILE_MODAL', {
+        status: true,
+      })
+    },
+    toggleEditImage() {
+      this.$store.commit('app/EDIT_IMAGE_MODAL', {
         status: true,
       })
     },
