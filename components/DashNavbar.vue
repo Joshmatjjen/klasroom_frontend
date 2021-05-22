@@ -1,6 +1,11 @@
 <template>
   <div class="container mx-auto">
-    <div @click="toggleUserMenu" :class="{ hidden: !userMenu }" class="fixed" :style="{ width: '100%', height: '100vh', zIndex: 2 }"></div>
+    <div
+      @click="toggleUserMenu"
+      :class="{ hidden: !userMenu }"
+      class="fixed"
+      :style="{ width: '100%', height: '100vh', zIndex: 2 }"
+    ></div>
     <nav class="flex items-center justify-between flex-wrap py-4 md:py-6">
       <h5
         class="flex items-center flex-shrink-0 mr-6 ml-4 lg:ml-0 font-extrabold text-gray-700"
@@ -73,14 +78,15 @@
             </div>
           </a>
         </div> -->
-        <user-dropdown 
+        <user-dropdown
           :userDash="userDash"
           :userType="userType"
           :userMenu="userMenu"
           :user="user"
-          :toggleUserMenu="toggleUserMenu" 
+          :toggleUserMenu="toggleUserMenu"
           :logout="logout"
           :switchDash="switchDash"
+          :profileImage="profileImage"
         >
         </user-dropdown>
       </div>
@@ -102,11 +108,13 @@ export default {
       darkMenu: (state) => state.app.darkMenu,
       title: (state) => state.app.pageTitle,
       user: (state) => state.auth.user,
-      userType: (state) => state.auth.user && state.auth.user.isTutor ? "tutor" : "student",
+      userType: (state) =>
+        state.auth.user && state.auth.user.isTutor ? 'tutor' : 'student',
+      profileImage: (state) => state.auth.profileImage,
     }),
     userDash() {
       return this.$route.path.split('/')[1]
-    }
+    },
   },
   methods: {
     toggleMenu() {
@@ -126,17 +134,15 @@ export default {
       this.$store.dispatch('auth/logout')
     },
     switchDash() {
-      if (this.userDash === "student" && this.userType === "tutor")
+      if (this.userDash === 'student' && this.userType === 'tutor')
         this.$router.push(`/tutor/dashboard`)
-      else if (this.userDash === "student" && this.userType === "student") {
+      else if (this.userDash === 'student' && this.userType === 'student') {
         // Become a tutor
         console.log('become a tutor...')
         // this.toggleUserMenu()
         this.$store.commit('app/BECOME_A_TUTOR_MODAL', true)
-      }
-      else
-        this.$router.push(`/student/dashboard`);
-    }
+      } else this.$router.push(`/student/dashboard`)
+    },
   },
 }
 </script>

@@ -246,7 +246,9 @@ export default {
           this.loading = false
           console.log(res)
           if (res) {
-            this.showSuccess('image uploaded successful')
+            this.showSuccess({
+              message: 'You have successfully updated your profie image',
+            })
           }
         })
         .catch((e) => console.log('e: ', e))

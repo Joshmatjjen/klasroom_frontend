@@ -7,6 +7,7 @@ export const state = () => ({
   token: null,
   expirationDate: null,
   bank: null,
+  profileImage: null,
 })
 
 // getters
@@ -23,6 +24,10 @@ export const getters = {
 export const mutations = {
   SET_TOKEN(state, token) {
     state.token = token
+  },
+
+  SET_PROFILE_IMAGE(state, profileImage) {
+    state.profileImage = profileImage
   },
 
   SET_EXPIRATION_DATE(state, expirationDate) {
@@ -164,6 +169,7 @@ export const actions = {
         vuexContext.commit('SET_TOKEN', data.accessToken)
         vuexContext.commit('FETCH_USER_SUCCESS', data)
         vuexContext.commit('SET_EXPIRATION_DATE', expirationDate)
+        vuexContext.commit('SET_PROFILE_IMAGE', data.image)
 
         localStorage.setItem('token', data.accessToken)
         localStorage.setItem('tokenExpiration', expirationDate)
@@ -259,7 +265,7 @@ export const actions = {
       )
       if (data) {
         console.log('profile-image changed success: ', data)
-        // vuexContext.commit('UPDATE_USER', data)
+        vuexContext.commit('SET_PROFILE_IMAGE', data.image)
         // localStorage.setItem('user', JSON.stringify(data))
         // Cookie.set('user', JSON.stringify(data))
         // const expirationDate = new Date().getTime() + 86400 * 1000 // 24 hrs duration

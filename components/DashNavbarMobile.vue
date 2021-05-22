@@ -26,7 +26,7 @@
         <a href="#" class="inline-block relative" @click="toggleUserMenu">
           <span
             class="user-avatar mr-1"
-            :style="{ backgroundImage: 'url(/avatar.jpg)' }"
+            :style="{ backgroundImage: 'url(' + profileImage + ')' }"
           ></span>
           <div
             class="user-menu-drop shadow-hover relative"
@@ -82,6 +82,7 @@ export default {
       user: (state) => state.auth.user,
       userType: (state) =>
         state.auth.user && state.auth.user.isTutor ? 'tutor' : 'student',
+      profileImage: (state) => state.auth.profileImage,
     }),
   },
   props: {

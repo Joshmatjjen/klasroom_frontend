@@ -86,7 +86,12 @@
               class="bg-white rounded-xl border border-gray-300 shadow-hover relative min-h-full"
             >
               <div class="block mb-2">
-                <div class="big-avatar relative rounded-xl overflow-hidden">
+                <div
+                  class="big-avatar relative rounded-xl overflow-hidden"
+                  v-bind:style="{
+                    backgroundImage: 'url(' + profileImage + ')',
+                  }"
+                >
                   <div
                     class="grid grid-cols-12 place-items-center py-32 md:py-32 lg:py-40 xl:py-48"
                   >
@@ -171,6 +176,7 @@ export default {
   computed: {
     ...mapState({
       user: (state) => state.auth.user,
+      profileImage: (state) => state.auth.profileImage,
     }),
   },
 
@@ -178,6 +184,7 @@ export default {
     toggleEditProfile() {
       this.$store.commit('app/EDIT_PROFILE_MODAL', {
         status: true,
+        image: this.profileImage,
       })
     },
     toggleEditImage() {
@@ -197,7 +204,7 @@ export default {
 <style scoped>
 .big-avatar {
   width: 100%;
-  background-image: url('/avatar-large.jpg');
+  background-image: url('https://www.pngkey.com/png/full/115-1150420_avatar-png-pic-male-avatar-icon-png.png');
   background-repeat: no-repeat;
   background-size: cover;
   @apply bg-gray-200;

@@ -1,7 +1,17 @@
 <template>
   <div :class="{ 'bg-orange-100': darkMenu }">
-    <div @click="toggleUserMenu" :class="{ hidden: !userMenu }" class="fixed" :style="{ width: '100%', height: '100vh', zIndex: 2 }"></div>
-    <div @click="() => toggleOpt('all')" :class="{ hidden: !loginOpt && !signUpOpt }" class="fixed" :style="{ width: '100%', height: '100vh', zIndex: 2 }"></div>
+    <div
+      @click="toggleUserMenu"
+      :class="{ hidden: !userMenu }"
+      class="fixed"
+      :style="{ width: '100%', height: '100vh', zIndex: 2 }"
+    ></div>
+    <div
+      @click="() => toggleOpt('all')"
+      :class="{ hidden: !loginOpt && !signUpOpt }"
+      class="fixed"
+      :style="{ width: '100%', height: '100vh', zIndex: 2 }"
+    ></div>
     <div class="container mx-auto">
       <nav class="flex items-center justify-between flex-wrap py-4 md:py-6">
         <nuxt-link
@@ -52,12 +62,16 @@
               Blog
             </nuxt-link>
           </div>
-          <div v-if="user" class="mt-8 md:mt-0 mb-6 md:mb-0 flex flex-row relative">
-            <user-dropdown 
+          <div
+            v-if="user"
+            class="mt-8 md:mt-0 mb-6 md:mb-0 flex flex-row relative"
+          >
+            <user-dropdown
               :userMenu="userMenu"
               :user="user"
-              :toggleUserMenu="toggleUserMenu" 
+              :toggleUserMenu="toggleUserMenu"
               :logout="logout"
+              :profileImage="profileImage"
             >
             </user-dropdown>
           </div>
@@ -167,6 +181,7 @@ export default {
     ...mapState({
       darkMenu: (state) => state.app.darkMenu,
       user: (state) => state.auth.user,
+      profileImage: (state) => state.auth.profileImage,
     }),
   },
   methods: {
@@ -196,9 +211,8 @@ export default {
     toggleOpt(type) {
       if (type === 'all') {
         this.signUpOpt = false
-        this.loginOpt = false  
-      }
-      else if (type === 'signup') this.signUpOpt = !this.signUpOpt
+        this.loginOpt = false
+      } else if (type === 'signup') this.signUpOpt = !this.signUpOpt
       else if (type === 'login') this.loginOpt = !this.loginOpt
     },
     toggleUserMenu(e) {
