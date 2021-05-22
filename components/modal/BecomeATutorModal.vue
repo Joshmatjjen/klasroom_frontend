@@ -3,7 +3,7 @@
     Tailwind UI components require Tailwind CSS v1.8 and the @tailwindcss/ui plugin.
     Read the documentation to get started: https://tailwindui.com/documentation
   -->
-  <div v-if="showModal" class="fixed z-10 inset-0 overflow-y-auto">
+  <div v-if="showModal" class="fixed inset-0 overflow-y-auto" style="z-index: 2002;">
     <div
       class="flex items-start justify-center min-h-screen pt-4 px-4 pb-4 lg:pb-20 text-center sm:block sm:p-0"
     >
@@ -82,34 +82,19 @@
               <hr class="mt-8 mb-5" />
               
               <form id="signup-form">
-
-                <div class="form-group mb-5">
-                  <label for="input-password">Password</label>
-                  <div>
-                    <input
-                      id="input-password"
-                      type="password"
-                      class="form-input"
-                      placeholder="Enter your password here"
-                      v-model="signupForm.password"
-                    />
-                  </div>
-                </div>
                 <div class="form-group">
                   <label for="input-courseCategories">Course Categories</label>
                   <div>
-                    <select
-                      id="input-password"
-                      multiple
-                      class="form-input"
-                      v-model="signupForm.courseCategories"
-                    >
-                      <option disabled value="">Select Course Categories</option>
-                      <option value="Programming">Programming</option>
-                      <option value="Business">Business</option>
-                      <option value="Finance">Finance</option>
-                    </select>
+                    <v-select 
+                      class="form-input style-chooser"
+                      placeholder="Select Course Categories"
+                      multiple 
+                      v-model="signupForm.courseCategories" 
+                      :options="coursesCategories"
+                      @input="checkFormError"
+                    />
                   </div>
+                  <span v-if="formError" class="text-sm text-red-700">Course categories is required</span>
                 </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
@@ -142,13 +127,14 @@ export default {
     isLogin: true,
     loading: false,
     signupForm: {
-      password: "",
       courseCategories: []
     },
+    formError: false,
   }),
   computed: {
     ...mapState({
       showModal: (state) => state.app.becomeATutorModal,
+      coursesCategories: (state) => state.app.coursesCategories,
     }),
   },
   // watch: {
@@ -162,8 +148,15 @@ export default {
   //   },
   // },
   methods: {
+    checkFormError() {
+      this.formError = false;
+    },
     onSignUp(e, userType) {
       if (e) e.preventDefault()
+      if (!this.signupForm.courseCategories.length) {
+        this.formError = true;
+        return;
+      }
       this.loading = true
       const data = {
         ...this.signupForm
@@ -176,23 +169,22 @@ export default {
         this.loading = false
         if (res) {
           this.clearInput()
-          this.showSuccess()
+          this.showSuccess(res)
         }
       }).catch(e => console.log('e: ', e));
     },
     
-    showSuccess() {
+    showSuccess(res) {
       this.$store.commit('app/NOTICE_MODAL', {
         title: 'All done!',
-        text: `You have successfully become a tutor. 
+        text: res.message ? res.message : `You have successfully become a tutor. 
           You can now switch to tutor dashboard.`,
       })
       this.$store.commit('app/BECOME_A_TUTOR_MODAL', false)
     },
     clearInput() {
       this.signupForm = {
-        password: "",
-        courseCategories: ""
+        courseCategories: []
       }
     }
   },

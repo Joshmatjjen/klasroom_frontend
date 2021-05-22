@@ -20,9 +20,13 @@ export default {
         name: 'description',
         content: process.env.npm_package_description || '',
       },
-      { "http-equiv": 'Content-Security-Policy', content: "img-src 'self' data: *; default-src 'self' data: 'unsafe-inline' 'unsafe-eval' https://*; connect-src 'self' https://*" },
+      { "http-equiv": 'Content-Security-Policy', content: "img-src 'self' data: *; default-src 'self' data: 'unsafe-inline' 'unsafe-eval' https://*; connect-src 'self' https://* ws://* wss://*" },
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    script: [
+      { src:"https://webrtc.github.io/adapter/adapter-latest.js" },
+      // { src:"js/webrtc_adaptor.js" }
+    ]
   },
   /*
    ** Global CSS
@@ -38,10 +42,14 @@ export default {
     '~plugins/vform',
     '~plugins/axios',
     '~plugins/vue2-filters',
+    '~plugins/webrtc-adaptor',
     { src: '~plugins/validate', mode: 'client' },
     { src: '~plugins/datepicker', mode: 'client' },
+    { src: '~plugins/vue-select', mode: 'client' },
+    // { src: '~plugins/vue-video-player', mode: 'client' },
     { src: '~plugins/paystack', mode: 'client' },
     { src: '~/plugins/vue-good-table', ssr: false },
+    // { src: '~plugins/webrtc-adaptor', ssr: false },
   ],
   /*
    ** Auto import components
@@ -94,6 +102,7 @@ export default {
       new webpack.ProvidePlugin({
         _: 'lodash',
         moment: 'moment',
+        adapter: 'webrtc-adapter'
         // $: 'jquery',
         // jQuery: 'jquery'
       }),

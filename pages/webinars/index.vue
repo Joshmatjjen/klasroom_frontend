@@ -17,7 +17,7 @@
             <h5 class="mb-8 leading-normal">
               Learn from seasoned and experienced experts.
             </h5>
-            <button class="btn btn-primary">Create Webinar</button>
+            <button @click.prevent="signinCallBackAction" class="btn btn-primary">Create Webinar</button>
           </div>
         </div>
       </div>
@@ -67,5 +67,22 @@ export default {
     tags,
     webinars,
   }),
+  methods: {
+    signinCallBackAction() {
+        
+      if (this.$store.getters["auth/user"])
+        this.$router.push("/student/webinars/new");
+
+      else
+        this.$store.commit('app/LOGIN_MODAL', {
+          status: true, 
+          type: 'login', 
+          userType: 'student',
+          callback: () => {
+            this.$router.push("/student/webinars/new")
+          }
+        });
+    }
+  }
 }
 </script>

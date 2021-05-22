@@ -87,17 +87,20 @@
                       type="email"
                       placeholder="Enter your email here"
                       v-model="form.email"
+                      @input="checkFormError"
                     />
                   </div>
+                  <span v-if="formError" class="text-sm text-red-700">Email address is required</span>
                 </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
                     <button
                       type="button"
                       class="btn btn-primary shadow"
-                      @click="proceed"
+                      @click.prevent="proceed"
                     >
                       Request password reset
+                      <loader v-if="loading" color="white" />
                     </button>
                   </span>
                 </div>
@@ -113,6 +116,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import Swal from 'sweetalert2'
 
 export default {
   data: () => ({
@@ -120,6 +124,7 @@ export default {
       email: '',
     },
     loading: false,
+    formError: false,
   }),
   computed: {
     ...mapState({
@@ -127,8 +132,17 @@ export default {
     }),
   },
   methods: {
+    checkFormError() {
+      this.formError = false;
+    },
     proceed(e) {
       if (e) e.preventDefault()
+      this.loading = true
+      if (!this.form.email) {
+        this.formError = true;
+        this.loading = false;
+        return;
+      }
       this.$store.dispatch("auth/forgetPassword", {
         ...this.form,
       })
@@ -136,7 +150,17 @@ export default {
         this.loading = false
         if (res) {
           this.$store.commit('app/RESET_PASSWORD_MODAL', this.form.email)
-          this.$store.commit('app/FORGOT_PASSWORD_MODAL', false)
+          this.$store.commit('app/FORGOT_PASSWORD_MODAL', false);
+          Swal.fire({
+            position: 'top-end',
+            width: '350px',
+            text: res.message ? res.message : 'A message was sent to the email associated with your account.',
+            backdrop: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            showCloseButton: true,
+            timer: 10000,
+          })
         }
       }).catch(e => console.log('e: ', e));
     },

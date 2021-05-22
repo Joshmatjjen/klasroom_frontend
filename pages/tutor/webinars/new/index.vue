@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div
+    <!-- <div
       @click="toggleMeetingOpt"
       :class="{ hidden: !meetingOpt }"
       class="fixed"
@@ -10,14 +10,17 @@
         zIndex: 2,
         marginLeft: '-300px',
       }"
-    ></div>
+    ></div> -->
     <section class="bg-orange-100">
-      <div class="container mx-auto">
-        <div class="grid grid-cols-12">
+      <div class="mx-auto flex items-center align-middle justify-center">
+        <div
+          class="grid grid-cols-12 mt-8 md:mb-6 lg:mb-20 xl:mb-24 md:mx-0 lg:mx-5 xl:mx-0"
+        >
+          <!-- Left -->
           <div class="col-span-12 md:col-span-6 px-4 lg:px-0">
-            <h1 class="font-bold leading-tight md:mt-20 mt-10 lg:-mr-8">
-              <!-- Webinars and courses to up your game 🚀🚀 -->
-              <!-- Relevant knowledge to start earning immediately -->
+            <h1
+              class="font-bold leading-tight sm:mt-0 md:mt-0 lg:mt-10 lg:-mr-8"
+            >
               Create video meetings and webinars for free.
             </h1>
             <h5 class="mt-10 mb-8 leading-normal">
@@ -26,64 +29,95 @@
               strategies for building successful businesses in Africa.
             </h5>
 
-            <div class="flex text-center pt-8 pb-4 sm:pb-4">
-              <span class="flex mr-3">
-                <nuxt-link
-                  to="/tutor/webinars/create"
-                  class="btn text-white bg-blue-500 shadow"
-                >
-                  <img src="/icon/webinars.svg" class="inline h-5 mr-2" />
-                  New Webinar
-                </nuxt-link>
-              </span>
-            </div>
+            <div class="flex text-center pt-8 pb-4 sm:pb-4 mb-10">
+              <div class="flex text-center md:pt-8 md:pb-4 sm:pb-8">
+                <span class="flex mr-3">
+                  <nuxt-link
+                    to="/tutor/webinars/create"
+                    class="btn2 p-3 lg:px-5 text-xs sm:text-xs md:text-xs lg:text-sm xl:text-sm text-white bg-blue-500 shadow"
+                  >
+                    <img src="/icon/webinars.svg" class="inline h-5 mr-2" />
+                    New Webinar
+                  </nuxt-link>
+                </span>
+              </div>
 
-            <div class="flex text-center pt-1 pb-4 sm:pb-4 relative">
-              <span class="flex mr-3">
-                <button
-                  type="button"
-                  class="btn btn-primary shadow"
-                  @click.prevent="toggleMeetingOpt"
+              <div class="flex text-center md:pt-8 md:pb-4 sm:pb-4 relative">
+                <span class="flex mr-3">
+                  <button
+                    type="button"
+                    class="btn2 p-3 lg:px-5 text-xs sm:text-xs md:text-xs lg:text-sm xl:text-sm btn2-primary shadow"
+                    @click.prevent="toggleMeetingOpt"
+                  >
+                    <img src="/icon/camera.svg" class="inline h-5 mr-2" />
+                    New Meeting
+                  </button>
+                </span>
+                <!-- <input class="search-box" placeholder="Enter code or link" /> -->
+                <div
+                  :class="{ hidden: !meetingOpt }"
+                  class="pop-up absolute bg-white border-1 right-0 top-0 mt-5 rounded-lg h-52 shadow-lg text-left"
+                  :style="{ zIndex: 2 }"
                 >
-                  <img src="/icon/camera.svg" class="inline h-5 mr-2" />
-                  New Meeting
-                </button>
-              </span>
-              <input class="search-box" placeholder="Enter code or link" />
-              <div
-                :class="{ hidden: !meetingOpt }"
-                class="pop-up absolute bg-white border-1 right-0 rounded-lg h-52 shadow-lg text-left"
-                :style="{ zIndex: 2 }"
-              >
-                <a
-                  href="#"
-                  class="pop-up-item hover:bg-gray-200 md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                >
-                  <p>Create a meeting for later</p>
-                </a>
-                <a
-                  href="#"
-                  class="pop-up-item hover:bg-gray-200 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                >
-                  <p>Start an instant meeting</p>
-                </a>
-                <a
-                  href="#"
-                  class="pop-up-item hover:bg-gray-200 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
-                >
-                  <p>Schedule a meeting</p>
-                </a>
+                  <a
+                    href="#"
+                    class="pop-up-item hover:bg-gray-200 md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                  >
+                    <p>Create a meeting for later</p>
+                  </a>
+                  <a
+                    href="#"
+                    class="pop-up-item hover:bg-gray-200 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                  >
+                    <p>Start an instant meeting</p>
+                  </a>
+                  <a
+                    href="#"
+                    class="pop-up-item hover:bg-gray-200 md:text-black md:bg-transparent block md:inline-block mb-5 md:mb-0"
+                  >
+                    <p>Schedule a meeting</p>
+                  </a>
+                </div>
               </div>
             </div>
+          </div>
+          <!-- Right -->
+          <div class="col-span-12 md:col-span-6 px-4 lg:px-0">
+            <toggle-switch
+              v-model="isAnnually"
+              active="Monthly"
+              inactive="Annually"
+              class="mb-6"
+            />
+            <div
+              class="col-span-12 grid grid-row-3 grid-flow-col sm:mx-10 lg:mx-12 xl:mx-16 mt-5 items-center"
+            >
+              <div class="flex justify-center">
+                <span
+                  class="md:text-3xl lg:text-2xl text-2xl text-gray-600 hover:text-white h-12 w-12 bg-gray-200 hover:bg-black rounded-full flex align-middle justify-center items-center cursor-pointer"
+                  @click="togglePrice(priceSwitch === 0 ? 1 : 0)"
+                  >&#x3c;</span
+                >
+              </div>
 
-            <div class="mt-8 mb-6 lg:mb-40">
-              <hr />
+              <price-card
+                :priceData="
+                  priceSwitch === 0 ? planBasicData : planCorporateData
+                "
+                :priceInfo="
+                  priceSwitch === 0 ? planBasicInfo : planCorporateInfo
+                "
+                :isAnnually="isAnnually"
+              />
+              <div class="flex justify-center">
+                <span
+                  class="md:text-3xl lg:text-2xl text-2xl text-gray-600 hover:text-white h-12 w-12 bg-gray-200 hover:bg-black rounded-full flex align-middle justify-center items-center cursor-pointer"
+                  @click="togglePrice(priceSwitch === 1 ? 0 : 1)"
+                  >&#x3e;</span
+                >
+              </div>
             </div>
           </div>
-          <img
-            src="/home-illust.svg"
-            class="lg:absolute lg:top-0 right-0 col-span-12 lg:mt-32 xl:mr-6 lg:-mr-16"
-          />
         </div>
       </div>
     </section>
@@ -95,9 +129,39 @@ import Vue from 'vue'
 
 export default {
   layout: 'dashboard',
-  middleware: ['check-auth', 'auth'],
+  middleware: ['check-auth', 'auth', 'isTutor'],
   data: () => ({
     meetingOpt: false,
+    isAnnually: false,
+    planBasicData: {
+      name: 'Basic',
+      monthlyPrice: '₦2,900',
+      annualPrice: '₦25,000',
+      description: 'Or ₦50,000 billed annualy',
+      color: 'orange-500',
+    },
+    planBasicInfo: [
+      'Host up to 100 people',
+      '3 hosts',
+      '4 hours limit',
+      'Single host screen sharing',
+      'Create polls',
+    ],
+    planCorporateData: {
+      name: 'Corporate',
+      monthlyPrice: '₦9,000',
+      annualPrice: '₦108,000',
+      description: 'Or ₦50,000 billed annualy',
+      color: 'blue-500',
+    },
+    planCorporateInfo: [
+      'Host up to 500 people',
+      '8 hosts',
+      'Unlimited streaming time',
+      'Multiple host screen sharing',
+      'Create polls',
+    ],
+    priceSwitch: 0,
   }),
   fetch({ store }) {
     store.commit('app/SET_TITLE', 'New Meeting or Webinar')
@@ -106,11 +170,18 @@ export default {
     toggleMeetingOpt() {
       this.meetingOpt = !this.meetingOpt
     },
+    togglePrice(priceState) {
+      console.log(priceState)
+      this.priceSwitch = priceState
+    },
   },
 }
 </script>
 
 <style scoped>
+/* .webinar-btn {
+  @apply text-xs p-3  !important;
+} */
 .search-box {
   background-image: url('/icon/search.svg');
   background-repeat: no-repeat;

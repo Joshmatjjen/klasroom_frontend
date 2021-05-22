@@ -87,8 +87,10 @@
                       class="form-input"
                       placeholder="Enter code that was sent to your email"
                       v-model="form.token"
+                      @input="checkFormError('token')"
                     />
                   </div>
+                  <span v-if="formError.find(i => i === 'token')" class="text-sm text-red-700">Code is required</span>
                 </div>
                 <div class="form-group mb-5">
                   <label for="input-password">New Password</label>
@@ -99,19 +101,32 @@
                       class="form-input"
                       placeholder="Enter your password here"
                       v-model="form.password"
+                      @input="() => {
+                        checkFormError('password')
+                        checkConfirmPassword()
+                      }"
                     />
                   </div>
+                  <span v-if="formError.find(i => i === 'password')" class="text-sm text-red-700">Password categories is required</span>
                 </div>
-                <!-- <div class="form-group">
-                  <label for="input-re_password">New Password</label>
+                <div class="form-group">
+                  <label for="input-re_password">Confirm Password</label>
                   <div>
                     <input
                       id="input-re_password"
+                      type="password"
                       class="form-input"
-                      placeholder="Repeat password"
+                      placeholder="Confirm password"
+                      v-model="form.confirmPassword"
+                      @input="() => {
+                        checkFormError('confirmPassword')
+                        checkConfirmPassword()
+                      }"
                     />
                   </div>
-                </div> -->
+                  <span v-if="formError.find(i => i === 'confirmPassword')" class="text-sm text-red-700 block">Confirm password categories is required</span>
+                  <span v-if="showConfirmPasswordErr" class="text-sm text-red-700">Confirm password dosen't match</span>
+                </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
                     <button
@@ -151,9 +166,12 @@ export default {
   data: () => ({
     form: {
       password: '',
+      confirmPassword: '',
       token: ''
     },
     loading: false,
+    formError: [],
+    showConfirmPasswordErr: false,
   }),
   computed: {
     ...mapState({
@@ -161,9 +179,31 @@ export default {
     }),
   },
   methods: {
+    checkConfirmPassword() {
+      this.showConfirmPasswordErr = false;
+    },
+    checkFormError(value) {
+      this.formError = this.formError.filter(i => i !== value);
+    },
     resetPassword(e) {
       if (e) e.preventDefault()
-      this.loading = true
+      if (this.form.password !== this.form.confirmPassword) {
+        this.showConfirmPasswordErr = true;
+        return;
+      }
+      this.loading = true;
+
+      for (let i in this.form) {
+        console.log(i)
+        if (this.form[i].length === 0) {
+          this.formError.push(i);
+        }
+      }
+
+      if (this.formError.length) {
+        this.loading = false;
+        return;
+      }
 
       this.$store.dispatch("auth/resetPassword", {
         ...this.form,
@@ -172,14 +212,14 @@ export default {
         this.loading = false
         if (res) {
           this.clearInput()
-          this.showSuccess()
+          this.showSuccess(res)
         }
       }).catch(e => console.log('e: ', e));
     },
-    showSuccess() {
+    showSuccess(res) {
       this.$store.commit('app/NOTICE_MODAL', {
         title: 'Congratulations!',
-        text: `Your password has been changed successfully. 
+        text: res.message ? res.message : `Your password has been changed successfully. 
           Please log in to your account to proceed.`,
         confirmCallback: () => {
           this.$store.commit('app/LOGIN_MODAL', {
@@ -193,12 +233,15 @@ export default {
       this.$store.commit('app/RESET_PASSWORD_MODAL', false)
     },
     forgotPassword() {
+      this.clearInput();
+      this.formError = [];
       this.$store.commit('app/FORGOT_PASSWORD_MODAL', true)
       this.$store.commit('app/RESET_PASSWORD_MODAL', false)
     },
     clearInput() {
       this.form = {
         password: "",
+        confirmPassword: '',
         token: ''
       }
     },

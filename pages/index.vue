@@ -86,7 +86,7 @@
                 Klasroom is the platform for you to reach thousands of 
                 learners and earn maximally. Create and sell your 
                 pre-recorded courses here.`"
-              link-url="/account/courses/create"
+              link-url="/tutor/courses/create"
               link-text="Create a course"
             />
           </div>
@@ -98,7 +98,7 @@
               title="Host &amp; Sell Webinars"
               :desc="`Create or host well-loved webinars on Klasroom to a wide 
                 variety of audience and expand your stream of income.`"
-              link-url="/account/webinars/create"
+              link-url="/student/webinars/new"
               link-text="Create a webinar"
             />
           </div>
