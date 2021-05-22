@@ -642,11 +642,12 @@ export class WebRTCAdaptor {
     this.webSocketAdaptor.send(JSON.stringify(jsCmd))
   }
 
-  getRoomInfo(roomName, streamId) {
+  getRoomInfo(roomName, streamId, presenting) {
     var jsCmd = {
       command: 'getRoomInfo',
       streamId: streamId,
       room: roomName,
+      presenting,
     }
     this.webSocketAdaptor.send(JSON.stringify(jsCmd))
   }
@@ -1507,7 +1508,6 @@ export class WebRTCAdaptor {
    */
   getVideoSender(streamId) {
     var videoSender = null
-    console.log('adapter: ', adapter)
     if (
       (adapter.default.browserDetails.browser === 'chrome' ||
         adapter.default.browserDetails.browser === 'firefox' ||
