@@ -247,17 +247,9 @@ export default {
       this.$store.commit('app/CHANGE_PASSWORD_MODAL', null)
     },
     clearInput() {
-      this.signupForm = {
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-        courseCategories: [],
-      }
-
-      this.loginForm = {
-        userIdentity: '',
-        password: '',
+      this.changePasswordForm = {
+        oldPassword: '',
+        newPassword: '',
       }
     },
   },

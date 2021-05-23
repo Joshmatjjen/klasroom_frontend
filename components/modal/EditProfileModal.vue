@@ -262,17 +262,11 @@ export default {
       this.$store.commit('app/EDIT_PROFILE_MODAL', null)
     },
     clearInput() {
-      this.signupForm = {
+      this.editProfileForm = {
         name: '',
-        email: '',
         phone: '',
-        password: '',
-        courseCategories: [],
-      }
-
-      this.loginForm = {
-        userIdentity: '',
-        password: '',
+        email: '',
+        gender: '',
       }
     },
   },

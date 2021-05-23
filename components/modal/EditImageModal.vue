@@ -50,7 +50,6 @@
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
               @click="
                 () => {
-                  clearInput()
                   close()
                 }
               "
@@ -189,7 +188,7 @@ export default {
   methods: {
     change({ coordinates, canvas }) {
       canvas.toBlob((blob) => {
-        console.log('blob data', blob)
+        // console.log('blob data', blob)
         this.newImageData = blob
       })
 
@@ -217,7 +216,7 @@ export default {
       }
     },
     showFileChooser() {
-      console.log(this.profileImage)
+      // console.log(this.profileImage)
       this.$refs.input.click()
     },
     onSave(e, userId) {
