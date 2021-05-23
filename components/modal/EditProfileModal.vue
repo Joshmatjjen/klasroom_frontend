@@ -211,15 +211,6 @@ export default {
     //   },
     //   immediate: true,
     // },
-    // isLogin(value) {
-    //   this.editProfileFormError = []
-    //   this.signupFormError = []
-    //   this.isStudent = false
-    //   this.clearInput()
-    // },
-    // isStudent(value) {
-    //   this.signupFormError = []
-    // },
   },
   methods: {
     onGenderChange(value) {
@@ -243,17 +234,6 @@ export default {
       const data = {
         ...this.editProfileForm,
       }
-
-      // for (let i in data) {
-      //   console.log(i)
-      //   if (data[i].length === 0) {
-      //     this.editProfileFormError.push(i)
-      //   }
-      // }
-      // if (this.editProfileFormError.length) {
-      //   this.loading = false
-      //   return
-      // }
 
       this.$store
         .dispatch('auth/updateUser', {

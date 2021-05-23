@@ -140,7 +140,13 @@
                       class="checkbox"
                       @click="$router.push('/student/dashboard')"
                     >
-                      <span class="text-sm">Delete account</span>
+                      <span
+                        class="text-sm"
+                        @click.prevent="
+                          (e) => toggleDeleteProfile(e, user.userId)
+                        "
+                        >Delete account</span
+                      >
                       <input type="checkbox" value="intermediate" disabled />
                       <span class="checkmark"></span>
                     </label>
@@ -196,6 +202,36 @@ export default {
       this.$store.commit('app/CHANGE_PASSWORD_MODAL', {
         status: true,
       })
+    },
+    toggleDeleteProfile(e, userId) {
+      // console.log('Hello >>', this.editProfileForm)
+      if (e) e.preventDefault()
+      this.loading = true
+
+      this.$store
+        .dispatch('auth/deleteProfile', userId)
+        .then((res) => {
+          this.loading = false
+          console.log(res)
+          if (res) {
+            this.showSuccess(res)
+          }
+        })
+        .catch((e) => console.log('e: ', e))
+    },
+    showSuccess(res) {
+      this.$store.commit('app/NOTICE_MODAL', {
+        title: 'All done!',
+        text: res.message
+          ? res.message
+          : `You have successfully deleted your profile`,
+      })
+      setTimeout(() => {
+        this.logout()
+      }, 4000)
+    },
+    logout() {
+      this.$store.dispatch('auth/logout')
     },
   },
 }

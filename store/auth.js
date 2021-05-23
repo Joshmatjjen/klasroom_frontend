@@ -289,6 +289,36 @@ export const actions = {
       return false
     }
   },
+  async deleteProfile(vuexContext, userId) {
+    try {
+      console.log(userId)
+      const { data } = await this.$axios.$delete('/users/' + userId)
+      if (data) {
+        console.log('profile deleted successfully: ', data)
+        // vuexContext.commit('SET_PROFILE_IMAGE', data.image)
+        // localStorage.setItem('user', JSON.stringify(data))
+        // Cookie.set('user', JSON.stringify(data))
+        // const expirationDate = new Date().getTime() + 86400 * 1000 // 24 hrs duration
+        // vuexContext.commit('SET_TOKEN', data.accessToken)
+        // vuexContext.commit('FETCH_USER_SUCCESS', data)
+        // vuexContext.commit('SET_EXPIRATION_DATE', expirationDate)
+
+        // localStorage.setItem('token', data.accessToken)
+        // localStorage.setItem('tokenExpiration', expirationDate)
+        // localStorage.setItem('user', JSON.stringify(data))
+
+        // Cookie.set('jwt', data.accessToken)
+        // Cookie.set('expirationDate', expirationDate)
+        // Cookie.set('user', JSON.stringify(data))
+
+        return data
+      }
+      return false
+    } catch (e) {
+      // console.log('fetch user failed: ', e)
+      return false
+    }
+  },
 
   async fetchBank({ commit, state }) {
     try {

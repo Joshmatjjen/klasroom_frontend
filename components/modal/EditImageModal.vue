@@ -82,7 +82,7 @@
               </p>
               <hr class="mt-8 mb-5" />
               <!-- Login form -->
-              <form v-if="imgSrc" id="login-form">
+              <form id="login-form">
                 <div class="form-group mb-5">
                   <div class="px-0 lg:px-8">
                     <input
@@ -96,7 +96,7 @@
                     <div class="flex justify-center">
                       <cropper
                         class="cropper"
-                        :src="imgSrc"
+                        :src="imgSrc || profileImage"
                         :transitions="true"
                         image-restriction="fill-area"
                         default-boundaries="fill"
@@ -134,7 +134,6 @@
                     @click.prevent="showFileChooser"
                   >
                     Upload
-                    <loader v-if="loading" color="white" />
                   </button>
                   <button
                     type="button"
@@ -157,19 +156,13 @@
 
 <script>
 import { mapState } from 'vuex'
-// import Vue from 'vue'
-// import { Cropper } from 'vue-advanced-cropper'
-// import 'vue-advanced-cropper/dist/style.css'
-// import VueCropper from 'vue-cropperjs'
-// import 'cropperjs/dist/cropper.css'
 
 export default {
   // components: { VueCropper, Cropper },
   data: () => ({
     // isLogin: true,
     loading: false,
-    imgSrc:
-      'https://images.ctfassets.net/hrltx12pl8hq/7yQR5uJhwEkRfjwMFJ7bUK/dc52a0913e8ff8b5c276177890eb0129/offset_comp_772626-opt.jpg?fit=fill&w=800&h=300',
+    imgSrc: '',
     cropImg: '',
     newImageData: null,
     editProfileFormError: [],
@@ -179,6 +172,7 @@ export default {
     ...mapState({
       showEditImage: (state) => state.app.editImageModal,
       user: (state) => state.auth.user,
+      profileImage: (state) => state.auth.profileImage,
     }),
   },
 
@@ -190,15 +184,6 @@ export default {
     //     if (value) this.isLogin = value.type !== 'register'
     //   },
     //   immediate: true,
-    // },
-    // isLogin(value) {
-    //   this.editProfileFormError = []
-    //   this.signupFormError = []
-    //   this.isStudent = false
-    //   this.clearInput()
-    // },
-    // isStudent(value) {
-    //   this.signupFormError = []
     // },
   },
   methods: {
@@ -232,6 +217,7 @@ export default {
       }
     },
     showFileChooser() {
+      console.log(this.profileImage)
       this.$refs.input.click()
     },
     onSave(e, userId) {
@@ -264,20 +250,6 @@ export default {
     },
     close() {
       this.$store.commit('app/EDIT_IMAGE_MODAL', null)
-    },
-    clearInput() {
-      this.signupForm = {
-        name: '',
-        email: '',
-        phone: '',
-        password: '',
-        courseCategories: [],
-      }
-
-      this.loginForm = {
-        userIdentity: '',
-        password: '',
-      }
     },
   },
 }
