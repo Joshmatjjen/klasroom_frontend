@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-orange-100" style="height: calc(100vh - 80px)">
+  <div class="bg-orange-100" style="height: calc(100vh)">
     <webinar-testing-modal
       v-if="startState === 'closed'"
       startState="closed"
@@ -26,6 +26,7 @@
       title="Testing your mic and camera"
       :devices="devices"
       :devicesOpt="devicesOpt"
+      :stream="stream"
     />
     <webinar-testing-modal
       v-if="startState === 'speaker_test'"
@@ -40,22 +41,46 @@
     <!-- content -->
     <div class="grid grid-cols-12">
       <div
-        class="video-player col-span-full lg:col-span-9 xl:col-span-9 flex flex-col"
+        class="video-player col-span-full flex flex-col"
+        :class="webinarSideBar && 'lg:col-span-9 xl:col-span-9'"
       >
         <div
           id="players"
           class="main-video flex scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch"
         >
-          <video ref="localVideo" id="localVideo" autoplay playsinline></video>
+          <div class="relative">
+            <img
+              @click.prevent="toogleFullScreen"
+              src="/webinar/push-pin.svg"
+              class="pin"
+              id="pin"
+              title="Pin to fullscreen"
+            />
+            <video
+              ref="localVideo"
+              id="localVideo"
+              autoplay
+              muted
+              playsinline
+            ></video>
+          </div>
         </div>
         <div v-if="startState" class="player-control bg-white flex p-4">
           <div class="flex w-1/3">
             <!-- <img src="/webinar/record.svg" class="mr-2 cursor-pointer" /> -->
-            <img
-              @click="() => switchVideoMode('screenwithcamera')"
-              src="/webinar/sharescreen.svg"
-              class="cursor-pointer"
-            />
+            <div
+              class="screen-share flex flex-col justify-between"
+              @click="
+                () =>
+                  presenting === streamId
+                    ? switchVideoMode('camera')
+                    : switchVideoMode('screenwithcamera')
+              "
+            >
+              <img src="/webinar/sharescreen.svg" class="cursor-pointer" />
+              <p v-if="presenting === streamId">Stop Presenting</p>
+              <p v-else>Start Presenting</p>
+            </div>
           </div>
 
           <div class="flex w-1/3">
@@ -78,14 +103,26 @@
             />
           </div>
 
-          <div class="flex w-1/3"></div>
+          <div class="flex w-1/3 flex-row-reverse border-red-600">
+            <span
+              class="flex items-center justify-center px-3 cursor-pointer"
+              @click="toggleSidebar"
+            >
+              <img
+                :src="webinarSideBar ? '/close.svg' : '/icon/hamburger.svg'"
+              />
+            </span>
+          </div>
         </div>
         <!-- <div id="players" class="players flex">
         
         </div> -->
       </div>
 
-      <div class="col-span-full lg:col-span-3 xl:col-span-3">
+      <div
+        v-if="webinarSideBar"
+        class="col-span-full lg:col-span-3 xl:col-span-3"
+      >
         <div
           class="flex flex-col flex-1 bg-white rounded-xl border border-gray-300 overflow-hidden"
           style="height: auto"
@@ -247,6 +284,7 @@ export default {
     startState: null,
     endMsg: 'Webinar Ended',
     isHost: false,
+    presenting: null,
     maxVideoBitrateKbps: 'unlimited',
     subscriberId: '123', // getUrlParameter("subscriberId"),
     subscriberCode: '123sdef', // getUrlParameter("subscriberCode"),
@@ -282,6 +320,7 @@ export default {
     ...mapState({
       token: (state) => state.auth.token,
       streamId: (state) => String(state.auth.user.userId),
+      webinarSideBar: (state) => state.app.webinarSideBar,
     }),
   },
   created: function () {
@@ -313,6 +352,12 @@ export default {
 
     // Chat End
 
+    toggleSidebar() {
+      if (this.webinarSideBar)
+        this.$store.commit('app/SET_WEBINAR_SIDEBAR', null)
+      else this.$store.commit('app/SET_WEBINAR_SIDEBAR', true)
+    },
+
     confirm(state) {
       if (state === 'begin_test') this.startState = 'mic_carmera_test'
 
@@ -333,6 +378,19 @@ export default {
       )
     },
 
+    toogleFullScreen(e) {
+      console.log(e.target.parentNode.className)
+      console.log(e.target.title)
+
+      if (e.target.title === 'Pin to fullscreen') {
+        e.target.title = 'Unpin from fullscreen'
+      } else e.target.title = 'Pin to fullscreen'
+
+      if (e.target.parentNode.className === 'relative') {
+        e.target.parentNode.className = 'absolute z-10'
+      } else e.target.parentNode.className = 'relative'
+    },
+
     stopPublishing() {
       console.log(
         'clearInterval -> autoRepublishIntervalJob: ',
@@ -346,6 +404,8 @@ export default {
       this.webRTCAdaptor.stop(this.streamId)
       this.webRTCAdaptor.leaveFromRoom(this.roomName)
       this.webRTCAdaptor.closePeerConnection(this.streamId)
+      this.webRTCAdaptor.closeStream()
+      // this.webRTCAdaptor.closeWebSocket()
 
       // this.webRTCAdaptor.leave(this.streamId)
       // this.webRTCAdaptor.closeStream()
@@ -378,11 +438,23 @@ export default {
       if (value == 'screen') {
         //this.webRTCAdaptor.switchDesktopWithMicAudio(this.streamId);
         this.webRTCAdaptor.switchDesktopCapture(this.streamId)
+        this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
       } else if (value == 'screenwithcamera') {
         this.webRTCAdaptor.switchDesktopCaptureWithCamera(this.streamId)
+        this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
+        this.presenting = this.streamId
+        this.clickElement('pin')
       } else {
         this.webRTCAdaptor.switchVideoCameraCapture(this.streamId, value)
+        this.sendNotificationEvent('SWITCH_VIDEO_CAM')
+        this.presenting = null
+        this.clickElement('pin')
+        this.sendNotificationEvent('STOP_SCREEN_SHARE')
       }
+    },
+
+    clickElement(id) {
+      document.getElementById(id).click()
     },
 
     switchAudioMode(value) {
@@ -390,8 +462,14 @@ export default {
     },
     sendNotificationEvent(eventType) {
       if (this.isDataChannelOpen) {
+        // const iceState = this.webRTCAdaptor.iceConnectionState(this.streamId)
+        // if (
+        //   iceState != null &&
+        //   iceState != 'failed' &&
+        //   iceState != 'disconnected'
+        // ) {
         const notEvent = { streamId: this.streamId, eventType: eventType }
-
+        console.log('Sending data...')
         this.webRTCAdaptor.sendData(this.streamId, JSON.stringify(notEvent))
       } else {
         console.log(
@@ -438,7 +516,7 @@ export default {
           headers: getAccessTokenHeader(this.token),
         }
       )
-      console.log('newData: ', newData, message)
+      console.log(message) //console.log('newData: ', newData, message)
 
       if (this.streamId === newData.hostId) {
         this.isHost = true
@@ -454,15 +532,11 @@ export default {
       return
     }
 
-    // function confirm(state) {
-    //   if (state === 'mic_carmera_test')
-    //     this.startState = 'speaker_test'
-
-    //   if (state === 'speaker_test')
-    //     this.startState = 'done'
-    // }
-
     let devices = []
+
+    // this.playStart = true
+    // this.isCameraOff = false
+    // this.isMute = false
 
     /**
      * If publishing stops for any reason, it tries to republish again.
@@ -472,13 +546,15 @@ export default {
      */
     const checkAndRepublishIfRequired = () => {
       const iceState = this.webRTCAdaptor.iceConnectionState(this.streamId)
-      console.log('Ice state checked = ' + iceState)
+      // console.log('Ice state checked = ' + iceState)
+      console.log('Ice state checked')
 
       if (
         iceState == null ||
         iceState == 'failed' ||
         iceState == 'disconnected'
       ) {
+        console.log('Ice state refreshing...')
         this.webRTCAdaptor.stop(this.streamId)
         this.webRTCAdaptor.closePeerConnection(this.streamId)
         this.webRTCAdaptor.closeWebSocket()
@@ -502,28 +578,44 @@ export default {
       let video = document.getElementById('remoteVideo' + obj.streamId)
 
       if (video == null) {
-        video = createRemoteVideo(obj.streamId)
+        const data = createRemoteVideo(obj.streamId)
+        video = data.video
+        const videoPlayer = data.videoPlayer
         // video = document.getElementById('remoteVideo' + obj.streamId)
-        document.getElementById('players').appendChild(video)
+        videoPlayer.appendChild(video)
+        document.getElementById('players').appendChild(videoPlayer)
       }
 
       video.srcObject = obj.stream
     }
 
     const createRemoteVideo = (streamId) => {
+      const videoPlayer = document.createElement('div')
       const video = document.createElement('video')
+
+      videoPlayer.className = 'relative'
+      videoPlayer.id = 'remoteVideoDiv' + streamId
+      videoPlayer.innerHTML = `<img
+              src="/webinar/push-pin.svg"
+              class="pin"
+              id="pin${streamId}"
+              title="Pin to fullscreen"
+            />`
+      videoPlayer.onclick = this.toogleFullScreen
+
       video.id = 'remoteVideo' + streamId
       video.autoplay = true
+      // video.muted = true
       video.playsinline = true
 
       // const player =
       //   '<video id="remoteVideo' + streamId + '"autoplay playsinline></video>'
       // document.getElementById('players').innerHTML += player
-      return video
+      return { video, videoPlayer }
     }
 
     const removeRemoteVideo = (streamId) => {
-      const video = document.getElementById('remoteVideo' + streamId)
+      const video = document.getElementById('remoteVideoDiv' + streamId)
       if (video != null) {
         video.srcObject = null
         document.getElementById('players').removeChild(video)
@@ -573,6 +665,15 @@ export default {
           console.log('Microphone muted for : ', eventStreamId)
         } else if (eventTyp == 'MIC_UNMUTED') {
           console.log('Microphone unmuted for : ', eventStreamId)
+        } else if (eventTyp == 'SWITCH_SCREEN_SHARE') {
+          console.log('Screen share for : ', eventStreamId)
+          if (this.presenting !== eventStreamId)
+            this.clickElement(`pin${eventStreamId}`)
+          this.presenting = eventStreamId
+        } else if (eventTyp == 'STOP_SCREEN_SHARE') {
+          console.log('Stop screen share for : ', eventStreamId)
+          this.clickElement(`pin${eventStreamId}`)
+          this.presenting = null
         }
       }
     }
@@ -631,7 +732,7 @@ export default {
         localVideoId: 'localVideo',
         isPlayMode: false,
         debug: true,
-        bandwidth: this.maxVideoBitrateKbps,
+        // bandwidth: this.maxVideoBitrateKbps,
         callback: (info, obj) => {
           if (info == 'initialized') {
             console.log('initialized: ', obj)
@@ -650,28 +751,10 @@ export default {
           } else if (info == 'joinedTheRoom') {
             const room = obj.ATTR_ROOM_NAME
             // this.roomOfStream[obj.streamId] = room
-            console.log('++++ joinedTheRoom: ' + room)
-            console.log(obj)
+            console.log('++++ joinedTheRoom: ' + obj)
+            // console.log(obj)
 
-            // if (
-            //   obj.streamId === String(this.$store.getters['auth/user'].userId)
-            // ) {
-            //   this.confirm('begin_test')
-            // }
-
-            // console.log('+++ roomOfStream: ', this.roomOfStream)
-
-            // publishStreamId = obj.streamId
             publish(obj.streamId, this.token)
-
-            // if(this.playStart) {
-
-            //   this.isCameraOff = false;
-            //   publish(obj.streamId, this.token);
-            // }
-            // else {
-            //   this.isCameraOff = true;
-            // }
 
             if (obj.streams != null) {
               obj.streams.forEach((item) => {
@@ -681,11 +764,17 @@ export default {
               this.streamsList = obj.streams
             }
             this.roomTimerId = setInterval(() => {
-              this.webRTCAdaptor.getRoomInfo(this.roomName, this.streamId)
+              this.webRTCAdaptor.getRoomInfo(
+                this.roomName,
+                this.streamId,
+                this.presenting
+              )
             }, 5000)
           } else if (info == 'newStreamAvailable') {
             console.log('++++ newStreamAvailable' + obj)
             playVideo(obj)
+            if (this.presenting === this.streamId)
+              this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
           } else if (info == 'bitrateMeasurement') {
             // console.log('++++ bitrateMeasurement: ', obj)
           } else if (info == 'available_devices') {
@@ -710,6 +799,9 @@ export default {
             // document.querySelector('video#localVideoTest').srcObject = stream;
           } else if (info == 'publish_started') {
             //stream is being published
+
+            this.stream = this.webRTCAdaptor.localStream
+
             this.isStreaming = true
             console.log('publish started: ')
             if (
@@ -718,12 +810,12 @@ export default {
               this.confirm('begin_test')
             }
 
-            startAnimation()
-            if (autoRepublishEnabled && this.autoRepublishIntervalJob == null) {
-              this.autoRepublishIntervalJob = setInterval(() => {
-                checkAndRepublishIfRequired()
-              }, 3000)
-            }
+            // startAnimation()
+            // if (autoRepublishEnabled && this.autoRepublishIntervalJob == null) {
+            //   this.autoRepublishIntervalJob = setInterval(() => {
+            //     checkAndRepublishIfRequired()
+            //   }, 3000)
+            // }
             this.webRTCAdaptor.enableStats(obj.streamId)
             // enableAudioLevel();
           } else if (info == 'leavedFromRoom') {
@@ -785,6 +877,9 @@ export default {
             console.log('browser screen share supported')
           } else if (info == 'screen_share_stopped') {
             console.log('screen share stopped')
+            this.presenting = null
+            this.clickElement('pin')
+            this.sendNotificationEvent('STOP_SCREEN_SHARE')
           } else if (info == 'closed') {
             console.log('Connection closed')
             this.isStreaming = false
@@ -797,7 +892,7 @@ export default {
             //It's especially useful when load balancer or firewalls close the websocket connection due to inactivity
           } else if (info == 'refreshConnestreamsListction') {
             console.log('refreshConnestreamsListction')
-            checkAndRepublishIfRequired()
+            // checkAndRepublishIfRequired()
           } else if (info == 'ice_connection_state_changed') {
             // console.log('iceConnectionState Changed: ', JSON.stringify(obj))
           } else if (info == 'updated_stats') {
@@ -815,7 +910,7 @@ export default {
             console.log('*** ' + info + ' notification received')
           }
         },
-        callbackError: function (error, message) {
+        callbackError: (error, message) => {
           //some of the possible errors, NotFoundError, SecurityError,PermissionDeniedError
 
           if (
@@ -858,6 +953,9 @@ export default {
               'You are not allowed to reach devices from an insecure origin, please enable ssl'
           } else if (error.indexOf('ScreenSharePermissionDenied') != -1) {
             errorMessage = 'You are not allowed to access screen share'
+            this.clickElement('pin')
+            this.presenting = null
+            this.sendNotificationEvent('STOP_SCREEN_SHARE')
           } else if (error.indexOf('WebSocketNotConnected') != -1) {
             errorMessage = null // 'WebSocket Connection is disconnected.'
           } else if (error.indexOf('streamIdInUse') != -1) {
@@ -879,7 +977,7 @@ export default {
       })
     }
     //initialize the WebRTCAdaptor
-    initWebRTCAdaptor(true, this.autoRepublishEnabled)
+    if (process.client) initWebRTCAdaptor(true, this.autoRepublishEnabled)
   },
 }
 </script>
@@ -890,17 +988,33 @@ export default {
 }
 
 .main-video {
-  padding: 10px;
-  height: calc(100vh - 180px);
+  height: calc(100vh - 100px);
   width: 100%;
   position: relative;
   overflow: auto;
 }
-.main-video > video {
+.main-video div {
+  width: 100%;
+  height: 100%;
+}
+
+.main-video .pin {
+  cursor: pointer;
+  width: 2.8rem;
+  position: absolute;
+  top: calc(50% - 1.4rem);
+  left: calc(50% - 1.4rem);
+  background-color: orange;
+  z-index: 1;
+  padding: 0.75rem;
+  opacity: 0;
+  border-radius: 10px;
+}
+.main-video video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border: 2px solid #cccccc;
+  border: 1px solid #000000;
 }
 
 .players {
@@ -910,7 +1024,7 @@ export default {
   padding: 0 10px 10px 10px;
 }
 
-.players > video {
+.players video {
   width: 260px;
   height: 100%;
   object-fit: cover;
@@ -918,16 +1032,25 @@ export default {
 }
 
 .player-control {
-  width: calc(100% - 20px);
+  width: calc(100%);
   height: 100px;
-  margin: 0 auto;
   bottom: 10px;
   border: 1px solid #cccccc;
   z-index: 1;
 }
 
+.screen-share {
+  padding: 8px;
+  border: 1px solid #cccccc;
+  font-size: 0.7rem;
+}
+
 .main-video:hover .player-control {
   opacity: 1;
   z-index: 1;
+}
+
+.main-video:hover .pin {
+  opacity: 1;
 }
 </style>

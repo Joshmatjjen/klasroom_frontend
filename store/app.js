@@ -10,6 +10,7 @@ export const state = () => ({
   modal: false,
   noticeModal: null,
   createMeetingModal: null,
+  webinarSideBar: null,
   redirectUrl: null,
   pageTitle: 'Dashboard',
   pageType: null,
@@ -56,6 +57,9 @@ export const mutations = {
   },
   SET_DARK_MENU(state, status) {
     state.darkMenu = status
+  },
+  SET_WEBINAR_SIDEBAR(state, options) {
+    state.webinarSideBar = options
   },
   LOGIN_MODAL(state, loginData) {
     state.loginModal = loginData
