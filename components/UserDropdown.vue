@@ -1,8 +1,5 @@
 <template>
-
-  <div
-    class="mt-8 md:mt-0 mb-6 md:mb-0 lg:border-l border-gray-400 lg:pl-6"
-  >
+  <div class="mt-8 md:mt-0 mb-6 md:mb-0 lg:border-l border-gray-400 lg:pl-6">
     <div class="notification mr-3">
       <span>{{ 0 }}</span>
     </div>
@@ -13,13 +10,15 @@
     >
       <span
         class="user-avatar mr-1"
-        :style="{ backgroundImage: 'url(/avatar.jpg)' }"
+        :style="{ backgroundImage: 'url(' + profileImage + ')' }"
       ></span>
       <div class="inline-block text-left text-xs mr-2 pt-1">
         <span class="block text-gray-700 font-bold leading-tight">
           {{ user ? user.name : 'Oluwadamilare Adedeji' }}
         </span>
-        <span class="block text-gray-600">{{ user ? user.email : 'damilare@gmail.com' }}</span>
+        <span class="block text-gray-600">{{
+          user ? user.email : 'damilare@gmail.com'
+        }}</span>
       </div>
       <div
         class="user-menu-drop shadow-hover relative"
@@ -43,24 +42,31 @@
         >
           <span class="text-sm">Settings</span>
         </nuxt-link>
-        <a v-if="userDash" @click.prevent="switchDash" class="user-menu-drop-item text-gray-700 block py-3 px-4 md:px-5 lg:px-6 hover:bg-gray-200">
+        <a
+          v-if="userDash"
+          @click.prevent="switchDash"
+          class="user-menu-drop-item text-gray-700 block py-3 px-4 md:px-5 lg:px-6 hover:bg-gray-200"
+        >
           <span class="text-sm">
-            {{ 
-              userDash === "student" && userType === "tutor" 
-              ? "Switch to Tutor" 
-              : userDash === "student" && userType === "student" 
-              ? "Become a Tutor" 
-              : "Switch to Student" 
+            {{
+              userDash === 'student' && userType === 'tutor'
+                ? 'Switch to Tutor'
+                : userDash === 'student' && userType === 'student'
+                ? 'Become a Tutor'
+                : 'Switch to Student'
             }}
           </span>
         </a>
-        <a href="#" @click.prevent="logout" class="user-menu-drop-item text-gray-700 block py-3 px-4 md:px-5 lg:px-6 hover:bg-gray-200">
+        <a
+          href="#"
+          @click.prevent="logout"
+          class="user-menu-drop-item text-gray-700 block py-3 px-4 md:px-5 lg:px-6 hover:bg-gray-200"
+        >
           <span class="text-sm">Sign out</span>
         </a>
       </div>
     </a>
   </div>
-  
 </template>
 
 <script>
@@ -69,31 +75,35 @@ export default {
   props: {
     userMenu: {
       type: Boolean,
-      required: true
+      required: true,
     },
     userDash: {
       type: String,
-      required: false
+      required: false,
     },
     userType: {
       type: String,
-      required: false
+      required: false,
     },
     user: {
       type: Object,
-      required: true
+      required: true,
+    },
+    profileImage: {
+      type: String,
+      required: false,
     },
     toggleUserMenu: {
       type: Function,
-      required: true
+      required: true,
     },
     logout: {
       type: Function,
-      required: true
+      required: true,
     },
     switchDash: {
       type: Function,
-      required: false
+      required: false,
     },
   },
 }

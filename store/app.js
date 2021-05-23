@@ -24,6 +24,7 @@ export const state = () => ({
   accounts: null,
   editProfileModal: null,
   changePasswordModal: null,
+  editImageModal: null,
 })
 
 // getters
@@ -89,6 +90,9 @@ export const mutations = {
   },
   CHANGE_PASSWORD_MODAL(state, passwordData) {
     state.changePasswordModal = passwordData
+  },
+  EDIT_IMAGE_MODAL(state, imageData) {
+    state.editImageModal = imageData
   },
   SET_TYPE(state, type) {
     state.pageType = type

@@ -3,9 +3,9 @@
     Tailwind UI components require Tailwind CSS v1.8 and the @tailwindcss/ui plugin.
     Read the documentation to get started: https://tailwindui.com/documentation
   -->
-  <div v-if="showEditProfile" class="fixed z-10 inset-0 overflow-y-auto">
+  <div v-if="showEditImage" class="fixed z-10 inset-0 overflow-y-auto">
     <div
-      class="flex items-start justify-center min-h-screen pt-4 px-4 pb-4 lg:pb-20 text-center sm:block sm:p-0"
+      class="flex items-start justify-center align-middle min-h-screen pt-4 px-4 pb-4 lg:pb-20 text-center sm:block sm:p-0"
     >
       <!--
         Background overlay, show/hide based on modal state.
@@ -35,22 +35,21 @@
           To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
       -->
       <div
-        class="inline-block align-top bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full sm:max-w-lg"
+        class="modal inline-block align-middle bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle w-full sm:max-w-lg"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-headline"
       >
-        <div class="bg-white relative px-8 pt-5 pb-8">
+        <div class="bg-white relative pt-5 pb-3">
           <!-- Close button -->
           <div
-            class="absolute top-0 right-0 -ml-8 pt-3 pr-3 flex sm:-ml-10 sm:pr-3"
+            class="absolute px-8 top-0 right-0 -ml-8 pt-3 pr-3 flex sm:-ml-10 sm:pr-3"
           >
             <button
               aria-label="Close panel"
               class="text-gray-700 hover:text-gray-500 focus:outline-none transition ease-in-out duration-150"
               @click="
                 () => {
-                  clearInput()
                   close()
                 }
               "
@@ -76,24 +75,50 @@
             <div class="sm:ml-0">
               <p
                 id="modal-headline"
-                class="text-sm font-semibold text-left text-gray-800"
+                class="px-8 text-sm font-semibold text-left text-gray-800"
               >
-                Account Details
+                Change Picture
               </p>
               <hr class="mt-8 mb-5" />
               <!-- Login form -->
-              <form v-if="isLogin" id="login-form">
+              <form id="login-form">
                 <div class="form-group mb-5">
-                  <label for="input-email">Name</label>
-                  <div>
+                  <div class="px-0 lg:px-8">
                     <input
+                      ref="input"
+                      type="file"
+                      name="image"
+                      accept="image/*"
+                      @change="setImage"
+                    />
+
+                    <div class="flex justify-center">
+                      <cropper
+                        class="cropper"
+                        :src="imgSrc || profileImage"
+                        :transitions="true"
+                        image-restriction="fill-area"
+                        default-boundaries="fill"
+                        @change="change"
+                        imageClass="vue-advanced-cropper__image"
+                      ></cropper>
+                    </div>
+                    <div class="flex justify-center mt-5">
+                      <p
+                        id="modal-headline"
+                        class="px-8 text-sm font-medium text-left text-gray-800"
+                      >
+                        Drag to reposition picture
+                      </p>
+                    </div>
+                    <!-- <input
                       id="input-name"
                       type="text"
                       class="form-input"
                       placeholder="Enter your name here"
                       :value="(editProfileForm.name = user.name)"
                       @input="editProfileForm.name = $event.target.value"
-                    />
+                    /> -->
                   </div>
                   <span
                     v-if="editProfileFormError.find((i) => i === 'name')"
@@ -101,72 +126,22 @@
                     >Name is required</span
                   >
                 </div>
-                <div class="form-group mb-5">
-                  <label for="input-email">Phone</label>
-                  <div>
-                    <input
-                      id="input-phone"
-                      type="number"
-                      class="form-input"
-                      placeholder="Enter your phone number here"
-                      :value="(editProfileForm.phone = user.phone)"
-                      @input="editProfileForm.phone = $event.target.value"
-                    />
-                  </div>
-                  <span
-                    v-if="editProfileFormError.find((i) => i === 'phone')"
-                    class="text-sm text-red-700"
-                    >Phone number is required</span
+                <div class="flex justify-evenly text-center pt-3 pb-3 mx-auto">
+                  <button
+                    type="button"
+                    class="btn btn-primary shadow"
+                    @click.prevent="showFileChooser"
                   >
-                </div>
-                <div class="form-group mb-5">
-                  <label for="input-email">Email address</label>
-                  <div>
-                    <input
-                      id="input-email"
-                      type="email"
-                      class="form-input"
-                      placeholder="Enter your email here"
-                      :value="(editProfileForm.email = user.email)"
-                      @input="editProfileForm.email = $event.target.value"
-                    />
-                  </div>
-                  <span
-                    v-if="editProfileFormError.find((i) => i === 'email')"
-                    class="text-sm text-red-700"
-                    >Email address is required</span
+                    Upload
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary shadow"
+                    @click.prevent="(e) => onSave(e, user.userId)"
                   >
-                </div>
-
-                <div class="form-group mb-5">
-                  <label for="input-gender">Gender</label>
-                  <div>
-                    <v-select
-                      class="form-input style-chooser cursor-pointer"
-                      placeholder="Select Course Categories"
-                      :value="editProfileForm.gender || user.gender"
-                      @input="onGenderChange"
-                      :options="['Male', 'Female']"
-                    />
-                  </div>
-                  <span
-                    v-if="editProfileFormError.find((i) => i === 'email')"
-                    class="text-sm text-red-700"
-                    >Gender is required</span
-                  >
-                </div>
-
-                <div class="flex text-center pt-8 pb-4 sm:pb-4">
-                  <span class="flex mx-auto">
-                    <button
-                      type="button"
-                      class="btn btn-primary shadow"
-                      @click.prevent="(e) => onSave(e, user.userId)"
-                    >
-                      Save
-                      <loader v-if="loading" color="white" />
-                    </button>
-                  </span>
+                    Save
+                    <loader v-if="loading" color="white" />
+                  </button>
                 </div>
               </form>
             </div>
@@ -182,23 +157,21 @@
 import { mapState } from 'vuex'
 
 export default {
+  // components: { VueCropper, Cropper },
   data: () => ({
-    isLogin: true,
+    // isLogin: true,
     loading: false,
-    isStudent: false,
-    editProfileForm: {
-      name: '',
-      phone: '',
-      email: '',
-      gender: '',
-    },
+    imgSrc: '',
+    cropImg: '',
+    newImageData: null,
     editProfileFormError: [],
   }),
 
   computed: {
     ...mapState({
-      showEditProfile: (state) => state.app.editProfileModal,
+      showEditImage: (state) => state.app.editImageModal,
       user: (state) => state.auth.user,
+      profileImage: (state) => state.auth.profileImage,
     }),
   },
 
@@ -213,38 +186,54 @@ export default {
     // },
   },
   methods: {
-    onGenderChange(value) {
-      this.editProfileForm.gender = value
+    change({ coordinates, canvas }) {
+      canvas.toBlob((blob) => {
+        // console.log('blob data', blob)
+        this.newImageData = blob
+      })
+
+      // let newImg = canvas.toDataURL()
+      // console.log(newImg)
+      // console.log(coordinates, canvas)
     },
-    checkEditProfileFormError(value) {
-      this.editProfileFormError = this.editProfileFormError.filter(
-        (i) => i !== value
-      )
+    setImage(e) {
+      console.log('Uploading__')
+      const file = e.target.files[0]
+      if (file.type.indexOf('image/') === -1) {
+        alert('Please select an image file')
+        return
+      }
+      if (typeof FileReader === 'function') {
+        const reader = new FileReader()
+        reader.onload = (event) => {
+          this.imgSrc = event.target.result
+          // rebuild cropperjs with the updated source
+          this.$refs.cropper.replace(event.target.result)
+        }
+        reader.readAsDataURL(file)
+      } else {
+        alert('Sorry, FileReader API not supported')
+      }
     },
-    forgotPassword(e) {
-      if (e) e.preventDefault()
-      this.$store.commit('app/FORGOT_PASSWORD_MODAL', true)
-      this.$store.commit('app/LOGIN_MODAL', null)
+    showFileChooser() {
+      // console.log(this.profileImage)
+      this.$refs.input.click()
     },
     onSave(e, userId) {
       // console.log('Hello >>', this.editProfileForm)
       if (e) e.preventDefault()
       this.loading = true
-
-      const data = {
-        ...this.editProfileForm,
-      }
+      let imageData = this.newImageData
 
       this.$store
-        .dispatch('auth/updateUser', {
-          ...data,
-          userId,
-        })
+        .dispatch('auth/changeProfileImage', imageData)
         .then((res) => {
           this.loading = false
           console.log(res)
           if (res) {
-            this.showSuccess(res)
+            this.showSuccess({
+              message: 'You have successfully updated your profie image',
+            })
           }
         })
         .catch((e) => console.log('e: ', e))
@@ -259,21 +248,26 @@ export default {
       this.close()
     },
     close() {
-      this.$store.commit('app/EDIT_PROFILE_MODAL', null)
-    },
-    clearInput() {
-      this.editProfileForm = {
-        name: '',
-        phone: '',
-        email: '',
-        gender: '',
-      }
+      this.$store.commit('app/EDIT_IMAGE_MODAL', null)
     },
   },
 }
 </script>
 
-<style>
+<style scope>
+.modal {
+  left: 0;
+  right: 0;
+  margin-top: calc(100vh / 20);
+  margin-bottom: calc(100vh / 20);
+}
+.cropper {
+  max-height: 300px !important;
+  max-width: 100% !important;
+}
+input[type='file'] {
+  display: none;
+}
 .style-chooser .vs__search::placeholder,
 .style-chooser .vs__dropdown-toggle,
 .style-chooser .vs__dropdown-menu {

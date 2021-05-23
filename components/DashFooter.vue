@@ -15,6 +15,7 @@
     <meeting-create-modal />
     <edit-profile-modal />
     <change-password-modal />
+    <edit-image-modal />
   </section>
 </template>
 
