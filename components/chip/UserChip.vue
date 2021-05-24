@@ -5,7 +5,7 @@
     <div class="flex flex-row w-full px-2 py-4">
       <img class="h-full rounded-lg" src="/avatar.jpg" />
       <div class="pl-3 md:pl-5 flex flex-col justify-around">
-        <p class="text-xs font-bold text-gray-700">
+        <p class="text-xs font-bold text-gray-700 capitalize">
           {{ owner ? owner.name : user.name }}
         </p>
         <p class="text-xs font-light text-gray-500">
