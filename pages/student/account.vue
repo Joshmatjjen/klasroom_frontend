@@ -116,7 +116,7 @@
               <div class="px-4 md:px-5 lg:px-6 py-4">
                 <ul class="text-gray-700">
                   <li class="text-center">
-                    <h5 class="font-bold mb-2 capitalize">
+                    <h5 class="name-text font-bold mb-2 capitalize">
                       {{ user ? user.name : '' }}
                     </h5>
                     <p class="text-sm text-gray-700">
@@ -126,7 +126,7 @@
                   </li>
                   <li>
                     <hr class="my-5" />
-                    <label class="checkbox" @click="$router.push('/')">
+                    <label class="checkbox" @click="logout">
                       <span class="text-sm">Sign out</span>
                       <input type="checkbox" value="intermediate" disabled />
                       <span class="checkmark"></span>
@@ -141,17 +141,8 @@
                   </li>
                   <li class="lg:pb-8">
                     <hr class="my-5" />
-                    <label
-                      class="checkbox"
-                      @click="$router.push('/student/dashboard')"
-                    >
-                      <span
-                        class="text-sm"
-                        @click.prevent="
-                          (e) => toggleDeleteProfile(e, user.userId)
-                        "
-                        >Delete account</span
-                      >
+                    <label class="checkbox" @click="toggleDeleteProfile">
+                      <span class="text-sm">Delete account</span>
                       <input type="checkbox" value="intermediate" disabled />
                       <span class="checkmark"></span>
                     </label>
@@ -208,35 +199,16 @@ export default {
         status: true,
       })
     },
-    toggleDeleteProfile(e, userId) {
-      // console.log('Hello >>', this.editProfileForm)
-      if (e) e.preventDefault()
-      this.loading = true
-
-      this.$store
-        .dispatch('auth/deleteProfile', userId)
-        .then((res) => {
-          this.loading = false
-          console.log(res)
-          if (res) {
-            this.showSuccess(res)
-          }
-        })
-        .catch((e) => console.log('e: ', e))
-    },
-    showSuccess(res) {
-      this.$store.commit('app/NOTICE_MODAL', {
-        title: 'All done!',
-        text: res.message
-          ? res.message
-          : `You have successfully deleted your profile`,
+    toggleDeleteProfile() {
+      this.$store.commit('app/DELETE_ACCOUNT_MODAL', {
+        status: true,
       })
-      setTimeout(() => {
-        this.logout()
-      }, 4000)
     },
     logout() {
       this.$store.dispatch('auth/logout')
+    },
+    capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1)
     },
   },
 }

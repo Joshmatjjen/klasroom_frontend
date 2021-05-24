@@ -24,7 +24,7 @@
               >
                 <div>
                   <span
-                    class="chat-box recieved-chat-box rounded-xl rounded-bl"
+                    class="chat-box recieved-chat-box rounded-xl rounded-bl capitalize"
                   >
                     <strong>{{ msg.username }}</strong> {{ msg.message }}
                   </span>

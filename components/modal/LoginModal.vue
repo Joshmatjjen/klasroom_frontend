@@ -162,7 +162,7 @@
                     <input
                       id="input-name"
                       type="text"
-                      class="form-input"
+                      class="form-input capitalize"
                       placeholder="Enter your name here"
                       v-model="signupForm.name"
                       @input="checkSignupFormError('name')"
@@ -170,7 +170,7 @@
                   </div>
                   <span
                     v-if="signupFormError.find((i) => i === 'name')"
-                    class="text-sm text-red-700"
+                    class="text-sm text-red-700 capitalize"
                     >Name is required</span
                   >
                 </div>

@@ -3,7 +3,7 @@
     Tailwind UI components require Tailwind CSS v1.8 and the @tailwindcss/ui plugin.
     Read the documentation to get started: https://tailwindui.com/documentation
   -->
-  <div v-if="null" class="fixed z-10 inset-0 overflow-y-auto">
+  <div v-if="showDeleteAccount" class="fixed z-10 inset-0 overflow-y-auto">
     <div
       class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
     >
@@ -35,7 +35,7 @@
           To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
       -->
       <div
-        class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+        class="modal inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-headline"
@@ -83,15 +83,17 @@
             <button
               type="button"
               class="inline-flex justify-center w-full rounded-md border border-transparent px-4 py-2 bg-red-600 text-base leading-6 font-medium text-white shadow-sm hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red transition ease-in-out duration-150 sm:text-sm sm:leading-5"
+              @click.prevent="(e) => onDelete(e, user.userId)"
             >
               Deactivate
+              <loader v-if="loading" color="white" />
             </button>
           </span>
           <span class="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
             <button
               type="button"
               class="inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5"
-              @click="$store.commit('app/LOGIN_MODAL', false)"
+              @click="close"
             >
               Cancel
             </button>
@@ -106,10 +108,58 @@
 import { mapState } from 'vuex'
 
 export default {
+  data: () => ({
+    loading: false,
+  }),
   computed: {
     ...mapState({
-      showLogin: (state) => state.app.loginModal,
+      showDeleteAccount: (state) => state.app.deleteAccountModal,
+      user: (state) => state.auth.user,
     }),
+  },
+  watch: {
+    // showLogin: {
+    //   handler(value) {
+    //     // console.log('showLogin', value)
+    //     // console.log('secret: ', process.env.secret)
+    //     if (value) this.isLogin = value.type !== 'register'
+    //   },
+    //   immediate: true,
+    // },
+  },
+  methods: {
+    onDelete(e, userId) {
+      if (e) e.preventDefault()
+      this.loading = true
+
+      this.$store
+        .dispatch('auth/deleteProfile', userId)
+        .then((res) => {
+          this.loading = false
+          console.log(res)
+          if (res) {
+            this.showSuccess(res)
+          }
+        })
+        .catch((e) => console.log('e: ', e))
+    },
+    showSuccess(res) {
+      this.$store.commit('app/NOTICE_MODAL', {
+        title: 'All done!',
+        text: res.message
+          ? res.message
+          : `You have successfully deleted your profile`,
+      })
+      setTimeout(() => {
+        this.logout()
+      }, 4000)
+    },
+    logout() {
+      this.$store.dispatch('auth/logout')
+    },
+    close() {
+      this.$store.commit('app/DELETE_ACCOUNT_MODAL', null)
+    },
   },
 }
 </script>

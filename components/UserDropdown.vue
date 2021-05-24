@@ -13,9 +13,9 @@
         :style="{ backgroundImage: 'url(' + profileImage + ')' }"
       ></span>
       <div class="inline-block text-left text-xs mr-2 pt-1">
-        <span class="block text-gray-700 font-bold leading-tight">
-          {{ user ? user.name : 'Oluwadamilare Adedeji' }}
-        </span>
+        <p class="block text-gray-700 font-bold leading-tight capitalize">
+          {{ user ? user.name : '' }}
+        </p>
         <span class="block text-gray-600">{{
           user ? user.email : 'damilare@gmail.com'
         }}</span>
