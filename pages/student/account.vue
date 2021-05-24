@@ -116,7 +116,7 @@
               <div class="px-4 md:px-5 lg:px-6 py-4">
                 <ul class="text-gray-700">
                   <li class="text-center">
-                    <h5 class="font-bold mb-2 capitalize">
+                    <h5 class="name-text font-bold mb-2 capitalize">
                       {{ user ? user.name : '' }}
                     </h5>
                     <p class="text-sm text-gray-700">
@@ -206,6 +206,9 @@ export default {
     },
     logout() {
       this.$store.dispatch('auth/logout')
+    },
+    capitalizeFirstLetter(string) {
+      return string.charAt(0).toUpperCase() + string.slice(1)
     },
   },
 }
