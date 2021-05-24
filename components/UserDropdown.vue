@@ -14,7 +14,7 @@
       ></span>
       <div class="inline-block text-left text-xs mr-2 pt-1">
         <p class="block text-gray-700 font-bold leading-tight capitalize">
-          {{ user ? user.name : 'Oluwadamilare Adedeji' }}
+          {{ user ? user.name : '' }}
         </p>
         <span class="block text-gray-600">{{
           user ? user.email : 'damilare@gmail.com'

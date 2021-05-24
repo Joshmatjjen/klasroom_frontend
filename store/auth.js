@@ -49,6 +49,7 @@ export const mutations = {
     state.user = null
     state.expirationDate = null
     state.token = null
+    state.profileImage = null
   },
 
   UPDATE_BANK(state, bank) {
@@ -175,7 +176,7 @@ export const actions = {
         localStorage.setItem('token', data.accessToken)
         localStorage.setItem('tokenExpiration', expirationDate)
         localStorage.setItem('user', JSON.stringify(data))
-        localStorage.setItem('profileImage', JSON.stringify(data.image))
+        localStorage.setItem('profileImage', data.image)
 
         Cookie.set('jwt', data.accessToken)
         Cookie.set('expirationDate', expirationDate)
@@ -270,7 +271,7 @@ export const actions = {
         console.log('profile-image changed success: ', data)
         vuexContext.commit('SET_PROFILE_IMAGE', data.image)
         localStorage.setItem('profileImage', JSON.stringify(data.image))
-        Cookie.set('profileImage', JSON.stringify(data.image))
+        Cookie.set('profileImage', data.image)
 
         return data
       }
