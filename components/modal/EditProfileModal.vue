@@ -89,7 +89,7 @@
                     <input
                       id="input-name"
                       type="text"
-                      class="form-input"
+                      class="form-input capitalize"
                       placeholder="Enter your name here"
                       :value="(editProfileForm.name = user.name)"
                       @input="editProfileForm.name = $event.target.value"

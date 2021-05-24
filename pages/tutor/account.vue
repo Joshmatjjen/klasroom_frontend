@@ -17,7 +17,9 @@
                   <div class="grid grid-cols-12 mb-5">
                     <div class="col-span-7">
                       <p class="text-sm font-bold text-gray-700 mb-3">Name</p>
-                      <p class="text-sm text-gray-700">{{ user.name }}</p>
+                      <p class="text-sm text-gray-700 capitalize">
+                        {{ user.name }}
+                      </p>
                     </div>
                     <div class="col-span-5 text-right">
                       <button
@@ -114,9 +116,12 @@
               <div class="px-4 md:px-5 lg:px-6 py-4">
                 <ul class="text-gray-700">
                   <li class="text-center">
-                    <h5 class="font-bold mb-2">Amina Bello</h5>
+                    <h5 class="font-bold mb-2 capitalize">
+                      {{ user ? user.name : '' }}
+                    </h5>
                     <p class="text-sm text-gray-700">
-                      Registered 12th Oct. 2020
+                      Registered
+                      {{ user ? user.createdAt : '' }}
                     </p>
                   </li>
                   <li>
