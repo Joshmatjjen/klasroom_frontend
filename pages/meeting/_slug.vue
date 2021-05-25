@@ -69,7 +69,7 @@
           <div class="flex w-1/3">
             <!-- <img src="/webinar/record.svg" class="mr-2 cursor-pointer" /> -->
             <div
-              class="screen-share flex flex-col justify-between"
+              class="screen-share flex flex-col justify-between shadow-xl"
               @click="
                 () =>
                   presenting === streamId
@@ -351,7 +351,12 @@ export default {
       // console.log(this.connection)
       // this.connection.send(message)
 
-      const msg = { userId: this.user.userId, name: this.user.name, message }
+      const msg = {
+        userId: this.user.userId,
+        image: this.user.image,
+        name: this.user.name,
+        message,
+      }
 
       // Add new msg
       this.messages = [...this.messages, msg]
@@ -397,15 +402,11 @@ export default {
       } else e.target.title = 'Pin to fullscreen'
 
       if (e.target.parentNode.className === 'relative') {
-        e.target.parentNode.className = 'absolute z-10'
+        e.target.parentNode.className = 'absolute z-5'
       } else e.target.parentNode.className = 'relative'
     },
 
     stopPublishing() {
-      console.log(
-        'clearInterval -> autoRepublishIntervalJob: ',
-        this.autoRepublishIntervalJob
-      )
       if (this.autoRepublishIntervalJob != null) {
         clearInterval(this.autoRepublishIntervalJob)
         this.autoRepublishIntervalJob = null
@@ -452,10 +453,23 @@ export default {
         this.webRTCAdaptor.switchDesktopCapture(this.streamId)
         this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
       } else if (value == 'screenwithcamera') {
-        this.webRTCAdaptor.switchDesktopCaptureWithCamera(this.streamId)
-        this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
-        this.presenting = this.streamId
-        this.clickElement('pin')
+        if (this.presenting) {
+          Swal.fire({
+            position: 'top-end',
+            width: '350px',
+            text: `Can't share screen. Another user is presenting.`,
+            backdrop: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            showCloseButton: true,
+            timer: 3000,
+          })
+        } else {
+          this.webRTCAdaptor.switchDesktopCaptureWithCamera(this.streamId)
+          this.sendNotificationEvent('SWITCH_SCREEN_SHARE')
+          this.presenting = this.streamId
+          this.clickElement('pin')
+        }
       } else {
         this.webRTCAdaptor.switchVideoCameraCapture(this.streamId, value)
         this.sendNotificationEvent('SWITCH_VIDEO_CAM')
@@ -769,7 +783,7 @@ export default {
         localVideoId: 'localVideo',
         isPlayMode: false,
         debug: true,
-        // bandwidth: this.maxVideoBitrateKbps,
+        bandwidth: this.maxVideoBitrateKbps,
         callback: (info, obj) => {
           if (info == 'initialized') {
             console.log('initialized: ', obj)
@@ -1080,8 +1094,9 @@ export default {
 
 .screen-share {
   padding: 8px;
-  border: 1px solid #cccccc;
   font-size: 0.7rem;
+  border: 0.5px solid #b6b5b5;
+  border-radius: 5px;
 }
 
 .main-video:hover .player-control {

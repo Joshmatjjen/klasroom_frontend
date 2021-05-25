@@ -3,7 +3,7 @@
     Tailwind UI components require Tailwind CSS v1.8 and the @tailwindcss/ui plugin.
     Read the documentation to get started: https://tailwindui.com/documentation
   -->
-  <div class="fixed inset-0 overflow-y-auto" style="z-index: 2">
+  <div class="fixed inset-0 overflow-y-auto" style="z-index: 6">
     <div
       class="flex items-start justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0"
     >
