@@ -90,7 +90,11 @@
                       @input="checkFormError('token')"
                     />
                   </div>
-                  <span v-if="formError.find(i => i === 'token')" class="text-sm text-red-700">Code is required</span>
+                  <span
+                    v-if="formError.find((i) => i === 'token')"
+                    class="text-sm text-red-700"
+                    >Code is required</span
+                  >
                 </div>
                 <div class="form-group mb-5">
                   <label for="input-password">New Password</label>
@@ -101,13 +105,19 @@
                       class="form-input"
                       placeholder="Enter your password here"
                       v-model="form.password"
-                      @input="() => {
-                        checkFormError('password')
-                        checkConfirmPassword()
-                      }"
+                      @input="
+                        () => {
+                          checkFormError('password')
+                          checkConfirmPassword()
+                        }
+                      "
                     />
                   </div>
-                  <span v-if="formError.find(i => i === 'password')" class="text-sm text-red-700">Password categories is required</span>
+                  <span
+                    v-if="formError.find((i) => i === 'password')"
+                    class="text-sm text-red-700"
+                    >Password is required</span
+                  >
                 </div>
                 <div class="form-group">
                   <label for="input-re_password">Confirm Password</label>
@@ -118,14 +128,24 @@
                       class="form-input"
                       placeholder="Confirm password"
                       v-model="form.confirmPassword"
-                      @input="() => {
-                        checkFormError('confirmPassword')
-                        checkConfirmPassword()
-                      }"
+                      @input="
+                        () => {
+                          checkFormError('confirmPassword')
+                          checkConfirmPassword()
+                        }
+                      "
                     />
                   </div>
-                  <span v-if="formError.find(i => i === 'confirmPassword')" class="text-sm text-red-700 block">Confirm password categories is required</span>
-                  <span v-if="showConfirmPasswordErr" class="text-sm text-red-700">Confirm password dosen't match</span>
+                  <span
+                    v-if="formError.find((i) => i === 'confirmPassword')"
+                    class="text-sm text-red-700 block"
+                    >Confirm password categories is required</span
+                  >
+                  <span
+                    v-if="showConfirmPasswordErr"
+                    class="text-sm text-red-700"
+                    >Confirm password dosen't match</span
+                  >
                 </div>
                 <div class="flex text-center pt-8 pb-4 sm:pb-4">
                   <span class="flex mx-auto">
@@ -167,7 +187,7 @@ export default {
     form: {
       password: '',
       confirmPassword: '',
-      token: ''
+      token: '',
     },
     loading: false,
     formError: [],
@@ -180,69 +200,73 @@ export default {
   },
   methods: {
     checkConfirmPassword() {
-      this.showConfirmPasswordErr = false;
+      this.showConfirmPasswordErr = false
     },
     checkFormError(value) {
-      this.formError = this.formError.filter(i => i !== value);
+      this.formError = this.formError.filter((i) => i !== value)
     },
     resetPassword(e) {
       if (e) e.preventDefault()
       if (this.form.password !== this.form.confirmPassword) {
-        this.showConfirmPasswordErr = true;
-        return;
+        this.showConfirmPasswordErr = true
+        return
       }
-      this.loading = true;
+      this.loading = true
 
       for (let i in this.form) {
         console.log(i)
         if (this.form[i].length === 0) {
-          this.formError.push(i);
+          this.formError.push(i)
         }
       }
 
       if (this.formError.length) {
-        this.loading = false;
-        return;
+        this.loading = false
+        return
       }
 
-      this.$store.dispatch("auth/resetPassword", {
-        ...this.form,
-      })
-      .then((res) => {
-        this.loading = false
-        if (res) {
-          this.clearInput()
-          this.showSuccess(res)
-        }
-      }).catch(e => console.log('e: ', e));
+      this.$store
+        .dispatch('auth/resetPassword', {
+          ...this.form,
+        })
+        .then((res) => {
+          this.loading = false
+          if (res) {
+            this.clearInput()
+            this.showSuccess(res)
+          }
+        })
+        .catch((e) => console.log('e: ', e))
     },
     showSuccess(res) {
       this.$store.commit('app/NOTICE_MODAL', {
         title: 'Congratulations!',
-        text: res.message ? res.message : `Your password has been changed successfully. 
+        text: res.message
+          ? res.message
+          : `Your password has been changed successfully. 
           Please log in to your account to proceed.`,
         confirmCallback: () => {
           this.$store.commit('app/LOGIN_MODAL', {
             status: true,
             type: 'login',
             userType: 'student',
-          });
+          })
           this.$store.commit('app/NOTICE_MODAL', false)
-        }
+        },
       })
       this.$store.commit('app/RESET_PASSWORD_MODAL', false)
     },
     forgotPassword() {
-      this.clearInput();
-      this.formError = [];
+      this.clearInput()
+      this.formError = []
       this.$store.commit('app/FORGOT_PASSWORD_MODAL', true)
       this.$store.commit('app/RESET_PASSWORD_MODAL', false)
     },
     clearInput() {
       this.form = {
-        password: "",
+        password: '',
         confirmPassword: '',
-        token: ''
+        token: '',
       }
     },
   },

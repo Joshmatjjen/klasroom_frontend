@@ -222,7 +222,7 @@
             "
             class="pl-4 md:pl-5 lg:pl-6 pb-5"
           >
-            <webinar-people />
+            <webinar-people :people="peopleOnline" type="meeting" />
           </div>
           <div
             v-if="
@@ -315,39 +315,49 @@ export default {
     inputMessage: null,
     messages: [],
     isPrivateChat: false,
+    peopleOnline: [],
   }),
   computed: {
     ...mapState({
       token: (state) => state.auth.token,
       streamId: (state) => String(state.auth.user.userId),
+      user: (state) => state.auth.user,
       webinarSideBar: (state) => state.app.webinarSideBar,
     }),
   },
-  created: function () {
-    console.log('Starting connection to WebSocket Server')
-    if (process.client) {
-      this.connection = new WebSocket(
-        `wss://74671b6522bf.ngrok.io/ws/public-chats/?token=${this.token}&webinar_id=25216`
-      )
+  // created: function () {
+  //   console.log('Starting connection to WebSocket Server')
+  //   if (process.client) {
+  //     this.connection = new WebSocket(
+  //       `wss://74671b6522bf.ngrok.io/ws/public-chats/?token=${this.token}&webinar_id=25216`
+  //     )
 
-      this.connection.onmessage = (event) => {
-        this.messages.push(JSON.parse(event.data))
-        // console.log(JSON.parse(event.data))
-      }
+  //     this.connection.onmessage = (event) => {
+  //       this.messages.push(JSON.parse(event.data))
+  //       // console.log(JSON.parse(event.data))
+  //     }
 
-      this.connection.onopen = function (event) {
-        console.log(event.data)
-        console.log('Successfully connected to the echo websocket server...')
-      }
-    }
-  },
+  //     this.connection.onopen = function (event) {
+  //       console.log(event.data)
+  //       console.log('Successfully connected to the echo websocket server...')
+  //     }
+  //   }
+  // },
   methods: {
     // Chat Start
 
     sendMessage(message) {
       // console.log('Hello')
       // console.log(this.connection)
-      this.connection.send(message)
+      // this.connection.send(message)
+
+      const msg = { userId: this.user.userId, name: this.user.name, message }
+
+      // Add new msg
+      this.messages = [...this.messages, msg]
+
+      // Send msg notification
+      this.sendNotificationEvent('SEND_MESSAGE', msg)
     },
 
     // Chat End
@@ -400,6 +410,8 @@ export default {
         clearInterval(this.autoRepublishIntervalJob)
         this.autoRepublishIntervalJob = null
       }
+
+      this.sendNotificationEvent('REMOVE_USER_DATA')
 
       this.webRTCAdaptor.stop(this.streamId)
       this.webRTCAdaptor.leaveFromRoom(this.roomName)
@@ -460,7 +472,7 @@ export default {
     switchAudioMode(value) {
       this.webRTCAdaptor.switchAudioInputSource(this.streamId, value)
     },
-    sendNotificationEvent(eventType) {
+    sendNotificationEvent(eventType, msg) {
       if (this.isDataChannelOpen) {
         // const iceState = this.webRTCAdaptor.iceConnectionState(this.streamId)
         // if (
@@ -469,6 +481,12 @@ export default {
         //   iceState != 'disconnected'
         // ) {
         const notEvent = { streamId: this.streamId, eventType: eventType }
+
+        if (eventType === 'REMOVE_USER_DATA' || eventType === 'SEND_USER_DATA')
+          notEvent.eventObj = this.user // Adding user obj to sendData
+
+        if (eventType === 'SEND_MESSAGE') notEvent.eventObj = msg // Adding msg to sendData
+
         console.log('Sending data...')
         this.webRTCAdaptor.sendData(this.streamId, JSON.stringify(notEvent))
       } else {
@@ -656,6 +674,7 @@ export default {
       if (notificationEvent != null && typeof notificationEvent == 'object') {
         const eventStreamId = notificationEvent.streamId
         const eventTyp = notificationEvent.eventType
+        const eventObj = notificationEvent.eventObj
 
         if (eventTyp == 'CAM_TURNED_OFF') {
           console.log('Camera turned off for : ', eventStreamId)
@@ -674,6 +693,24 @@ export default {
           console.log('Stop screen share for : ', eventStreamId)
           this.clickElement(`pin${eventStreamId}`)
           this.presenting = null
+        } else if (eventTyp === 'SEND_USER_DATA') {
+          // Add new joined user
+          if (!this.peopleOnline.find((i) => i.userId === eventObj.userId))
+            this.peopleOnline = [...this.peopleOnline, eventObj]
+
+          console.log('SEND_USER_DATA - peopleOnline : ', this.peopleOnline)
+        } else if (eventTyp === 'REMOVE_USER_DATA') {
+          // Remove user that left room
+          this.peopleOnline = this.peopleOnline.filter(
+            (i) => i.userId !== eventObj.userId
+          )
+
+          console.log('REMOVE_USER_DATA - peopleOnline : ', this.peopleOnline)
+        } else if (eventTyp === 'SEND_MESSAGE') {
+          // Add new msg
+          this.messages = [...this.messages, eventObj]
+
+          console.log('SEND_MESSAGE : ', this.messages, eventObj)
         }
       }
     }
@@ -841,6 +878,8 @@ export default {
           } else if (info == 'roomInformation') {
             console.log('+++ roomInformation: ', obj)
             console.log('+++ streamsList: ', this.streamsList)
+
+            this.sendNotificationEvent('SEND_USER_DATA')
 
             // this.webRTCAdaptor.play(this.streamId, this.token, this.roomName)
 

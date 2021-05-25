@@ -17,7 +17,7 @@
           :key="key"
         >
           <!-- Left -->
-          <div class="chat-message" v-if="user.name !== msg.username">
+          <div class="chat-message" v-if="user.userId !== msg.userId">
             <div class="flex items-end">
               <div
                 class="flex flex-col space-y-2 text-xs ml-2 mr-4 order-2 items-start"
@@ -26,7 +26,7 @@
                   <span
                     class="chat-box recieved-chat-box rounded-xl rounded-bl capitalize"
                   >
-                    <strong>{{ msg.username }}</strong> {{ msg.message }}
+                    <strong>{{ msg.name }}</strong> {{ msg.message }}
                   </span>
                 </div>
               </div>

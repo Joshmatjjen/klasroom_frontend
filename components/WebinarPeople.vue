@@ -29,7 +29,7 @@
               class="text-xs leading-tight"
               :class="contact.online ? 'text-green-500' : 'text-gray-600'"
             >
-              {{ contact.online ? 'Online' : 'Offline' }}
+              {{ type === 'meeting' ? 'Online' : 'Offline' }}
             </p>
           </div>
           <!-- <div v-if="contact.unread" class="flex flex-row mt-auto mb-1">
@@ -52,14 +52,25 @@ export default {
   },
   computed: {
     results() {
-      return this.members.filter(
+      return this.people.filter(
         (o) => o.name.toLowerCase().includes(this.search.toLowerCase()) === true
       )
+    },
+  },
+  props: {
+    people: {
+      type: Array,
+      required: true,
+    },
+    type: {
+      type: String,
+      required: true,
     },
   },
   mounted() {
     const el = this.$refs.scrollbar
     el.scrollTop = el.scrollHeight
+    console.log('this.people: ', this.people)
   },
   // methods: {
   //   doSearch: _.debounce((search) => {

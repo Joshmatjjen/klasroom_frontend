@@ -791,7 +791,7 @@ export default {
               (i) => i.kind === 'audioinput' && i.deviceId !== 'default'
             )[0]
             this.devicesOpt.audio = devices.filter(
-              (i) => i.kind === 'audiooutput' && i.deviceId !== 'default'
+              (i) => i.kind === 'audioinput' && i.deviceId !== 'default'
             )[0]
             this.devicesOpt.carmera = devices.filter(
               (i) => i.kind === 'videoinput'
