@@ -13,6 +13,16 @@ export const actions = {
       await commit('auth/SET_USER_ID', user.trim())
     }
 
+    // const profileImage = cookieFromRequest(req, 'profileImage')
+    // if (profileImage) {
+    //   await commit('auth/SET_PROFILE_IMAGE', profileImage)
+    // }
+
+    // const settings = cookieFromRequest(req, 'settings')
+    // if (settings) {
+    //   await commit('auth/SET_PROFILE_SETTINGS', settings)
+    // }
+
     const locale = cookieFromRequest(req, 'locale')
     if (locale) {
       await commit('lang/SET_LOCALE', { locale })
@@ -23,12 +33,13 @@ export const actions = {
       if (data) {
         await commit('app/SET_COURSES_CATEGORIES', data)
       }
+    } catch (err) {
+      await commit('app/SET_COURSES_CATEGORIES', [
+        'Programming',
+        'Business',
+        'Finance',
+      ])
     }
-
-    catch (err) {
-      await commit('app/SET_COURSES_CATEGORIES', ['Programming','Business', 'Finance'])
-    }
-
   },
 
   async nuxtClientInit({ commit }) {
@@ -41,6 +52,16 @@ export const actions = {
     if (user) {
       await commit('auth/SET_USER_ID', user.trim())
     }
+
+    // const profileImage = Cookies.get('profileImage')
+    // if (profileImage) {
+    //   await commit('auth/SET_PROFILE_IMAGE', profileImage)
+    // }
+
+    // const settings = Cookies.get('settings')
+    // if (settings) {
+    //   await commit('auth/SET_PROFILE_SETTINGS', JSON.parse(settings))
+    // }
 
     const upload = localStorage.getItem('uploadedFiles')
     if (upload) {

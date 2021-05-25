@@ -15,6 +15,8 @@
     <meeting-create-modal />
     <edit-profile-modal />
     <change-password-modal />
+    <edit-image-modal />
+    <delete-account-modal />
   </section>
 </template>
 

@@ -17,21 +17,25 @@
           :key="key"
         >
           <!-- Left -->
-          <div class="chat-message" v-if="user.name !== msg.username">
+          <div class="chat-message" v-if="user.userId !== msg.userId">
             <div class="flex items-end">
               <div
                 class="flex flex-col space-y-2 text-xs ml-2 mr-4 order-2 items-start"
               >
                 <div>
                   <span
-                    class="chat-box recieved-chat-box rounded-xl rounded-bl"
+                    class="chat-box recieved-chat-box rounded-xl rounded-bl capitalize"
                   >
-                    <strong>{{ msg.username }}</strong> {{ msg.message }}
+                    <strong>{{ msg.name }}</strong> {{ msg.message }}
                   </span>
                 </div>
               </div>
               <img
-                src="https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144"
+                :src="
+                  msg.image
+                    ? msg.image
+                    : 'https://images.unsplash.com/photo-1549078642-b2ba4bda0cdb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=facearea&amp;facepad=3&amp;w=144&amp;h=144'
+                "
                 alt="My profile"
                 class="w-6 h-6 rounded-full order-1"
               />

@@ -10,6 +10,7 @@ export const state = () => ({
   modal: false,
   noticeModal: null,
   createMeetingModal: null,
+  webinarSideBar: null,
   redirectUrl: null,
   pageTitle: 'Dashboard',
   pageType: null,
@@ -23,6 +24,8 @@ export const state = () => ({
   accounts: null,
   editProfileModal: null,
   changePasswordModal: null,
+  editImageModal: null,
+  deleteAccountModal: null,
 })
 
 // getters
@@ -56,6 +59,9 @@ export const mutations = {
   SET_DARK_MENU(state, status) {
     state.darkMenu = status
   },
+  SET_WEBINAR_SIDEBAR(state, options) {
+    state.webinarSideBar = options
+  },
   LOGIN_MODAL(state, loginData) {
     state.loginModal = loginData
   },
@@ -85,6 +91,12 @@ export const mutations = {
   },
   CHANGE_PASSWORD_MODAL(state, passwordData) {
     state.changePasswordModal = passwordData
+  },
+  EDIT_IMAGE_MODAL(state, imageData) {
+    state.editImageModal = imageData
+  },
+  DELETE_ACCOUNT_MODAL(state, data) {
+    state.deleteAccountModal = data
   },
   SET_TYPE(state, type) {
     state.pageType = type

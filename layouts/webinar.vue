@@ -1,6 +1,6 @@
 <template>
   <div class="h-screen">
-    <WebinarNavbar />
+    <!-- <WebinarNavbar /> -->
     <Nuxt />
     <meeting-create-modal />
   </div>

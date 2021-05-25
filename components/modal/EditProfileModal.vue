@@ -89,7 +89,7 @@
                     <input
                       id="input-name"
                       type="text"
-                      class="form-input"
+                      class="form-input capitalize"
                       placeholder="Enter your name here"
                       :value="(editProfileForm.name = user.name)"
                       @input="editProfileForm.name = $event.target.value"
@@ -211,15 +211,6 @@ export default {
     //   },
     //   immediate: true,
     // },
-    // isLogin(value) {
-    //   this.editProfileFormError = []
-    //   this.signupFormError = []
-    //   this.isStudent = false
-    //   this.clearInput()
-    // },
-    // isStudent(value) {
-    //   this.signupFormError = []
-    // },
   },
   methods: {
     onGenderChange(value) {
@@ -243,17 +234,6 @@ export default {
       const data = {
         ...this.editProfileForm,
       }
-
-      // for (let i in data) {
-      //   console.log(i)
-      //   if (data[i].length === 0) {
-      //     this.editProfileFormError.push(i)
-      //   }
-      // }
-      // if (this.editProfileFormError.length) {
-      //   this.loading = false
-      //   return
-      // }
 
       this.$store
         .dispatch('auth/updateUser', {
@@ -282,17 +262,11 @@ export default {
       this.$store.commit('app/EDIT_PROFILE_MODAL', null)
     },
     clearInput() {
-      this.signupForm = {
+      this.editProfileForm = {
         name: '',
-        email: '',
         phone: '',
-        password: '',
-        courseCategories: [],
-      }
-
-      this.loginForm = {
-        userIdentity: '',
-        password: '',
+        email: '',
+        gender: '',
       }
     },
   },

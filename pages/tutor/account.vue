@@ -17,7 +17,9 @@
                   <div class="grid grid-cols-12 mb-5">
                     <div class="col-span-7">
                       <p class="text-sm font-bold text-gray-700 mb-3">Name</p>
-                      <p class="text-sm text-gray-700">{{ user.name }}</p>
+                      <p class="text-sm text-gray-700 capitalize">
+                        {{ user.name }}
+                      </p>
                     </div>
                     <div class="col-span-5 text-right">
                       <button
@@ -86,14 +88,24 @@
               class="bg-white rounded-xl border border-gray-300 shadow-hover relative min-h-full"
             >
               <div class="block mb-2">
-                <div class="big-avatar relative rounded-xl overflow-hidden">
+                <div
+                  class="big-avatar relative rounded-xl overflow-hidden"
+                  v-bind:style="{
+                    backgroundImage: 'url(' + profileImage + ')',
+                  }"
+                >
                   <div
                     class="grid grid-cols-12 place-items-center py-32 md:py-32 lg:py-40 xl:py-48"
                   >
                     <div
                       class="change-picture col-span-12 text-white mx-auto my-auto"
                     >
-                      <button class="focus:outline-none">Change Picture</button>
+                      <button
+                        class="focus:outline-none"
+                        v-on:click.prevent="toggleEditImage()"
+                      >
+                        Change Picture
+                      </button>
                     </div>
                   </div>
                   <div
@@ -104,14 +116,17 @@
               <div class="px-4 md:px-5 lg:px-6 py-4">
                 <ul class="text-gray-700">
                   <li class="text-center">
-                    <h5 class="font-bold mb-2">Amina Bello</h5>
+                    <h5 class="font-bold mb-2 capitalize">
+                      {{ user ? user.name : '' }}
+                    </h5>
                     <p class="text-sm text-gray-700">
-                      Registered 12th Oct. 2020
+                      Registered
+                      {{ user ? user.createdAt : '' }}
                     </p>
                   </li>
                   <li>
                     <hr class="my-5" />
-                    <label class="checkbox" @click="$router.push('/')">
+                    <label class="checkbox" @click="logout">
                       <span class="text-sm">Sign out</span>
                       <input type="checkbox" value="intermediate" disabled />
                       <span class="checkmark"></span>
@@ -126,10 +141,7 @@
                   </li>
                   <li class="lg:pb-8">
                     <hr class="my-5" />
-                    <label
-                      class="checkbox"
-                      @click="$router.push('/student/dashboard')"
-                    >
+                    <label class="checkbox" @click="toggleDeleteProfile">
                       <span class="text-sm">Delete account</span>
                       <input type="checkbox" value="intermediate" disabled />
                       <span class="checkmark"></span>
@@ -166,12 +178,19 @@ export default {
   computed: {
     ...mapState({
       user: (state) => state.auth.user,
+      profileImage: (state) => state.auth.profileImage,
     }),
   },
 
   methods: {
     toggleEditProfile() {
       this.$store.commit('app/EDIT_PROFILE_MODAL', {
+        status: true,
+        image: this.profileImage,
+      })
+    },
+    toggleEditImage() {
+      this.$store.commit('app/EDIT_IMAGE_MODAL', {
         status: true,
       })
     },
@@ -180,6 +199,14 @@ export default {
         status: true,
       })
     },
+    toggleDeleteProfile() {
+      this.$store.commit('app/DELETE_ACCOUNT_MODAL', {
+        status: true,
+      })
+    },
+    logout() {
+      this.$store.dispatch('auth/logout')
+    },
   },
 }
 </script>
@@ -187,7 +214,7 @@ export default {
 <style scoped>
 .big-avatar {
   width: 100%;
-  background-image: url('/avatar-large.jpg');
+  background-image: url('https://www.pngkey.com/png/full/115-1150420_avatar-png-pic-male-avatar-icon-png.png');
   background-repeat: no-repeat;
   background-size: cover;
   @apply bg-gray-200;

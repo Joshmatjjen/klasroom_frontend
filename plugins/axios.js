@@ -12,7 +12,7 @@ export default ({ $axios, app, store, redirect, route }) => {
     request.baseURL = process.env.baseUrl
 
     request.headers.common['Secret'] = process.env.secret
-    request.headers.common['Content-Type'] = 'application/json'
+    request.headers.common['Content-Type'] = 'multipart/form-data'
 
     let token = store.getters['auth/token']
     // console.log('Axios token:', token)

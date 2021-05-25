@@ -1,16 +1,18 @@
 <template>
   <div :class="{ 'bg-orange-100': darkMenu }">
-    <div class="container mx-auto h-20">
-      <nav class="flex items-center justify-between flex-wrap py-4 md:py-6">
-        <nuxt-link
-          to="/"
-          class="flex items-center flex-shrink-0 mx-auto"
-        >
+    <div class="flex flex-row justify-center w-full h-20 relative">
+      <nav class="flex items-center justify-self-end flex-wrap py-4 md:py-6">
+        <nuxt-link to="/" class="flex items-center flex-shrink-0 mx-auto">
           <img src="/logo.svg" />
         </nuxt-link>
-
-  
       </nav>
+
+      <button
+        class="sidbar-nav absolute right-0 flex items-center justify-center h-8 px-3"
+        @click="toggleSidebar"
+      >
+        <img src="/icon/hamburger.svg" />
+      </button>
     </div>
   </div>
 </template>
@@ -27,15 +29,24 @@ export default {
   computed: {
     ...mapState({
       darkMenu: (state) => state.app.darkMenu,
+      webinarSideBar: (state) => state.app.webinarSideBar,
     }),
   },
   methods: {
- 
+    toggleSidebar() {
+      if (this.webinarSideBar)
+        this.$store.commit('app/SET_WEBINAR_SIDEBAR', null)
+      else this.$store.commit('app/SET_WEBINAR_SIDEBAR', true)
+    },
   },
 }
 </script>
 
 <style scoped>
+.sidbar-nav {
+  top: calc(50% - 1rem);
+  right: 10px;
+}
 .menu-group {
   @apply transition duration-500;
   @apply w-full flex-grow bg-white mt-5 shadow-lg px-4;
