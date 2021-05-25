@@ -132,7 +132,7 @@ import { getAccessTokenHeader } from '~/utils'
 
 export default {
   layout: 'dashboard',
-  middleware: ['check-auth', 'auth'],
+  middleware: ['check-auth', 'auth', 'isTutor'],
   data: () => ({
     meetingOpt: false,
     isAnnually: false,
