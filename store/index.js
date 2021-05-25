@@ -13,10 +13,15 @@ export const actions = {
       await commit('auth/SET_USER_ID', user.trim())
     }
 
-    const profileImage = cookieFromRequest(req, 'profileImage')
-    if (profileImage) {
-      await commit('auth/SET_PROFILE_IMAGE', profileImage)
-    }
+    // const profileImage = cookieFromRequest(req, 'profileImage')
+    // if (profileImage) {
+    //   await commit('auth/SET_PROFILE_IMAGE', profileImage)
+    // }
+
+    // const settings = cookieFromRequest(req, 'settings')
+    // if (settings) {
+    //   await commit('auth/SET_PROFILE_SETTINGS', settings)
+    // }
 
     const locale = cookieFromRequest(req, 'locale')
     if (locale) {
@@ -48,10 +53,15 @@ export const actions = {
       await commit('auth/SET_USER_ID', user.trim())
     }
 
-    const profileImage = Cookies.get('profileImage')
-    if (profileImage) {
-      await commit('auth/SET_PROFILE_IMAGE', profileImage)
-    }
+    // const profileImage = Cookies.get('profileImage')
+    // if (profileImage) {
+    //   await commit('auth/SET_PROFILE_IMAGE', profileImage)
+    // }
+
+    // const settings = Cookies.get('settings')
+    // if (settings) {
+    //   await commit('auth/SET_PROFILE_SETTINGS', JSON.parse(settings))
+    // }
 
     const upload = localStorage.getItem('uploadedFiles')
     if (upload) {

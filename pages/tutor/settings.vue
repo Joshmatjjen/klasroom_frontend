@@ -16,7 +16,10 @@
                       <p class="text-sm text-gray-700">Autoplay</p>
                     </div>
                     <div class="col-span-5 text-right">
-                      <input-toggle-switch v-model="autoplay" />
+                      <input-toggle-switch
+                        :value="(settings.autoPlay = allSettings.autoPlay)"
+                        @input="onAutoPlayChange"
+                      />
                     </div>
                   </div>
                   <div class="grid grid-cols-12">
@@ -24,7 +27,13 @@
                       <p class="text-sm text-gray-700">Recommendations</p>
                     </div>
                     <div class="col-span-5 text-right">
-                      <input-toggle-switch />
+                      <input-toggle-switch
+                        :value="
+                          (settings.recommendations =
+                            allSettings.recommendations)
+                        "
+                        @input="onRecommendationsChange"
+                      />
                     </div>
                   </div>
                 </div>
@@ -38,7 +47,12 @@
                       </p>
                     </div>
                     <div class="col-span-5 text-right">
-                      <button class="btn btn-light btn-sm">Change</button>
+                      <button
+                        v-on:click.prevent="(e) => onSave(e)"
+                        class="btn btn-light btn-sm"
+                      >
+                        Change
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -52,11 +66,13 @@
                       <p class="text-sm text-gray-700">Notification option</p>
                     </div>
                     <div class="col-span-5 lg:col-span-4 text-right">
-                      <div class="cs-select">
-                        <select class="input">
-                          <option value="">In-app and email</option>
-                        </select>
-                      </div>
+                      <v-select
+                        class="form-input style-chooser cursor-pointer capitalize"
+                        placeholder="Notification Type"
+                        :value="allSettings.notifications"
+                        @input="onNotificationChange"
+                        :options="['in-app', 'email', 'in-app and email']"
+                      />
                     </div>
                   </div>
                 </div>
@@ -70,16 +86,18 @@
                       </p>
                     </div>
                     <div class="col-span-5 lg:col-span-4 text-right">
-                      <div class="cs-select">
-                        <select class="input">
-                          <option value="">English</option>
-                        </select>
-                      </div>
+                      <v-select
+                        class="form-input style-chooser cursor-pointer capitalize"
+                        placeholder="Language"
+                        :value="(settings.languages = allSettings.languages)"
+                        @input="onLanguageChange"
+                        :options="['english']"
+                      />
                     </div>
                   </div>
                 </div>
                 <!-- Learning History -->
-                <div class="border-gray-300 pb-5 md:mb-20">
+                <div class="border-gray-300 pb-5 md:mb-10">
                   <p class="text-base font-bold text-gray-700 mb-3">
                     Learning History
                   </p>
@@ -94,6 +112,19 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="flex text-center pb-4 sm:pb-4">
+                  <span class="flex mx-auto">
+                    <button
+                      type="button"
+                      class="btn btn-primary shadow"
+                      @click.prevent="(e) => onSave(e)"
+                    >
+                      Update Settings
+                      <loader v-if="loading" color="white" />
+                    </button>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -105,7 +136,7 @@
 
 <script>
 import Vue from 'vue'
-
+import { mapState } from 'vuex'
 const webinars = require('@/static/json/webinars.json')
 
 export default {
@@ -115,9 +146,111 @@ export default {
     store.commit('app/SET_TITLE', 'Settings')
   },
   data: () => ({
-    autoplay: true,
+    loading: null,
     webinars: _.take(webinars, 4),
     undoneTasks: _.take(webinars, 3),
+    settings: {
+      autoPlay: '',
+      recommendations: '',
+      languages: '',
+      notifications: '',
+    },
   }),
+  computed: {
+    ...mapState({
+      allSettings: (state) => state.auth.settings,
+      user: (state) => state.auth.user,
+    }),
+  },
+  watch: {
+    allSettings: {
+      handler(newValue, oldValue) {
+        console.log(
+          'allSettings changed to ' +
+            newValue +
+            'Old values' +
+            JSON.stringify(oldValue)
+        )
+        if (newValue) {
+          this.settings = newValue
+        } else {
+          console.log(
+            'allSettings changed to ' + newValue + 'Old values' + oldValue
+          )
+          this.settings = oldValue
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
+    settings: {
+      handler(newValue, oldValue) {
+        // console.log(
+        //   'searchInput changed to ' +
+        //     JSON.stringify(newValue) +
+        //     'Old values' +
+        //     JSON.stringify(oldValue)
+        // )
+        if (newValue) {
+          this.settings = newValue
+        } else {
+          this.settings = oldValue
+        }
+      },
+      deep: true,
+      immediate: true,
+    },
+    // 'item.someOtherProp': function (newVal, oldVal){
+    //      //to work with changes in someOtherProp
+    //  },
+    // settings: [
+    //   // 'handle1',
+    //   function handle2(val, oldVal) {
+    //     console.log('settings changed', val, 'Old', oldVal)
+    //   },
+    // ],
+  },
+  methods: {
+    onNotificationChange(value) {
+      this.settings.notifications = value
+    },
+    onLanguageChange(value) {
+      this.settings.languages = value
+    },
+    onAutoPlayChange(value) {
+      this.settings.autoPlay = value
+    },
+    onRecommendationsChange(value) {
+      this.settings.recommendations = value
+    },
+    onSave(e) {
+      // console.log('Hello >>', this.changePasswordForm)
+      if (e) e.preventDefault()
+      this.loading = true
+
+      const data = {
+        ...this.settings,
+      }
+      this.$store
+        .dispatch('auth/changeSettings', {
+          ...data,
+        })
+        .then((res) => {
+          this.loading = false
+          this.settings = res
+          if (res) {
+            this.showSuccess(res)
+          }
+        })
+        .catch((e) => console.log('e: ', e))
+    },
+
+    showSuccess(res) {
+      this.$store.commit('app/NOTICE_MODAL', {
+        title: 'All done!',
+        text: res.message ? res.message : `Settings updated successful`,
+      })
+    },
+  },
 }
 </script>
