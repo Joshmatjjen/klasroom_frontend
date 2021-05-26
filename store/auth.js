@@ -141,8 +141,6 @@ export const actions = {
           userType: 'student',
         })
 
-        // console.log('fetch old user success: ', data)
-
         const { data: newData, message } = await this.$axios.$post(
           '/users/tutor',
           {
