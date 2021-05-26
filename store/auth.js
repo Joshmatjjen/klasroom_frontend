@@ -124,7 +124,6 @@ export const actions = {
         password: userData.password,
         token: userData.token,
       })
-      // console.log("data: ", data)
       return { data, message }
     } catch (e) {
       // console.log("error validation: ", e)
