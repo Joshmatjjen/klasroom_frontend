@@ -1044,11 +1044,13 @@ export default {
   height: calc(100vh - 100px);
   width: 100%;
   position: relative;
-  overflow: auto;
+  overflow: hidden;
 }
 .main-video div {
   width: 100%;
   height: 100%;
+  padding: 10px;
+  background-color: rgb(37, 37, 37);
 }
 
 .main-video .pin {
@@ -1067,7 +1069,7 @@ export default {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border: 1px solid #000000;
+  border-radius: 10px;
 }
 
 .players {

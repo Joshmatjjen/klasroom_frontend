@@ -170,7 +170,7 @@ export const actions = {
       const { data } = await this.$axios.$post('/login', userData)
 
       if (data.accessToken) {
-        console.log(data.accessToken)
+        console.log(data)
         vuexContext.commit('SET_TOKEN', data.accessToken)
         const settingsResult = await this.$axios.$get('/users/settings')
         const { settings } = settingsResult.data

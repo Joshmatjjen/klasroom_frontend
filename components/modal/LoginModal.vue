@@ -94,7 +94,11 @@
               </h2>
               <hr class="mt-8 mb-5" />
               <!-- Login form -->
-              <form v-if="isLogin" id="login-form">
+              <form
+                @submit.stop.prevent="(e) => onLogin(e, showLogin.userType)"
+                v-if="isLogin"
+                id="login-form"
+              >
                 <div class="form-group mb-5">
                   <label for="input-email">Email address</label>
                   <div>
