@@ -51,7 +51,7 @@
           <div class="relative">
             <img
               @click.prevent="toogleFullScreen"
-              src="/webinar/push-pin.svg"
+              src="/webinar/unpin.svg"
               class="pin"
               id="pin"
               title="Pin to fullscreen"
@@ -83,23 +83,31 @@
             </div>
           </div>
 
-          <div class="flex w-1/3">
+          <div class="middle flex w-1/3">
             <img
               @click="toogleAudio"
               :src="`/webinar/${isMute ? 'mute' : 'unmute'}.svg`"
               class="mx-auto cursor-pointer"
+              :title="isMute ? 'unmute' : 'mute'"
             />
-            <button
+            <img
+              @click="stopPublishing"
+              :src="`/webinar/end-call.svg`"
+              class="mx-auto cursor-pointer"
+              title="Leave Meeting"
+            />
+            <!-- <button
               type="button"
               class="btn btn-primary shadow"
               @click.prevent="() => stopPublishing()"
             >
               Leave Meeting
-            </button>
+            </button> -->
             <img
               @click="toogleVideo"
               :src="`/webinar/${isCameraOff ? 'videooff' : 'video'}.svg`"
               class="mx-auto cursor-pointer"
+              :title="isCameraOff ? 'On video' : 'Off video'"
             />
           </div>
 
@@ -110,6 +118,7 @@
             >
               <img
                 :src="webinarSideBar ? '/close.svg' : '/icon/hamburger.svg'"
+                :style="{ height: '20px' }"
               />
             </span>
           </div>
@@ -399,7 +408,11 @@ export default {
 
       if (e.target.title === 'Pin to fullscreen') {
         e.target.title = 'Unpin from fullscreen'
-      } else e.target.title = 'Pin to fullscreen'
+        e.target.src = '/webinar/pin.svg'
+      } else {
+        e.target.title = 'Pin to fullscreen'
+        e.target.src = '/webinar/unpin.svg'
+      }
 
       if (e.target.parentNode.className === 'relative') {
         e.target.parentNode.className = 'absolute z-5'
@@ -480,7 +493,8 @@ export default {
     },
 
     clickElement(id) {
-      document.getElementById(id).click()
+      const videoplayer = document.getElementById(id)
+      videoplayer.click()
     },
 
     switchAudioMode(value) {
@@ -628,7 +642,7 @@ export default {
       videoPlayer.className = 'relative'
       videoPlayer.id = 'remoteVideoDiv' + streamId
       videoPlayer.innerHTML = `<img
-              src="/webinar/push-pin.svg"
+              src="/webinar/unpin.svg"
               class="pin"
               id="pin${streamId}"
               title="Pin to fullscreen"
@@ -1059,7 +1073,7 @@ export default {
   position: absolute;
   top: calc(50% - 1.4rem);
   left: calc(50% - 1.4rem);
-  background-color: rgba(255, 166, 0, 0.507);
+  background-color: rgb(37, 37, 37);
   z-index: 1;
   padding: 0.75rem;
   opacity: 0;
@@ -1092,6 +1106,11 @@ export default {
   bottom: 10px;
   border: 1px solid #cccccc;
   z-index: 1;
+  align-items: center;
+}
+
+.player-control img {
+  height: 40px;
 }
 
 .screen-share {

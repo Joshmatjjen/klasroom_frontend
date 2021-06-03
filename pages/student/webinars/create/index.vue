@@ -17,14 +17,14 @@
                   <p class="text-xs text-gray-700">Preliminary</p>
                 </button>
                 <button
-                  @click="!webinar ? switcher(1) : null"
+                  @click="webinar ? switcher(1) : null"
                   :class="{ active: isWebinarSwitch === 1 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Organizers</p>
                 </button>
                 <button
-                  @click="!webinar ? switcher(2) : null"
+                  @click="webinar ? switcher(2) : null"
                   :class="{ active: isWebinarSwitch === 2 }"
                   class="menu-btn"
                 >
