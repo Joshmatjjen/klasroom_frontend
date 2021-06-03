@@ -642,7 +642,7 @@ export default {
       videoPlayer.className = 'relative'
       videoPlayer.id = 'remoteVideoDiv' + streamId
       videoPlayer.innerHTML = `<img
-              src="/webinar/push-pin.svg"
+              src="/webinar/unpin.svg"
               class="pin"
               id="pin${streamId}"
               title="Pin to fullscreen"
