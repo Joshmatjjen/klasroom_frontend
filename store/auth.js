@@ -276,10 +276,7 @@ export const actions = {
     formData.append('image', imageData, '.png')
     try {
       console.log(formData)
-      const { data } = await this.$axios.$post(
-        '/uploads/profile-image',
-        formData
-      )
+      const { data } = await this.$axios.$post('/uploads', formData)
       if (data) {
         console.log('profile-image changed success: ', data)
         vuexContext.commit('SET_PROFILE_IMAGE', data.image)
