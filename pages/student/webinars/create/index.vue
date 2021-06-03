@@ -10,29 +10,36 @@
                 class="switcher whitespace-no-wrap flex flex-row gap-10 place-items-start px-5 border-b-2 border-gray-200 overflow-scroll scrollbar-thumb-orange"
               >
                 <button
-                  v-on:click="switcher(0)"
-                  v-bind:class="{ active: isWebinarSwitch === 0 }"
+                  @click="switcher(0)"
+                  :class="{ active: isWebinarSwitch === 0 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Preliminary</p>
                 </button>
                 <button
-                  v-on:click="switcher(1)"
-                  v-bind:class="{ active: isWebinarSwitch === 1 }"
+                  @click="!webinar ? switcher(1) : null"
+                  :class="{ active: isWebinarSwitch === 1 }"
+                  class="menu-btn"
+                >
+                  <p class="text-xs text-gray-700">Organizers</p>
+                </button>
+                <button
+                  @click="!webinar ? switcher(2) : null"
+                  :class="{ active: isWebinarSwitch === 2 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Resources</p>
                 </button>
                 <button
-                  v-on:click="switcher(2)"
-                  v-bind:class="{ active: isWebinarSwitch === 2 }"
+                  @click="webinar ? switcher(3) : null"
+                  :class="{ active: isWebinarSwitch === 3 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Polls</p>
                 </button>
                 <button
-                  v-on:click="switcher(3)"
-                  v-bind:class="{ active: isWebinarSwitch === 3 }"
+                  @click="webinar ? switcher(4) : null"
+                  :class="{ active: isWebinarSwitch === 4 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Settings</p>
@@ -142,7 +149,10 @@
                   </div>
                 </div>
               </section>
+            </section>
 
+            <!-- Organizers -->
+            <section v-if="isWebinarSwitch === 1">
               <!-- Tutor Or Co-Host section-->
               <section>
                 <div class="container mx-auto my-10 px-2 lg:px-0">
@@ -278,7 +288,7 @@
             </section>
 
             <!-- Resources -->
-            <section v-if="isWebinarSwitch === 1">
+            <section v-if="isWebinarSwitch === 2">
               <!-- Resources section -->
               <section>
                 <div class="container mx-auto my-10 px-2 lg:px-0">
@@ -303,12 +313,14 @@
                               :key="key"
                               :file="{ filename: item.name }"
                               :id="key"
+                              :deleteItem="deleteResItem"
                             />
                             <resource-chip
                               v-for="(item, key) in linkResources"
                               :key="key"
-                              :file="{ filename: item }"
+                              :link="item"
                               :id="key"
+                              :deleteItem="deleteResItem"
                             />
                             <!-- <resource-chip
                               :file="{ filename: 'tradingpatterns.zip' }"
@@ -399,7 +411,7 @@
             </section>
 
             <!-- Polls -->
-            <section v-if="isWebinarSwitch === 2">
+            <section v-if="isWebinarSwitch === 3">
               <section>
                 <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
@@ -581,7 +593,7 @@
             </section>
 
             <!-- Settings -->
-            <section v-if="isWebinarSwitch === 3">
+            <section v-if="isWebinarSwitch === 4">
               <section>
                 <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
@@ -1283,7 +1295,7 @@
               </button>
               <button
                 class="btn btn-sm lg:mt-0"
-                :class="isWebinarSwitch === 3 ? 'btn-disable' : 'btn-primary'"
+                :class="isWebinarSwitch === 4 ? 'btn-disable' : 'btn-primary'"
                 @click="
                   () => {
                     goNext(isWebinarSwitch)
@@ -1291,6 +1303,7 @@
                 "
               >
                 Next
+                <loader v-if="loading" color="white" />
               </button>
             </div>
           </div>
@@ -1321,6 +1334,7 @@ export default {
     courses: _.take(courses, 4),
     webinars: _.take(webinars, 4),
     undoneTasks: _.take(courses, 3),
+    webinar: null,
     isWebinarSwitch: 0,
     createWebinar: {
       title: '',
@@ -1457,8 +1471,9 @@ export default {
                 })
 
                 console.log('webinar data: ', res.data)
+                this.webinar = res.data
                 this.loading = false
-                isWebinarSwitch >= 3 ? null : this.switcher(isWebinarSwitch + 1)
+                isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
 
                 // Publish action
                 // if (this.userDash === 'tutor') this.gotoWebinar('tutor')
@@ -1471,7 +1486,7 @@ export default {
             })
           break
         case 1:
-          isWebinarSwitch >= 3 ? null : this.switcher(isWebinarSwitch + 1)
+          isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
           break
         case 2:
           this.loading = true
@@ -1490,7 +1505,7 @@ export default {
             console.log('uploaded: ', message, data)
 
             const resData = {
-              webinar_id: 'string',
+              webinar_id: this.webinar.id,
               resources: [
                 ...data.resources.map((i) => {
                   return {
@@ -1507,16 +1522,20 @@ export default {
               ],
             }
 
-            // const { data: newData } = await this.$axios.$post(
-            //   `/uploads`,
-            //   formData,
-            //   {
-            //     headers: getAccessTokenHeader(this.token),
-            //   }
-            // )
+            console.log('resData: ', resData)
+
+            const { data: newData } = await this.$axios.$post(
+              `https://streaming.staging.klasroom.com/v1/webinars/resources`,
+              resData,
+              {
+                headers: getAccessTokenHeader(this.token),
+              }
+            )
+
+            console.log('newData: ', newData)
 
             this.loading = false
-            isWebinarSwitch >= 3 ? null : this.switcher(isWebinarSwitch + 1)
+            isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
           } catch (e) {
             console.log(e)
             this.loading = false
@@ -1524,7 +1543,11 @@ export default {
           }
           break
         case 3:
-          isWebinarSwitch >= 3 ? null : this.switcher(isWebinarSwitch + 1)
+          isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          break
+
+        case 4:
+          isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
           break
 
         default:
@@ -1565,6 +1588,13 @@ export default {
       // } else {
       //   alert('Sorry, FileReader API not supported')
       // }
+    },
+    deleteResItem(id, type) {
+      if (type === 'link')
+        this.linkResources = this.linkResources.filter(
+          (i, index) => index !== id
+        )
+      this.fileResources = this.fileResources.filter((i, index) => index !== id)
     },
   },
 }
