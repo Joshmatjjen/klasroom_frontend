@@ -124,7 +124,6 @@ export const actions = {
         password: userData.password,
         token: userData.token,
       })
-      // console.log("data: ", data)
       return { data, message }
     } catch (e) {
       // console.log("error validation: ", e)
@@ -140,8 +139,6 @@ export const actions = {
           password: userData.password,
           userType: 'student',
         })
-
-        // console.log('fetch old user success: ', data)
 
         const { data: newData, message } = await this.$axios.$post(
           '/users/tutor',
@@ -279,10 +276,7 @@ export const actions = {
     formData.append('image', imageData, '.png')
     try {
       console.log(formData)
-      const { data } = await this.$axios.$post(
-        '/uploads/profile-image',
-        formData
-      )
+      const { data } = await this.$axios.$post('/uploads', formData)
       if (data) {
         console.log('profile-image changed success: ', data)
         vuexContext.commit('SET_PROFILE_IMAGE', data.image)
