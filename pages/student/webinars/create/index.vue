@@ -10,29 +10,36 @@
                 class="switcher whitespace-no-wrap flex flex-row gap-10 place-items-start px-5 border-b-2 border-gray-200 overflow-scroll scrollbar-thumb-orange"
               >
                 <button
-                  v-on:click="switcher(0)"
-                  v-bind:class="{ active: isWebinarSwitch === 0 }"
+                  @click="switcher(0)"
+                  :class="{ active: isWebinarSwitch === 0 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Preliminary</p>
                 </button>
                 <button
-                  v-on:click="switcher(1)"
-                  v-bind:class="{ active: isWebinarSwitch === 1 }"
+                  @click="webinar ? switcher(1) : null"
+                  :class="{ active: isWebinarSwitch === 1 }"
+                  class="menu-btn"
+                >
+                  <p class="text-xs text-gray-700">Organizers</p>
+                </button>
+                <button
+                  @click="webinar ? switcher(2) : null"
+                  :class="{ active: isWebinarSwitch === 2 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Resources</p>
                 </button>
                 <button
-                  v-on:click="switcher(2)"
-                  v-bind:class="{ active: isWebinarSwitch === 2 }"
+                  @click="webinar ? switcher(3) : null"
+                  :class="{ active: isWebinarSwitch === 3 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Polls</p>
                 </button>
                 <button
-                  v-on:click="switcher(3)"
-                  v-bind:class="{ active: isWebinarSwitch === 3 }"
+                  @click="webinar ? switcher(4) : null"
+                  :class="{ active: isWebinarSwitch === 4 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Settings</p>
@@ -109,7 +116,9 @@
                                 </div>
                               </div>
                               <div class="form-group mb-5">
-                                <label for="input-name">Webinar start time</label>
+                                <label for="input-name"
+                                  >Webinar start time</label
+                                >
                                 <div>
                                   <input
                                     id="input-name"
@@ -140,7 +149,10 @@
                   </div>
                 </div>
               </section>
+            </section>
 
+            <!-- Organizers -->
+            <section v-if="isWebinarSwitch === 1">
               <!-- Tutor Or Co-Host section-->
               <section>
                 <div class="container mx-auto my-10 px-2 lg:px-0">
@@ -153,7 +165,7 @@
                         >
                           <div class="px-4 md:px-5 lg:px-6 py-4">
                             <!-- Webinar name -->
-                            <user-chip :owner="{ name: 'Joy Adeleke' }" />
+                            <user-chip :owner="{ name: user.name }" />
                             <user-chip
                               :user="{
                                 name: 'Somto Agu',
@@ -276,32 +288,49 @@
             </section>
 
             <!-- Resources -->
-            <section v-if="isWebinarSwitch === 1">
+            <section v-if="isWebinarSwitch === 2">
               <!-- Resources section -->
               <section>
                 <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
                     <div class="col-span-12">
-                      <dash-items-section-group
-                        title="Preliminary"
-                        :edit="true"
-                      >
+                      <dash-items-section-group title="Resources" :edit="true">
                         <div
                           class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full"
                         >
+                          <input
+                            ref="input"
+                            type="file"
+                            name="image"
+                            accept="image/*"
+                            multiple
+                            @change="setImage"
+                          />
                           <div class="px-4 md:px-5 lg:px-6 py-4">
                             <!-- Webinar name -->
                             <resource-chip
-                              :file="{ filename: 'Lesson_1.mp4' }"
+                              v-for="(item, key) in fileResources"
+                              :key="key"
+                              :file="{ filename: item.name }"
+                              :id="key"
+                              :deleteItem="deleteResItem"
                             />
                             <resource-chip
-                              :file="{ filename: 'tradingpatterns.zip' }"
+                              v-for="(item, key) in linkResources"
+                              :key="key"
+                              :link="item"
+                              :id="key"
+                              :deleteItem="deleteResItem"
                             />
+                            <!-- <resource-chip
+                              :file="{ filename: 'tradingpatterns.zip' }"
+                            /> -->
                             <div
                               class="container flex flex-row bg-white rounded-lg border border-gray-300 shadow-hover mb-5"
                             >
                               <div
-                                class="flex flex-row justify-center items-center w-full p-4"
+                                class="flex flex-row justify-center items-center w-full p-4 cursor-pointer"
+                                @click.prevent="showFileChooser"
                               >
                                 <div>
                                   <svg
@@ -328,6 +357,7 @@
                             <div class="flex flex-row justify-center gap-5">
                               <div
                                 class="flex flex-row bg-white rounded-md border border-orange-400 shadow-hover mt-2 mb-5 py-1 px-2 cursor-pointer"
+                                @click.prevent="showFileChooser"
                               >
                                 <svg
                                   width="15"
@@ -350,6 +380,7 @@
                               </div>
                               <div
                                 class="flex flex-row bg-white rounded-md border border-orange-400 shadow-hover mt-2 mb-5 py-1 px-2 cursor-pointer"
+                                @click.prevent="showAddLink"
                               >
                                 <svg
                                   width="17"
@@ -380,7 +411,7 @@
             </section>
 
             <!-- Polls -->
-            <section v-if="isWebinarSwitch === 2">
+            <section v-if="isWebinarSwitch === 3">
               <section>
                 <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
@@ -562,7 +593,7 @@
             </section>
 
             <!-- Settings -->
-            <section v-if="isWebinarSwitch === 3">
+            <section v-if="isWebinarSwitch === 4">
               <section>
                 <div class="container mx-auto my-10 px-2 lg:px-0">
                   <div class="grid grid-cols-12 gap-4">
@@ -1264,12 +1295,15 @@
               </button>
               <button
                 class="btn btn-sm lg:mt-0"
-                :class="isWebinarSwitch === 3 ? 'btn-disable' : 'btn-primary'"
+                :class="isWebinarSwitch === 4 ? 'btn-disable' : 'btn-primary'"
                 @click="
-                  isWebinarSwitch >= 3 ? null : switcher(isWebinarSwitch + 1)
+                  () => {
+                    goNext(isWebinarSwitch)
+                  }
                 "
               >
                 Next
+                <loader v-if="loading" color="white" />
               </button>
             </div>
           </div>
@@ -1284,6 +1318,7 @@ import { mapState } from 'vuex'
 import Swal from 'sweetalert2'
 import moment from 'moment'
 import UserChip from '~/components/chip/UserChip.vue'
+import { getAccessTokenHeader } from '~/utils'
 
 const courses = require('@/static/json/courses.json')
 const webinars = require('@/static/json/webinars.json')
@@ -1299,6 +1334,7 @@ export default {
     courses: _.take(courses, 4),
     webinars: _.take(webinars, 4),
     undoneTasks: _.take(courses, 3),
+    webinar: null,
     isWebinarSwitch: 0,
     createWebinar: {
       title: '',
@@ -1307,20 +1343,30 @@ export default {
       date: '',
       startTime: '',
       endTime: '',
-      tags: []
+      tags: [],
     },
     publishOpt: false,
     timeLength: '',
     loading: false,
+    fileResources: [],
+    linkResources: [],
   }),
   computed: {
     ...mapState({
       user: (state) => state.auth.user,
-      userType: (state) => state.auth.user && state.auth.user.isTutor ? "tutor" : "student",
+      token: (state) => state.auth.token,
+      userType: (state) =>
+        state.auth.user && state.auth.user.isTutor ? 'tutor' : 'student',
     }),
     userDash() {
       return this.$route.path.split('/')[1]
-    }
+    },
+  },
+  watch: {
+    async fileResources(value) {
+      console.log('fileResources: ', value)
+      // await this.$nextTick()
+    },
   },
   methods: {
     switcher: function (value) {
@@ -1334,41 +1380,221 @@ export default {
       console.log('adding new')
     },
     createNewWebinar() {
-      this.loading = true;
-      const {title, subtitle, introduction, date, startTime, endTime} = this.createWebinar;
+      this.loading = true
+      const {
+        title,
+        subtitle,
+        introduction,
+        date,
+        startTime,
+        endTime,
+      } = this.createWebinar
       const data = {
         ...this.createWebinar,
-        webinarStart: moment(date + " " + startTime).format("YYYY-MM-DDTHH:mm:ss"),
-        webinarEnd: moment(date + " " + endTime).format("YYYY-MM-DDTHH:mm:ss"),
+        webinarStart: moment(date + ' ' + startTime).format(
+          'YYYY-MM-DDTHH:mm:ss'
+        ),
+        webinarEnd: moment(date + ' ' + endTime).format('YYYY-MM-DDTHH:mm:ss'),
       }
-      console.log('data: ', data);
-      this.$store.dispatch("webinar/createWebinar", {
-        ...data,
-        publishNow: true
-      })
-      .then((res) => {
-        this.loading = false
-        if (res) {
-          Swal.fire({
-            position: 'top-end',
-            width: '350px',
-            text: res.message,
-            backdrop: false,
-            allowOutsideClick: false,
-            showConfirmButton: false,
-            showCloseButton: true,
-            timer: 3000,
-          });
-          if (this.userDash === 'tutor')
-            this.gotoWebinar('tutor');
-          else
-            this.gotoWebinar('student');
-        }
-      }).catch(e => console.log('e: ', e));
+      console.log('data: ', data)
+      this.$store
+        .dispatch('webinar/createWebinar', {
+          ...data,
+          publishNow: false,
+        })
+        .then((res) => {
+          this.loading = false
+          if (res) {
+            Swal.fire({
+              position: 'top-end',
+              width: '350px',
+              text: res.message,
+              backdrop: false,
+              allowOutsideClick: false,
+              showConfirmButton: false,
+              showCloseButton: true,
+              timer: 3000,
+            })
+
+            console.log('webinar data: ', res.data)
+
+            // Publish action
+            // if (this.userDash === 'tutor') this.gotoWebinar('tutor')
+            // else this.gotoWebinar('student')
+          }
+        })
+        .catch((e) => console.log('e: ', e))
     },
     gotoWebinar(type) {
       this.$router.push(`/${type}/webinars`)
       this.close()
+    },
+    async goNext(isWebinarSwitch) {
+      switch (isWebinarSwitch) {
+        case 0:
+          this.loading = true
+          const {
+            title,
+            subtitle,
+            introduction,
+            date,
+            startTime,
+            endTime,
+          } = this.createWebinar
+          const data = {
+            ...this.createWebinar,
+            webinarStart: moment(date + ' ' + startTime).format(
+              'YYYY-MM-DDTHH:mm:ss'
+            ),
+            webinarEnd: moment(date + ' ' + endTime).format(
+              'YYYY-MM-DDTHH:mm:ss'
+            ),
+          }
+          console.log('data: ', data)
+          this.$store
+            .dispatch('webinar/createWebinar', {
+              ...data,
+              publishNow: false,
+            })
+            .then((res) => {
+              this.loading = false
+              if (res) {
+                Swal.fire({
+                  position: 'top-end',
+                  width: '350px',
+                  text: res.message,
+                  backdrop: false,
+                  allowOutsideClick: false,
+                  showConfirmButton: false,
+                  showCloseButton: true,
+                  timer: 3000,
+                })
+
+                console.log('webinar data: ', res.data)
+                this.webinar = res.data
+                this.loading = false
+                isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+
+                // Publish action
+                // if (this.userDash === 'tutor') this.gotoWebinar('tutor')
+                // else this.gotoWebinar('student')
+              }
+            })
+            .catch((e) => {
+              console.log('e: ', e)
+              this.loading = false
+            })
+          break
+        case 1:
+          isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          break
+        case 2:
+          this.loading = true
+          const formData = new FormData()
+          this.fileResources.map((i) => {
+            formData.append('resources', i, '.' + i.type.split('/')[1])
+          })
+          try {
+            const { data, message } = await this.$axios.$post(
+              `/uploads`,
+              formData,
+              {
+                headers: getAccessTokenHeader(this.token),
+              }
+            )
+            console.log('uploaded: ', message, data)
+
+            const resData = {
+              webinar_id: this.webinar.id,
+              resources: [
+                ...data.resources.map((i) => {
+                  return {
+                    resource: i,
+                    type: 'file',
+                  }
+                }),
+                ...this.linkResources.map((i) => {
+                  return {
+                    resource: i,
+                    type: 'link',
+                  }
+                }),
+              ],
+            }
+
+            console.log('resData: ', resData)
+
+            const { data: newData } = await this.$axios.$post(
+              `https://streaming.staging.klasroom.com/v1/webinars/resources`,
+              resData,
+              {
+                headers: getAccessTokenHeader(this.token),
+              }
+            )
+
+            console.log('newData: ', newData)
+
+            this.loading = false
+            isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          } catch (e) {
+            console.log(e)
+            this.loading = false
+            return
+          }
+          break
+        case 3:
+          isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          break
+
+        case 4:
+          isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          break
+
+        default:
+          break
+      }
+    },
+    addLink(link) {
+      this.linkResources = [...this.linkResources, link]
+    },
+    showAddLink() {
+      this.$store.commit('app/ADD_LINK_MODAL', {
+        status: true,
+        addLink: this.addLink,
+      })
+    },
+    showFileChooser() {
+      this.$refs.input.click()
+    },
+    async setImage(e) {
+      console.log('Uploading__')
+      const files = e.target.files
+      console.log('files: ', files)
+
+      this.fileResources = [...this.fileResources, ...files]
+
+      // if (file.type.indexOf('image/') === -1) {
+      //   alert('Please select an image file')
+      //   return
+      // }
+      // if (typeof FileReader === 'function') {
+      //   const reader = new FileReader()
+      //   reader.onload = (event) => {
+      //     this.imgSrc = event.target.result
+      //     // rebuild cropperjs with the updated source
+      //     this.$refs.cropper.replace(event.target.result)
+      //   }
+      //   reader.readAsDataURL(file)
+      // } else {
+      //   alert('Sorry, FileReader API not supported')
+      // }
+    },
+    deleteResItem(id, type) {
+      if (type === 'link')
+        this.linkResources = this.linkResources.filter(
+          (i, index) => index !== id
+        )
+      this.fileResources = this.fileResources.filter((i, index) => index !== id)
     },
   },
 }

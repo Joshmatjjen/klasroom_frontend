@@ -73,20 +73,41 @@
     </div>
     <div class="px-4 pb-4 mb-2 sm:mb-0">
       <div class="relative flex">
+        <Picker
+          v-if="showEmojis"
+          :style="{
+            position: 'absolute',
+            right: '0px',
+            bottom: '63px',
+            width: '300px',
+          }"
+          :data="emojiIndex"
+          set="twitter"
+          @select="selectEmoji"
+        />
         <input
           type="text"
+          ref="chatInput"
           placeholder="Type message here"
           class="focus:outline-none focus:placeholder-gray-400 placeholder-gray-600"
+          :style="{ paddingRight: '8rem' }"
           v-model="inputMessage"
           v-on:keyup.enter="submitMessage"
         />
-        <div class="absolute right-0 items-center inset-y-0 hidden sm:flex">
+        <div class="absolute right-0 items-center inset-y-0 flex">
+          <button
+            type="button"
+            class="inline-flex items-center justify-center rounded-full h-12 w-12 mr-2 transition duration-500 ease-in-out text-white hover:bg-orange-100 focus:outline-none"
+            v-on:click="toggleEmojis"
+          >
+            <img class="h-5" src="/icon/emoji.svg" />
+          </button>
           <button
             type="button"
             class="inline-flex items-center justify-center rounded-full h-12 w-12 mr-2 transition duration-500 ease-in-out text-white hover:bg-orange-100 focus:outline-none"
             v-on:click="submitMessage"
           >
-            <img src="/icon/send.svg" />
+            <img class="h-5" src="/icon/send.svg" />
           </button>
         </div>
       </div>
@@ -96,6 +117,11 @@
 
 <script>
 import { mapState } from 'vuex'
+import data from 'emoji-mart-vue-fast/data/all.json'
+import 'emoji-mart-vue-fast/css/emoji-mart.css'
+import { Picker, EmojiIndex } from 'emoji-mart-vue-fast'
+
+let emojiIndex = new EmojiIndex(data)
 
 export default {
   props: {
@@ -103,10 +129,15 @@ export default {
     sendMessage: { type: Function, default: null },
     messages: { type: Array, default: [] },
   },
+  components: {
+    Picker,
+  },
   data() {
     return {
       // messages: require('@/static/json/messages.json'),
       inputMessage: '',
+      emojiIndex: emojiIndex,
+      showEmojis: false,
     }
   },
   computed: {
@@ -123,6 +154,15 @@ export default {
       console.log(this.user.name, this.messages)
       this.sendMessage(this.inputMessage)
       this.inputMessage = ''
+    },
+    selectEmoji(emoji) {
+      this.inputMessage = this.inputMessage + emoji.native
+      this.showEmojis = false
+      this.$refs.chatInput.focus()
+    },
+    toggleEmojis() {
+      this.showEmojis = !this.showEmojis
+      console.log('chatInput: ', this.$refs.chatInput)
     },
   },
 }
