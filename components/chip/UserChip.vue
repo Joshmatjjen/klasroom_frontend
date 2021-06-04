@@ -6,10 +6,12 @@
       <img class="h-full rounded-lg" src="/avatar.jpg" />
       <div class="pl-3 md:pl-5 flex flex-col justify-around">
         <p class="text-xs font-bold text-gray-700 capitalize">
-          {{ owner ? owner.name : user.name }}
+          {{ owner ? owner.name : user.email }}
         </p>
         <p class="text-xs font-light text-gray-500">
-          {{ owner ? 'You' : user.email }}
+          {{
+            owner ? 'You' : user.type === 'co_host' ? 'co-host' : 'moderator'
+          }}
         </p>
       </div>
     </div>
@@ -56,6 +58,7 @@
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            @click="deleteItem(id, user.type)"
           >
             <path d="M7.5 7.5H8.75V15H7.5V7.5Z" fill="#545454" />
             <path d="M11.25 7.5H12.5V15H11.25V7.5Z" fill="#545454" />
@@ -76,6 +79,8 @@ export default {
   props: {
     owner: { type: Object, default: null },
     user: { type: Object, default: null },
+    id: { type: String, required: false },
+    deleteItem: { type: Function, required: false },
   },
   // computed: {
   //   view_route() {

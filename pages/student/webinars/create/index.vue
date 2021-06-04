@@ -167,9 +167,14 @@
                             <!-- Webinar name -->
                             <user-chip :owner="{ name: user.name }" />
                             <user-chip
+                              v-for="(item, key) in coHostOrganizers"
+                              :key="key"
+                              :id="key"
+                              :deleteItem="deleteOrgItem"
                               :user="{
-                                name: 'Somto Agu',
-                                email: 'somtoagu@gmail.com',
+                                name: item.name,
+                                email: item.email,
+                                type: item.type,
                               }"
                             />
                             <hr class="my-5" />
@@ -177,7 +182,7 @@
                               Add new co-host
                             </p>
                             <div class="flex flex-row gap-10">
-                              <div class="form-group flex-1 mb-5">
+                              <!-- <div class="form-group flex-1 mb-5">
                                 <label for="input-name">co-host name</label>
                                 <div>
                                   <input
@@ -185,10 +190,10 @@
                                     type="text"
                                     class="form-input"
                                     placeholder="Enter co-host name here"
-                                    v-model="createWebinar.name"
+                                    v-model="coHost.name"
                                   />
                                 </div>
-                              </div>
+                              </div> -->
 
                               <div class="form-group flex-1 mb-5">
                                 <label for="input-name">Email</label>
@@ -198,7 +203,8 @@
                                     type="text"
                                     class="form-input"
                                     placeholder="Enter co-host name here"
-                                    v-model="createWebinar.name"
+                                    v-model="coHost.email"
+                                    @input="checkFormError('co_host')"
                                   />
                                 </div>
                               </div>
@@ -207,11 +213,17 @@
                                 <div
                                   type="button"
                                   class="btn btn-primary align-middle text-center hover"
+                                  @click="addOrganizer('co_host')"
                                 >
                                   Add
                                 </div>
                               </div>
                             </div>
+                            <span
+                              v-if="coHostFormError"
+                              class="text-sm text-red-700"
+                              >Email address is required</span
+                            >
                             <p class="text-xs text-gray-700">
                               An invitation email will be sent to the co-host's
                               email address including their unique link
@@ -228,9 +240,14 @@
                         >
                           <div class="px-4 md:px-5 lg:px-6 py-4">
                             <user-chip
+                              v-for="(item, key) in modratorOrganizers"
+                              :key="key"
+                              :id="key"
+                              :deleteItem="deleteOrgItem"
                               :user="{
-                                name: 'Forza Speciale',
-                                email: 'adeyemi20@gmail.com',
+                                name: item.name,
+                                email: item.email,
+                                type: item.type,
                               }"
                             />
                             <hr class="my-5" />
@@ -238,7 +255,7 @@
                               Add new moderator
                             </p>
                             <div class="flex flex-row gap-10">
-                              <div class="form-group flex-1 mb-5">
+                              <!-- <div class="form-group flex-1 mb-5">
                                 <label for="input-name">Moderator name</label>
                                 <div>
                                   <input
@@ -246,10 +263,10 @@
                                     type="text"
                                     class="form-input"
                                     placeholder="Enter moderator name here"
-                                    v-model="createWebinar.name"
+                                    v-model="moderator.name"
                                   />
                                 </div>
-                              </div>
+                              </div> -->
 
                               <div class="form-group flex-1 mb-5">
                                 <label for="input-name">Email</label>
@@ -259,7 +276,8 @@
                                     type="text"
                                     class="form-input"
                                     placeholder="Enter moderator email here"
-                                    v-model="createWebinar.name"
+                                    v-model="moderator.email"
+                                    @input="checkFormError('moderator')"
                                   />
                                 </div>
                               </div>
@@ -268,11 +286,17 @@
                                 <div
                                   type="button"
                                   class="btn btn-primary align-middle text-center"
+                                  @click="addOrganizer('moderator')"
                                 >
                                   Add
                                 </div>
                               </div>
                             </div>
+                            <span
+                              v-if="moderatorFormError"
+                              class="text-sm text-red-700"
+                              >Email address is required</span
+                            >
                             <p class="text-xs text-gray-700">
                               An invitation email will be sent to the
                               moderator's email address including their unique
@@ -1345,11 +1369,23 @@ export default {
       endTime: '',
       tags: [],
     },
+    coHost: {
+      name: '',
+      email: '',
+    },
+    moderator: {
+      name: '',
+      email: '',
+    },
+    coHostFormError: false,
+    moderatorFormError: false,
     publishOpt: false,
     timeLength: '',
     loading: false,
     fileResources: [],
     linkResources: [],
+    coHostOrganizers: [],
+    modratorOrganizers: [],
   }),
   computed: {
     ...mapState({
@@ -1486,7 +1522,34 @@ export default {
             })
           break
         case 1:
-          isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          try {
+            const resData = {
+              webinar_id: this.webinar.id,
+              co_organizers: [
+                ...this.coHostOrganizers,
+                ...this.modratorOrganizers,
+              ],
+            }
+
+            console.log('resData: ', resData)
+
+            const { data } = await this.$axios.$post(
+              `https://streaming.staging.klasroom.com/v1/webinars/organizers`,
+              resData,
+              {
+                headers: getAccessTokenHeader(this.token),
+              }
+            )
+
+            console.log('Organizers newData: ', data)
+
+            this.loading = false
+            isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          } catch (e) {
+            console.log(e)
+            this.loading = false
+            return
+          }
           break
         case 2:
           this.loading = true
@@ -1566,6 +1629,37 @@ export default {
     showFileChooser() {
       this.$refs.input.click()
     },
+    addOrganizer(type) {
+      if (type === 'co_host') {
+        const data = this.coHost
+        if (!data.email) {
+          this.coHostFormError = true
+          return
+        }
+        data.type = 'co_host'
+        this.coHostOrganizers = [...this.coHostOrganizers, data]
+        this.coHost = {
+          name: '',
+          email: '',
+        }
+      } else {
+        const data = this.moderator
+        if (!data.email) {
+          this.moderatorFormError = true
+          return
+        }
+        data.type = 'moderator'
+        this.modratorOrganizers = [...this.modratorOrganizers, data]
+        this.moderator = {
+          name: '',
+          email: '',
+        }
+      }
+    },
+    checkFormError(type) {
+      if (type === 'co_host') this.coHostFormError = false
+      else this.moderatorFormError = false
+    },
     async setImage(e) {
       console.log('Uploading__')
       const files = e.target.files
@@ -1594,7 +1688,21 @@ export default {
         this.linkResources = this.linkResources.filter(
           (i, index) => index !== id
         )
-      this.fileResources = this.fileResources.filter((i, index) => index !== id)
+      else
+        this.fileResources = this.fileResources.filter(
+          (i, index) => index !== id
+        )
+    },
+    deleteOrgItem(id, type) {
+      if (type === 'co_host') {
+        this.coHostOrganizers = this.coHostOrganizers.filter(
+          (i, index) => index !== id
+        )
+      } else {
+        this.modratorOrganizers = this.modratorOrganizers.filter(
+          (i, index) => index !== id
+        )
+      }
     },
   },
 }
