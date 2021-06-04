@@ -165,7 +165,7 @@
                         >
                           <div class="px-4 md:px-5 lg:px-6 py-4">
                             <!-- Webinar name -->
-                            <user-chip :owner="{ name: 'Joy Adeleke' }" />
+                            <user-chip :owner="{ name: user.name }" />
                             <user-chip
                               :user="{
                                 name: 'Somto Agu',
