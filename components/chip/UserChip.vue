@@ -51,14 +51,13 @@
             />
           </svg>
         </button>
-        <button class="items-center">
+        <button @click="deleteItem(id, user.type)" class="items-center">
           <svg
             width="17"
             height="17"
             viewBox="0 0 20 20"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
-            @click="deleteItem(id, user.type)"
           >
             <path d="M7.5 7.5H8.75V15H7.5V7.5Z" fill="#545454" />
             <path d="M11.25 7.5H12.5V15H11.25V7.5Z" fill="#545454" />

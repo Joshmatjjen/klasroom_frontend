@@ -31,14 +31,14 @@
                   <p class="text-xs text-gray-700">Resources</p>
                 </button>
                 <button
-                  @click="webinar ? switcher(3) : null"
+                  @click="!webinar ? switcher(3) : null"
                   :class="{ active: isWebinarSwitch === 3 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Polls</p>
                 </button>
                 <button
-                  @click="webinar ? switcher(4) : null"
+                  @click="!webinar ? switcher(4) : null"
                   :class="{ active: isWebinarSwitch === 4 }"
                   class="menu-btn"
                 >
@@ -446,136 +446,21 @@
                         <div
                           class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full items-center mb-8"
                         >
-                          <div class="px-4 md:px-5 lg:px-6 py-4">
-                            <!-- Question -->
-                            <div class="form-group mb-5">
-                              <label for="input-name">Your question</label>
-                              <div>
-                                <input
-                                  id="input-name"
-                                  type="text"
-                                  class="form-input"
-                                  placeholder="What cryptocurrency is worth the most at the moment?"
-                                  v-model="createWebinar.name"
-                                />
-                              </div>
-                            </div>
-                            <hr class="mb-5" />
-                            <!-- Choices -->
-                            <div class="grid grid-cols-2 gap-x-5 gap-y-0">
-                              <div class="form-group mb-5">
-                                <label for="input-name">Choice1</label>
-                                <div>
-                                  <input
-                                    id="input-name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="Enter choice 1 here"
-                                    v-model="createWebinar.choice"
-                                  />
-                                </div>
-                              </div>
-
-                              <div class="form-group mb-5">
-                                <label for="input-name">Choice 2</label>
-                                <div>
-                                  <input
-                                    id="input-name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="Enter choice 2 here"
-                                    v-model="createWebinar.introduction"
-                                  />
-                                </div>
-                              </div>
-                              <div class="form-group mb-5">
-                                <label for="input-name">Choice 3</label>
-                                <div>
-                                  <input
-                                    id="input-name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="Enter choice 3 here"
-                                    v-model="createWebinar.introduction"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <!-- Add New Choice Button -->
-                            <div
-                              class="relative flex items-center justify-center my-10"
-                              @click="callLog"
-                            >
-                              <hr class="w-full" />
-                              <empty-chip :isAbsolute="true">
-                                <svg
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 16 16"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <g clip-path="url(#clip0)">
-                                    <path
-                                      d="M-2.18262 8H7.99972V-2.18234"
-                                      stroke="#8A8A8A"
-                                      stroke-width="1.5"
-                                    />
-                                    <path
-                                      d="M8 18.1821V7.99979H18.1823"
-                                      stroke="#8A8A8A"
-                                      stroke-width="1.5"
-                                    />
-                                  </g>
-                                  <defs>
-                                    <clipPath id="clip0">
-                                      <rect
-                                        width="16"
-                                        height="16"
-                                        fill="white"
-                                      />
-                                    </clipPath>
-                                  </defs>
-                                </svg>
-                                <p
-                                  class="text-xs text-center font-thin text-gray-600 pl-2"
-                                >
-                                  Add new choice
-                                </p>
-                              </empty-chip>
-                            </div>
-
-                            <!-- Poll Length -->
-                            <div class="grid grid-cols-2 gap-x-5 gap-y-0 mb-5">
-                              <div class="form-group">
-                                <label for="input-name">Poll length</label>
-                                <div class="cs-select mb-8">
-                                  <select v-model="timeLength" class="input">
-                                    <option default value="">
-                                      Select category
-                                    </option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="form-group flex items-end">
-                                <!-- <label for="input-name">Choice 2</label> -->
-                                <div class="cs-select mb-8">
-                                  <select v-model="timeLength" class="input">
-                                    <option default value="">
-                                      Select category
-                                    </option>
-                                  </select>
-                                </div>
-                              </div>
-                            </div>
-
-                            <hr class="mb-8" />
-                          </div>
+                          <poll-chip
+                            v-for="(item, key) in polls"
+                            :key="key"
+                            :id="key"
+                            :item="item"
+                            :deleteItem="removePoll"
+                            :polls="polls"
+                            :checkFormError="checkFormError"
+                          />
                         </div>
 
                         <div class="relative flex items-center justify-center">
                           <div
                             class="btn btn-primary absolute flex flex-row bottom-0 mb-2"
+                            @click="addPoll"
                           >
                             <svg
                               width="16"
@@ -605,10 +490,14 @@
                             <p
                               class="text-sm text-center font-thin text-white pl-2"
                             >
-                              Add new choice
+                              Add new poll
                             </p>
                           </div>
                         </div>
+
+                        <span v-if="pollsError" class="text-sm text-red-700"
+                          >Fill all input field</span
+                        >
                       </dash-items-section-group>
                     </div>
                   </div>
@@ -1343,12 +1232,13 @@ import Swal from 'sweetalert2'
 import moment from 'moment'
 import UserChip from '~/components/chip/UserChip.vue'
 import { getAccessTokenHeader } from '~/utils'
+import PollChip from '~/components/chip/PollChip.vue'
 
 const courses = require('@/static/json/courses.json')
 const webinars = require('@/static/json/webinars.json')
 
 export default {
-  components: { UserChip },
+  components: { UserChip, PollChip },
   layout: 'dashboard',
   middleware: ['check-auth', 'auth'],
   fetch({ store }) {
@@ -1377,10 +1267,17 @@ export default {
       name: '',
       email: '',
     },
+    polls: [
+      {
+        question: '',
+        choices: ['', '', ''],
+        duration: '',
+      },
+    ],
+    pollsError: false,
     coHostFormError: false,
     moderatorFormError: false,
     publishOpt: false,
-    timeLength: '',
     loading: false,
     fileResources: [],
     linkResources: [],
@@ -1402,6 +1299,10 @@ export default {
     async fileResources(value) {
       console.log('fileResources: ', value)
       // await this.$nextTick()
+    },
+    async polls(value) {
+      await this.$nextTick()
+      console.log('polls: ', value)
     },
   },
   methods: {
@@ -1606,7 +1507,47 @@ export default {
           }
           break
         case 3:
-          isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          try {
+            this.polls.map((i) => {
+              if (!i.question) {
+                this.pollsError = true
+                return
+              }
+              if (!i.duration) {
+                this.pollsError = true
+                return
+              }
+              i.choices.map((j) => {
+                if (!j) {
+                  this.pollsError = true
+                  return
+                }
+              })
+            })
+            const resData = {
+              webinar_id: this.webinar.id,
+              polls: [...this.polls],
+            }
+
+            console.log('resData: ', resData)
+
+            const { data } = await this.$axios.$post(
+              `https://streaming.staging.klasroom.com/v1/webinars/polls`,
+              resData,
+              {
+                headers: getAccessTokenHeader(this.token),
+              }
+            )
+
+            console.log('Polls newData: ', data)
+
+            this.loading = false
+            isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          } catch (e) {
+            console.log(e)
+            this.loading = false
+            return
+          }
           break
 
         case 4:
@@ -1657,7 +1598,8 @@ export default {
       }
     },
     checkFormError(type) {
-      if (type === 'co_host') this.coHostFormError = false
+      if (type === 'polls') this.pollsError = false
+      else if (type === 'co_host') this.coHostFormError = false
       else this.moderatorFormError = false
     },
     async setImage(e) {
@@ -1703,6 +1645,19 @@ export default {
           (i, index) => index !== id
         )
       }
+    },
+    addPoll() {
+      this.polls = [
+        ...this.polls,
+        {
+          question: '',
+          choices: ['', '', ''],
+          duration: '',
+        },
+      ]
+    },
+    removePoll(id) {
+      this.polls = this.polls.filter((i, index) => index !== id)
     },
   },
 }
