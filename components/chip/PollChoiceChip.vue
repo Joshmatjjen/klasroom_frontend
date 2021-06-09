@@ -26,19 +26,11 @@
 <script>
 export default {
   props: {
-    // choices: { type: Array, required: false },
-    // question: { type: String, required: false },
     choice: { type: String, required: false },
     id: { type: Number, required: false },
     deleteItem: { type: Function, required: false },
     checkFormError: { type: Function, required: false },
   },
-  // computed: {
-  //   view_route() {
-  //     const slug = _.get(this.course, 'slug', '')
-  //     return this.session ? '/student/courses/view/' + slug : '/courses/' + slug
-  //   },
-  // },
   computed: {
     _choice: {
       get: function () {
@@ -46,16 +38,7 @@ export default {
       },
       set: function (newValue) {
         this.$emit('update:choice', newValue)
-        console.log('update-choice: ', newValue)
-        // console.log('choice: ', this.choice)
-        // console.log('_choice: ', this._choice)
       },
-    },
-  },
-  methods: {
-    update(value) {
-      this.choice = value
-      console.log('choice: ', this.choice)
     },
   },
 }

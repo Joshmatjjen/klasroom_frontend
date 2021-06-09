@@ -128,30 +128,12 @@
 <script>
 export default {
   props: {
-    // choices: { type: Array, required: false },
-    // question: { type: String, required: false },
     item: { type: Object, required: false },
     id: { type: Number, required: false },
     deleteItem: { type: Function, required: false },
     polls: { type: Array, required: false },
     checkFormError: { type: Function, required: false },
   },
-  // computed: {
-  //   view_route() {
-  //     const slug = _.get(this.course, 'slug', '')
-  //     return this.session ? '/student/courses/view/' + slug : '/courses/' + slug
-  //   },
-  // },
-  // computed: {
-  //   choices: {
-  //     get: function () {
-  //       return this.item.choices
-  //     },
-  //     set: function (newValue) {
-  //       this.$emit('update:item.choices', newValue)
-  //     },
-  //   },
-  // },
   methods: {
     addChoice() {
       this.item.choices = [...this.item.choices, '']
