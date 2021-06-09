@@ -162,7 +162,6 @@ export default {
     },
     toggleEmojis() {
       this.showEmojis = !this.showEmojis
-      console.log('chatInput: ', this.$refs.chatInput)
     },
   },
 }
