@@ -17,28 +17,28 @@
                   <p class="text-xs text-gray-700">Preliminary</p>
                 </button>
                 <button
-                  @click="webinar ? switcher(1) : null"
+                  @click="organizerId ? switcher(1) : null"
                   :class="{ active: isWebinarSwitch === 1 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Organizers</p>
                 </button>
                 <button
-                  @click="webinar ? switcher(2) : null"
+                  @click="resourceId ? switcher(2) : null"
                   :class="{ active: isWebinarSwitch === 2 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Resources</p>
                 </button>
                 <button
-                  @click="webinar ? switcher(3) : null"
+                  @click="pollId ? switcher(3) : null"
                   :class="{ active: isWebinarSwitch === 3 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Polls</p>
                 </button>
                 <button
-                  @click="webinar ? switcher(4) : null"
+                  @click="settingId ? switcher(4) : null"
                   :class="{ active: isWebinarSwitch === 4 }"
                   class="menu-btn"
                 >
@@ -167,9 +167,14 @@
                             <!-- Webinar name -->
                             <user-chip :owner="{ name: user.name }" />
                             <user-chip
+                              v-for="(item, key) in coHostOrganizers"
+                              :key="key"
+                              :id="key"
+                              :deleteItem="deleteOrgItem"
                               :user="{
-                                name: 'Somto Agu',
-                                email: 'somtoagu@gmail.com',
+                                name: item.name,
+                                email: item.email,
+                                type: item.type,
                               }"
                             />
                             <hr class="my-5" />
@@ -177,7 +182,7 @@
                               Add new co-host
                             </p>
                             <div class="flex flex-row gap-10">
-                              <div class="form-group flex-1 mb-5">
+                              <!-- <div class="form-group flex-1 mb-5">
                                 <label for="input-name">co-host name</label>
                                 <div>
                                   <input
@@ -185,10 +190,10 @@
                                     type="text"
                                     class="form-input"
                                     placeholder="Enter co-host name here"
-                                    v-model="createWebinar.name"
+                                    v-model="coHost.name"
                                   />
                                 </div>
-                              </div>
+                              </div> -->
 
                               <div class="form-group flex-1 mb-5">
                                 <label for="input-name">Email</label>
@@ -198,7 +203,8 @@
                                     type="text"
                                     class="form-input"
                                     placeholder="Enter co-host name here"
-                                    v-model="createWebinar.name"
+                                    v-model="coHost.email"
+                                    @input="checkFormError('co_host')"
                                   />
                                 </div>
                               </div>
@@ -207,11 +213,17 @@
                                 <div
                                   type="button"
                                   class="btn btn-primary align-middle text-center hover"
+                                  @click="addOrganizer('co_host')"
                                 >
                                   Add
                                 </div>
                               </div>
                             </div>
+                            <span
+                              v-if="coHostFormError"
+                              class="text-sm text-red-700"
+                              >Email address is required</span
+                            >
                             <p class="text-xs text-gray-700">
                               An invitation email will be sent to the co-host's
                               email address including their unique link
@@ -228,9 +240,14 @@
                         >
                           <div class="px-4 md:px-5 lg:px-6 py-4">
                             <user-chip
+                              v-for="(item, key) in modratorOrganizers"
+                              :key="key"
+                              :id="key"
+                              :deleteItem="deleteOrgItem"
                               :user="{
-                                name: 'Forza Speciale',
-                                email: 'adeyemi20@gmail.com',
+                                name: item.name,
+                                email: item.email,
+                                type: item.type,
                               }"
                             />
                             <hr class="my-5" />
@@ -238,7 +255,7 @@
                               Add new moderator
                             </p>
                             <div class="flex flex-row gap-10">
-                              <div class="form-group flex-1 mb-5">
+                              <!-- <div class="form-group flex-1 mb-5">
                                 <label for="input-name">Moderator name</label>
                                 <div>
                                   <input
@@ -246,10 +263,10 @@
                                     type="text"
                                     class="form-input"
                                     placeholder="Enter moderator name here"
-                                    v-model="createWebinar.name"
+                                    v-model="moderator.name"
                                   />
                                 </div>
-                              </div>
+                              </div> -->
 
                               <div class="form-group flex-1 mb-5">
                                 <label for="input-name">Email</label>
@@ -259,7 +276,8 @@
                                     type="text"
                                     class="form-input"
                                     placeholder="Enter moderator email here"
-                                    v-model="createWebinar.name"
+                                    v-model="moderator.email"
+                                    @input="checkFormError('moderator')"
                                   />
                                 </div>
                               </div>
@@ -268,11 +286,17 @@
                                 <div
                                   type="button"
                                   class="btn btn-primary align-middle text-center"
+                                  @click="addOrganizer('moderator')"
                                 >
                                   Add
                                 </div>
                               </div>
                             </div>
+                            <span
+                              v-if="moderatorFormError"
+                              class="text-sm text-red-700"
+                              >Email address is required</span
+                            >
                             <p class="text-xs text-gray-700">
                               An invitation email will be sent to the
                               moderator's email address including their unique
@@ -422,136 +446,21 @@
                         <div
                           class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full items-center mb-8"
                         >
-                          <div class="px-4 md:px-5 lg:px-6 py-4">
-                            <!-- Question -->
-                            <div class="form-group mb-5">
-                              <label for="input-name">Your question</label>
-                              <div>
-                                <input
-                                  id="input-name"
-                                  type="text"
-                                  class="form-input"
-                                  placeholder="What cryptocurrency is worth the most at the moment?"
-                                  v-model="createWebinar.name"
-                                />
-                              </div>
-                            </div>
-                            <hr class="mb-5" />
-                            <!-- Choices -->
-                            <div class="grid grid-cols-2 gap-x-5 gap-y-0">
-                              <div class="form-group mb-5">
-                                <label for="input-name">Choice1</label>
-                                <div>
-                                  <input
-                                    id="input-name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="Enter choice 1 here"
-                                    v-model="createWebinar.choice"
-                                  />
-                                </div>
-                              </div>
-
-                              <div class="form-group mb-5">
-                                <label for="input-name">Choice 2</label>
-                                <div>
-                                  <input
-                                    id="input-name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="Enter choice 2 here"
-                                    v-model="createWebinar.introduction"
-                                  />
-                                </div>
-                              </div>
-                              <div class="form-group mb-5">
-                                <label for="input-name">Choice 3</label>
-                                <div>
-                                  <input
-                                    id="input-name"
-                                    type="text"
-                                    class="form-input"
-                                    placeholder="Enter choice 3 here"
-                                    v-model="createWebinar.introduction"
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                            <!-- Add New Choice Button -->
-                            <div
-                              class="relative flex items-center justify-center my-10"
-                              @click="callLog"
-                            >
-                              <hr class="w-full" />
-                              <empty-chip :isAbsolute="true">
-                                <svg
-                                  width="16"
-                                  height="16"
-                                  viewBox="0 0 16 16"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                >
-                                  <g clip-path="url(#clip0)">
-                                    <path
-                                      d="M-2.18262 8H7.99972V-2.18234"
-                                      stroke="#8A8A8A"
-                                      stroke-width="1.5"
-                                    />
-                                    <path
-                                      d="M8 18.1821V7.99979H18.1823"
-                                      stroke="#8A8A8A"
-                                      stroke-width="1.5"
-                                    />
-                                  </g>
-                                  <defs>
-                                    <clipPath id="clip0">
-                                      <rect
-                                        width="16"
-                                        height="16"
-                                        fill="white"
-                                      />
-                                    </clipPath>
-                                  </defs>
-                                </svg>
-                                <p
-                                  class="text-xs text-center font-thin text-gray-600 pl-2"
-                                >
-                                  Add new choice
-                                </p>
-                              </empty-chip>
-                            </div>
-
-                            <!-- Poll Length -->
-                            <div class="grid grid-cols-2 gap-x-5 gap-y-0 mb-5">
-                              <div class="form-group">
-                                <label for="input-name">Poll length</label>
-                                <div class="cs-select mb-8">
-                                  <select v-model="timeLength" class="input">
-                                    <option default value="">
-                                      Select category
-                                    </option>
-                                  </select>
-                                </div>
-                              </div>
-                              <div class="form-group flex items-end">
-                                <!-- <label for="input-name">Choice 2</label> -->
-                                <div class="cs-select mb-8">
-                                  <select v-model="timeLength" class="input">
-                                    <option default value="">
-                                      Select category
-                                    </option>
-                                  </select>
-                                </div>
-                              </div>
-                            </div>
-
-                            <hr class="mb-8" />
-                          </div>
+                          <poll-chip
+                            v-for="(item, key) in polls"
+                            :key="key"
+                            :id="key"
+                            :item="item"
+                            :deleteItem="removePoll"
+                            :polls="polls"
+                            :checkFormError="checkFormError"
+                          />
                         </div>
 
                         <div class="relative flex items-center justify-center">
                           <div
                             class="btn btn-primary absolute flex flex-row bottom-0 mb-2"
+                            @click="addPoll"
                           >
                             <svg
                               width="16"
@@ -581,10 +490,14 @@
                             <p
                               class="text-sm text-center font-thin text-white pl-2"
                             >
-                              Add new choice
+                              Add new poll
                             </p>
                           </div>
                         </div>
+
+                        <span v-if="pollsError" class="text-sm text-red-700"
+                          >Fill all polls input field</span
+                        >
                       </dash-items-section-group>
                     </div>
                   </div>
@@ -609,8 +522,8 @@
                           class="bg-white rounded-xl border border-gray-300 shadow-hover relative h-full items-center mb-8"
                         >
                           <div class="px-4 md:px-5 lg:px-6 py-4">
-                            <!-- Tutors -->
-                            <div class="form-group mb-5">
+                            <!-- Co Host -->
+                            <!-- <div class="form-group mb-5">
                               <p
                                 class="text-sm text-left font-bold text-gray-800"
                               >
@@ -636,9 +549,9 @@
                                 />
                               </div>
                             </div>
-                            <hr class="mb-5" />
+                            <hr class="mb-5" /> -->
 
-                            <!-- Moderators -->
+                            <!-- Tutors -->
                             <div class="form-group mb-5">
                               <p
                                 class="text-sm text-left font-bold text-gray-800"
@@ -650,19 +563,19 @@
                                   <p
                                     class="text-sm font-thin text-gray-600 self-center"
                                   >
-                                    Max number of moderator
+                                    Max number of tutors
                                   </p>
                                 </div>
 
-                                <v-select
-                                  class="style-chooser cursor-pointer"
-                                  placeholder="4"
-                                  :options="[
-                                    'Components',
-                                    'CSS / Variables',
-                                    'Slots',
-                                  ]"
-                                />
+                                <div>
+                                  <input
+                                    id="input-settings-tutors"
+                                    type="number"
+                                    class="form-input"
+                                    placeholder=""
+                                    v-model="settings.tutors"
+                                  />
+                                </div>
                               </div>
                             </div>
                             <hr class="mb-5" />
@@ -682,15 +595,15 @@
                                   </p>
                                 </div>
 
-                                <v-select
-                                  class="style-chooser cursor-pointer"
-                                  placeholder="50"
-                                  :options="[
-                                    'Components',
-                                    'CSS / Variables',
-                                    'Slots',
-                                  ]"
-                                />
+                                <div>
+                                  <input
+                                    id="input-settings-students"
+                                    type="number"
+                                    class="form-input"
+                                    placeholder=""
+                                    v-model="settings.students"
+                                  />
+                                </div>
                               </div>
                             </div>
                             <hr class="mb-5" />
@@ -699,32 +612,32 @@
                               <p
                                 class="text-sm text-left font-bold text-gray-800"
                               >
-                                Tutors
+                                Moderators
                               </p>
                               <div class="flex flex-row justify-between my-4">
                                 <div class="flex items-center">
                                   <p
                                     class="text-sm font-thin text-gray-600 self-center"
                                   >
-                                    Max number of moderator
+                                    Max number of moderators
                                   </p>
                                 </div>
 
-                                <v-select
-                                  class="style-chooser cursor-pointer"
-                                  placeholder="4"
-                                  :options="[
-                                    'Components',
-                                    'CSS / Variables',
-                                    'Slots',
-                                  ]"
-                                />
+                                <div>
+                                  <input
+                                    id="input-settings-moderators"
+                                    type="number"
+                                    class="form-input"
+                                    placeholder=""
+                                    v-model="settings.moderators"
+                                  />
+                                </div>
                               </div>
                             </div>
                             <hr class="mb-5" />
 
                             <!-- Videos -->
-                            <div class="form-group mb-5">
+                            <!-- <div class="form-group mb-5">
                               <p
                                 class="text-sm text-left font-bold text-gray-800"
                               >
@@ -749,10 +662,10 @@
                                 />
                               </div>
                             </div>
-                            <hr class="mb-5" />
+                            <hr class="mb-5" /> -->
 
                             <!-- Recording -->
-                            <div class="form-group mb-5">
+                            <!-- <div class="form-group mb-5">
                               <p
                                 class="text-sm text-left font-bold text-gray-800"
                               >
@@ -779,10 +692,10 @@
                                 </div>
                               </div>
                             </div>
-                            <hr class="mb-5" />
+                            <hr class="mb-5" /> -->
 
                             <!-- Screen Sharing -->
-                            <div class="form-group mb-5">
+                            <!-- <div class="form-group mb-5">
                               <p
                                 class="text-sm text-left font-bold text-gray-800"
                               >
@@ -799,11 +712,11 @@
                                 </div>
                               </div>
                             </div>
-                            <hr class="mb-5" />
+                            <hr class="mb-5" /> -->
                           </div>
                         </div>
 
-                        <div class="relative flex items-center justify-center">
+                        <!-- <div class="relative flex items-center justify-center">
                           <div
                             class="btn btn-primary absolute flex flex-row bottom-0 mb-2"
                           >
@@ -838,7 +751,7 @@
                               Add new choice
                             </p>
                           </div>
-                        </div>
+                        </div> -->
                       </dash-items-section-group>
 
                       <!-- Pricing -->
@@ -871,21 +784,22 @@
                                     ₦
                                   </p>
                                   <input
-                                    type="text"
+                                    type="number"
                                     class="currency-input"
                                     placeholder="price"
-                                    v-model="createWebinar.introduction"
+                                    v-model="price"
                                   />
-                                  <p
+
+                                  <!-- <p
                                     class="percentage-chip bg-orange-500 rounded-xl text-sm font-medium text-white text-center"
                                   >
                                     15% off
-                                  </p>
+                                  </p> -->
                                 </div>
                               </div>
 
                               <!-- Kenya price -->
-                              <div class="flex flex-row justify-between my-4">
+                              <!-- <div class="flex flex-row justify-between my-4">
                                 <div class="flex items-center">
                                   <p
                                     class="text-sm font-thin text-gray-600 self-center"
@@ -913,10 +827,10 @@
                                     15% off
                                   </p>
                                 </div>
-                              </div>
+                              </div> -->
 
                               <!-- South African price -->
-                              <div class="flex flex-row justify-between my-4">
+                              <!-- <div class="flex flex-row justify-between my-4">
                                 <div class="flex items-center">
                                   <p
                                     class="text-sm font-thin text-gray-600 self-center"
@@ -945,7 +859,7 @@
                                   </p>
                                 </div>
                               </div>
-                              <hr class="mb-5" />
+                              <hr class="mb-5" /> -->
                               <!-- Default bank -->
                               <p
                                 class="text-sm text-left font-bold text-gray-800"
@@ -972,7 +886,7 @@
                           </div>
                         </div>
 
-                        <div class="relative flex items-center justify-center">
+                        <!-- <div class="relative flex items-center justify-center">
                           <div
                             class="btn btn-primary absolute flex flex-row bottom-0 mb-2"
                           >
@@ -1007,7 +921,7 @@
                               Add new choice
                             </p>
                           </div>
-                        </div>
+                        </div> -->
                       </dash-items-section-group>
 
                       <!-- Promotion -->
@@ -1046,11 +960,18 @@
                                   class="form-input currency-box flex flex-row text-center justify-center items-center"
                                 >
                                   <input
-                                    type="text"
-                                    class="promotion-input"
-                                    placeholder="price"
-                                    v-model="createWebinar.introduction"
+                                    type="number"
+                                    class="currency-input"
+                                    min="0"
+                                    max="100"
+                                    placeholder="0"
+                                    v-model="promo.percentageOff"
                                   />
+                                  <p
+                                    class="percentage-chip bg-orange-500 rounded-xl text-sm font-medium text-white text-center"
+                                  >
+                                    % off
+                                  </p>
                                 </div>
                               </div>
 
@@ -1069,8 +990,8 @@
                                   <input
                                     type="date"
                                     class="promotion-input"
-                                    placeholder="price"
-                                    v-model="createWebinar.introduction"
+                                    placeholder="date"
+                                    v-model="promo.startDate"
                                   />
                                 </div>
                               </div>
@@ -1090,8 +1011,8 @@
                                   <input
                                     type="date"
                                     class="promotion-input"
-                                    placeholder="price"
-                                    v-model="createWebinar.introduction"
+                                    placeholder="date"
+                                    v-model="promo.endDate"
                                   />
                                 </div>
                               </div>
@@ -1099,7 +1020,7 @@
                             <hr class="mb-5" />
 
                             <!-- Screen Sharing -->
-                            <div class="form-group mb-5">
+                            <!-- <div class="form-group mb-5">
                               <p
                                 class="text-sm text-left font-bold text-gray-800"
                               >
@@ -1116,11 +1037,11 @@
                                 </div>
                               </div>
                             </div>
-                            <hr class="mb-5" />
+                            <hr class="mb-5" /> -->
                           </div>
                         </div>
 
-                        <div class="relative flex items-center justify-center">
+                        <!-- <div class="relative flex items-center justify-center">
                           <div
                             class="btn btn-primary absolute flex flex-row bottom-0 mb-2"
                           >
@@ -1155,7 +1076,7 @@
                               Add new choice
                             </p>
                           </div>
-                        </div>
+                        </div> -->
                       </dash-items-section-group>
                     </div>
                   </div>
@@ -1166,21 +1087,22 @@
             <!-- End for Switchers -->
           </div>
           <!-- Right Add Image -->
-          <div class="col-span-full lg:col-span-5 xl:col-span-4">
+          <div
+            v-if="isWebinarSwitch !== 0"
+            class="col-span-full lg:col-span-5 xl:col-span-4"
+          >
             <div
               class="bg-white rounded-xl border border-gray-300 shadow-hover relative min-h-full"
             >
               <div class="block mb-2">
                 <div
                   class="big-avatar h-64 relative rounded-xl overflow-hidden"
+                  :style="{
+                    backgroundImage: createWebinar.image
+                      ? `url(${createWebinar.image.signedUrl})`
+                      : `url('/webinar-view-bg.jpg')`,
+                  }"
                 >
-                  <div class="grid grid-cols-12 place-items-center h-64 py-32">
-                    <div
-                      class="change-picture col-span-12 text-white mx-auto my-auto"
-                    >
-                      <button class="focus:outline-none">Change Picture</button>
-                    </div>
-                  </div>
                   <div
                     class="w-full h-full bg-black opacity-50 absolute top-0"
                   ></div>
@@ -1190,45 +1112,24 @@
                 <ul class="text-gray-700">
                   <li class="text-left">
                     <h5 class="font-bold mb-2">
-                      The Cryptocurrency Masterclass
+                      {{ webinar.title }}
                     </h5>
                     <p class="text-xs text-gray-700">
-                      Everything you need to know about Cryptocurrency and ways
-                      you can profit from it.
+                      {{ webinar.introduction }}
                     </p>
                   </li>
-                  <li>
+                  <!-- <li>
                     <hr class="my-5" />
                     <label class="checkbox" @click="$router.push('/')">
                       <span class="text-sm">Preview webinar</span>
                       <input type="checkbox" value="intermediate" disabled />
                       <span class="checkmark"></span>
                     </label>
-                  </li>
+                  </li> -->
                   <hr class="my-5" />
-                  <li class="flex flex-row justify-between">
-                    <label
-                      class="checkbox"
-                      @click="$router.push('/student/dashboard')"
-                    >
-                      <span class="text-sm">Tutor link: https://klasro..</span>
-                      <input type="checkbox" value="intermediate" disabled />
-                      <span class="checkmark"></span>
-                    </label>
-                    <div class="flex items-center mr-5 mb-3 cursor-pointer">
-                      <img class="w-6 h-4" src="/icon/copy.svg" />
-                      <span class="text-xs">Copy</span>
-                    </div>
-                  </li>
                   <li class="lg:pb-8 flex flex-row justify-between">
-                    <label
-                      class="checkbox"
-                      @click="$router.push('/student/dashboard')"
-                    >
-                      <span class="text-sm">Studet link: https://klasro..</span>
-                      <input type="checkbox" value="intermediate" disabled />
-                      <span class="checkmark"></span>
-                    </label>
+                    <span class="text-sm">Link: https://klasro..</span>
+
                     <div class="flex items-center mr-5 mb-3 cursor-pointer">
                       <img class="w-6 h-4" src="/icon/copy.svg" />
                       <span class="text-xs">Copy</span>
@@ -1237,9 +1138,8 @@
                   <li class="lg:pb-8 flex flex-row justify-between relative">
                     <button
                       class="btn btn-primary mr-5 flex flex-row justify-between align-middle items-center"
-                      @click.prevent="createNewWebinar"
                     >
-                      <span class="text-xs">Publish webinar</span>
+                      <span class="text-xs">Preview webinar</span>
                       <!-- <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-5 w-5 ml-1"
@@ -1271,11 +1171,52 @@
                         <p>Schedule for later</p>
                       </a>
                     </div> -->
-                    <button class="btn btn-light">
+                    <!-- <button class="btn btn-light">
                       <span class="text-xs">Save </span>
-                    </button>
+                    </button> -->
                   </li>
                 </ul>
+              </div>
+            </div>
+          </div>
+
+          <div v-else class="col-span-full lg:col-span-5 xl:col-span-4">
+            <div
+              class="bg-white rounded-xl border border-gray-300 shadow-hover relative min-h-full"
+            >
+              <div class="block mb-2">
+                <div
+                  class="big-avatar h-64 relative rounded-xl overflow-hidden"
+                  :style="{
+                    backgroundImage: createWebinar.image
+                      ? `url(${createWebinar.image.signedUrl})`
+                      : `url('/webinar-view-bg.jpg')`,
+                  }"
+                >
+                  <div class="grid grid-cols-12 place-items-center h-64 py-32">
+                    <div
+                      class="change-picture col-span-12 text-white mx-auto my-auto"
+                    >
+                      <input
+                        ref="image"
+                        type="file"
+                        name="image"
+                        accept="image/*"
+                        multiple
+                        @change="setWebinarImage"
+                      />
+                      <button
+                        @click.prevent="showFileChooser('webinarImage')"
+                        class="focus:outline-none"
+                      >
+                        Add Picture
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="w-full h-full bg-black opacity-50 absolute top-0"
+                  ></div>
+                </div>
               </div>
             </div>
           </div>
@@ -1294,15 +1235,14 @@
                 Previous
               </button>
               <button
-                class="btn btn-sm lg:mt-0"
-                :class="isWebinarSwitch === 4 ? 'btn-disable' : 'btn-primary'"
+                class="btn btn-sm lg:mt-0 btn-primary"
                 @click="
                   () => {
                     goNext(isWebinarSwitch)
                   }
                 "
               >
-                Next
+                {{ isWebinarSwitch === 4 ? 'Publish Webinar' : 'Next' }}
                 <loader v-if="loading" color="white" />
               </button>
             </div>
@@ -1319,12 +1259,13 @@ import Swal from 'sweetalert2'
 import moment from 'moment'
 import UserChip from '~/components/chip/UserChip.vue'
 import { getAccessTokenHeader } from '~/utils'
+import PollChip from '~/components/chip/PollChip.vue'
 
 const courses = require('@/static/json/courses.json')
 const webinars = require('@/static/json/webinars.json')
 
 export default {
-  components: { UserChip },
+  components: { UserChip, PollChip },
   layout: 'dashboard',
   middleware: ['check-auth', 'auth'],
   fetch({ store }) {
@@ -1334,7 +1275,15 @@ export default {
     courses: _.take(courses, 4),
     webinars: _.take(webinars, 4),
     undoneTasks: _.take(courses, 3),
+
     webinar: null,
+    organizerId: null,
+    resourceId: null,
+    pollId: null,
+    settingId: null,
+    priceId: null,
+    promotionId: null,
+
     isWebinarSwitch: 0,
     createWebinar: {
       title: '',
@@ -1344,12 +1293,43 @@ export default {
       startTime: '',
       endTime: '',
       tags: [],
+      image: null,
     },
+    coHost: {
+      name: '',
+      email: '',
+    },
+    moderator: {
+      name: '',
+      email: '',
+    },
+    polls: [
+      {
+        question: '',
+        choices: ['', '', ''],
+        duration: '',
+      },
+    ],
+    settings: {
+      tutors: 0,
+      moderators: 0,
+      students: 0,
+    },
+    price: 0,
+    promo: {
+      percentageOff: 0,
+      startDate: '',
+      endDate: '',
+    },
+    pollsError: false,
+    coHostFormError: false,
+    moderatorFormError: false,
     publishOpt: false,
-    timeLength: '',
     loading: false,
     fileResources: [],
     linkResources: [],
+    coHostOrganizers: [],
+    modratorOrganizers: [],
   }),
   computed: {
     ...mapState({
@@ -1366,6 +1346,10 @@ export default {
     async fileResources(value) {
       console.log('fileResources: ', value)
       // await this.$nextTick()
+    },
+    async polls(value) {
+      await this.$nextTick()
+      console.log('polls: ', value)
     },
   },
   methods: {
@@ -1425,6 +1409,47 @@ export default {
         })
         .catch((e) => console.log('e: ', e))
     },
+    async publishWebinar() {
+      try {
+        if (this.webinar) {
+          const { data, message } = await this.$axios.$put(
+            `https://streaming.staging.klasroom.com/v1/webinars?publish_now=${true}`,
+            {
+              title: this.webinar.title,
+              subtitle: this.webinar.subtitle,
+              introduction: this.webinar.introduction,
+              webinarStart: this.webinar.startDateTime,
+              webinarEnd: this.webinar.endDateTime,
+              tags: this.webinar.tags,
+            },
+            {
+              headers: getAccessTokenHeader(this.token),
+            }
+          )
+          newData = data
+
+          Swal.fire({
+            position: 'top-end',
+            width: '350px',
+            text: message,
+            backdrop: false,
+            allowOutsideClick: false,
+            showConfirmButton: false,
+            showCloseButton: true,
+            timer: 3000,
+          })
+
+          console.log('webinar data: ', data, message)
+
+          // Publish action
+          if (this.userDash === 'tutor') this.gotoWebinar('tutor')
+          else this.gotoWebinar('student')
+        }
+      } catch (e) {
+        console.log(e)
+        return
+      }
+    },
     gotoWebinar(type) {
       this.$router.push(`/${type}/webinars`)
       this.close()
@@ -1432,61 +1457,106 @@ export default {
     async goNext(isWebinarSwitch) {
       switch (isWebinarSwitch) {
         case 0:
-          this.loading = true
-          const {
-            title,
-            subtitle,
-            introduction,
-            date,
-            startTime,
-            endTime,
-          } = this.createWebinar
-          const data = {
-            ...this.createWebinar,
-            webinarStart: moment(date + ' ' + startTime).format(
-              'YYYY-MM-DDTHH:mm:ss'
-            ),
-            webinarEnd: moment(date + ' ' + endTime).format(
-              'YYYY-MM-DDTHH:mm:ss'
-            ),
+          try {
+            this.loading = true
+            const { date, startTime, endTime, image } = this.createWebinar
+            const resData = {
+              ...this.createWebinar,
+              webinarStart: moment(date + ' ' + startTime).format(
+                'YYYY-MM-DDTHH:mm:ss'
+              ),
+              webinarEnd: moment(date + ' ' + endTime).format(
+                'YYYY-MM-DDTHH:mm:ss'
+              ),
+              webinarImage: image ? image.fileName : '',
+            }
+            console.log('resData: ', resData)
+
+            let newData
+
+            if (this.webinar) {
+              const { data } = await this.$axios.$put(
+                `https://streaming.staging.klasroom.com/v1/webinars?publish_now=${false}`,
+                resData,
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              newData = data
+            } else {
+              const { data } = await this.$axios.$post(
+                `https://streaming.staging.klasroom.com/v1/webinars?publish_now=${false}`,
+                resData,
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              newData = data
+            }
+
+            // const { data } = await this.$axios.$post(
+            //   `https://streaming.staging.klasroom.com/v1/webinars?publish_now=${false}`,
+            //   resData,
+            //   {
+            //     headers: getAccessTokenHeader(this.token),
+            //   }
+            // )
+            // newData = data
+
+            console.log('webinar data: ', newData)
+            this.webinar = newData
+            this.loading = false
+            isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          } catch (e) {
+            console.log(e)
+            this.loading = false
+            return
           }
-          console.log('data: ', data)
-          this.$store
-            .dispatch('webinar/createWebinar', {
-              ...data,
-              publishNow: false,
-            })
-            .then((res) => {
-              this.loading = false
-              if (res) {
-                Swal.fire({
-                  position: 'top-end',
-                  width: '350px',
-                  text: res.message,
-                  backdrop: false,
-                  allowOutsideClick: false,
-                  showConfirmButton: false,
-                  showCloseButton: true,
-                  timer: 3000,
-                })
-
-                console.log('webinar data: ', res.data)
-                this.webinar = res.data
-                this.loading = false
-                isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
-
-                // Publish action
-                // if (this.userDash === 'tutor') this.gotoWebinar('tutor')
-                // else this.gotoWebinar('student')
-              }
-            })
-            .catch((e) => {
-              console.log('e: ', e)
-              this.loading = false
-            })
           break
         case 1:
-          isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          try {
+            const resData = {
+              webinar_id: this.webinar.id,
+              co_organizers: [
+                ...this.coHostOrganizers,
+                ...this.modratorOrganizers,
+              ],
+            }
+
+            console.log('resData: ', resData)
+
+            let newData
+
+            if (this.organizerId) {
+              const { data } = await this.$axios.$post(
+                `https://streaming.staging.klasroom.com/v1/webinars/organizers`,
+                resData,
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              newData = data
+            } else {
+              const { data } = await this.$axios.$post(
+                `https://streaming.staging.klasroom.com/v1/webinars/organizers`,
+                resData,
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              newData = data
+            }
+
+            console.log('Organizers newData: ', newData)
+            this.organizerId = newData.id
+
+            this.loading = false
+            isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          } catch (e) {
+            console.log(e)
+            this.loading = false
+            return
+          }
           break
         case 2:
           this.loading = true
@@ -1509,7 +1579,7 @@ export default {
               resources: [
                 ...data.resources.map((i) => {
                   return {
-                    resource: i,
+                    resource: i.fileName,
                     type: 'file',
                   }
                 }),
@@ -1524,15 +1594,31 @@ export default {
 
             console.log('resData: ', resData)
 
-            const { data: newData } = await this.$axios.$post(
-              `https://streaming.staging.klasroom.com/v1/webinars/resources`,
-              resData,
-              {
-                headers: getAccessTokenHeader(this.token),
-              }
-            )
+            let newData
+
+            if (this.resourceId) {
+              const { data } = await this.$axios.$put(
+                `https://streaming.staging.klasroom.com/v1/webinars/resources/${this.resourceId}`,
+                resData,
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              newData = data
+            } else {
+              const { data } = await this.$axios.$post(
+                `https://streaming.staging.klasroom.com/v1/webinars/resources`,
+                resData,
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              newData = data
+            }
 
             console.log('newData: ', newData)
+
+            this.resourceId = newData.id
 
             this.loading = false
             isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
@@ -1543,11 +1629,156 @@ export default {
           }
           break
         case 3:
-          isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          this.loading = true
+          try {
+            this.polls.map((i) => {
+              if (!i.question) {
+                this.pollsError = true
+                return
+              }
+              if (!i.duration) {
+                this.pollsError = true
+                return
+              }
+              i.choices.map((j) => {
+                if (!j) {
+                  this.pollsError = true
+                  return
+                }
+              })
+            })
+            const resData = {
+              webinar_id: this.webinar.id,
+              polls: [...this.polls],
+            }
+
+            console.log('resData: ', resData)
+
+            let newData
+
+            if (this.pollId) {
+              const { data } = await this.$axios.$put(
+                `https://streaming.staging.klasroom.com/v1/webinars/polls/${this.pollId}`,
+                resData,
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              newData = data
+            } else {
+              const { data } = await this.$axios.$post(
+                `https://streaming.staging.klasroom.com/v1/webinars/polls`,
+                resData,
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              newData = data
+            }
+
+            console.log('Polls newData: ', newData)
+
+            this.pollId = newData.id
+            this.loading = false
+            isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          } catch (e) {
+            console.log(e)
+            this.loading = false
+            return
+          }
           break
 
         case 4:
-          isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          this.loading = true
+          try {
+            const { startDate, endDate } = this.promo
+            const resPromoData = {
+              ...this.promo,
+              startDate: moment(startDate).format('YYYY-MM-DDTHH:mm:ss'),
+              endDate: moment(endDate).format('YYYY-MM-DDTHH:mm:ss'),
+            }
+
+            let newData
+
+            if (this.settingId) {
+              const { data: settingsData } = await this.$axios.$put(
+                `https://streaming.staging.klasroom.com/v1/webinars/settings/${this.settingId}`,
+                {
+                  webinar_id: this.webinar.id,
+                  ...this.settings,
+                },
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              const { data: priceData } = await this.$axios.$put(
+                `https://streaming.staging.klasroom.com/v1/webinars/price/${this.priceId}`,
+                {
+                  webinarId: this.webinar.id,
+                  price: this.price,
+                },
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              const { data: promotionData } = await this.$axios.$put(
+                `https://streaming.staging.klasroom.com/v1/webinars/promos/${this.promotionId}`,
+                {
+                  webinarId: this.webinar.id,
+                  ...resPromoData,
+                },
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              newData = { settingsData, priceData, promotionData }
+            } else {
+              const { data: settingsData } = await this.$axios.$post(
+                `https://streaming.staging.klasroom.com/v1/webinars/settings`,
+                {
+                  webinar_id: this.webinar.id,
+                  ...this.settings,
+                },
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              const { data: priceData } = await this.$axios.$post(
+                `https://streaming.staging.klasroom.com/v1/webinars/price`,
+                {
+                  webinarId: this.webinar.id,
+                  price: this.price,
+                },
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              const { data: promotionData } = await this.$axios.$post(
+                `https://streaming.staging.klasroom.com/v1/webinars/promos`,
+                {
+                  webinarId: this.webinar.id,
+                  ...resPromoData,
+                },
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              newData = { settingsData, priceData, promotionData }
+            }
+
+            console.log('Settings newData: ', newData)
+            this.settingId = newData.settingsData.id
+            this.priceId = newData.priceData.id
+            this.promotionId = newData.promotionData.id
+            this.loading = false
+
+            // Change to public webinar
+            isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+          } catch (e) {
+            console.log(e)
+            this.loading = false
+            return
+          }
           break
 
         default:
@@ -1563,8 +1794,64 @@ export default {
         addLink: this.addLink,
       })
     },
-    showFileChooser() {
-      this.$refs.input.click()
+    showFileChooser(type) {
+      if (type === 'webinarImage') this.$refs.image.click()
+      else this.$refs.input.click()
+    },
+    addOrganizer(type) {
+      if (type === 'co_host') {
+        const data = this.coHost
+        if (!data.email) {
+          this.coHostFormError = true
+          return
+        }
+        data.type = 'co_host'
+        this.coHostOrganizers = [...this.coHostOrganizers, data]
+        this.coHost = {
+          name: '',
+          email: '',
+        }
+      } else {
+        const data = this.moderator
+        if (!data.email) {
+          this.moderatorFormError = true
+          return
+        }
+        data.type = 'moderator'
+        this.modratorOrganizers = [...this.modratorOrganizers, data]
+        this.moderator = {
+          name: '',
+          email: '',
+        }
+      }
+    },
+    checkFormError(type) {
+      if (type === 'polls') this.pollsError = false
+      else if (type === 'co_host') this.coHostFormError = false
+      else this.moderatorFormError = false
+    },
+    async setWebinarImage(e) {
+      console.log('Uploading__')
+      const file = e.target.files[0]
+      console.log('file: ', file)
+
+      const formData = new FormData()
+      formData.append('webinar', file, '.' + file.type.split('/')[1])
+      try {
+        const { data, message } = await this.$axios.$post(
+          `/uploads`,
+          formData,
+          {
+            headers: getAccessTokenHeader(this.token),
+          }
+        )
+        console.log('uploaded: ', message, data)
+
+        this.createWebinar.image = data.webinar
+      } catch (e) {
+        console.log(e)
+        return
+      }
     },
     async setImage(e) {
       console.log('Uploading__')
@@ -1594,7 +1881,34 @@ export default {
         this.linkResources = this.linkResources.filter(
           (i, index) => index !== id
         )
-      this.fileResources = this.fileResources.filter((i, index) => index !== id)
+      else
+        this.fileResources = this.fileResources.filter(
+          (i, index) => index !== id
+        )
+    },
+    deleteOrgItem(id, type) {
+      if (type === 'co_host') {
+        this.coHostOrganizers = this.coHostOrganizers.filter(
+          (i, index) => index !== id
+        )
+      } else {
+        this.modratorOrganizers = this.modratorOrganizers.filter(
+          (i, index) => index !== id
+        )
+      }
+    },
+    addPoll() {
+      this.polls = [
+        ...this.polls,
+        {
+          question: '',
+          choices: ['', '', ''],
+          duration: '',
+        },
+      ]
+    },
+    removePoll(id) {
+      this.polls = this.polls.filter((i, index) => index !== id)
     },
   },
 }
@@ -1624,7 +1938,6 @@ export default {
 }
 .big-avatar {
   width: 100%;
-  background-image: url('/webinar-view-bg.jpg');
   background-repeat: no-repeat;
   background-size: cover;
   @apply bg-gray-200;
