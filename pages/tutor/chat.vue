@@ -25,7 +25,7 @@
             </chat-messages>
           </div>
           <div class="col-span-3 max-h-content-screen">
-            <chat-members />
+            <!-- <chat-members /> -->
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@
       <div class="container mx-auto mb-10 px-4 lg:px-0">
         <div class="md:grid grid-cols-12 gap-5">
           <div class="col-span-3 max-h-content-screen mb-8 lg:mb-0">
-            <chat-contacts />
+            <chat-courses />
           </div>
           <div class="col-span-6 max-h-content-screen mb-8 lg:mb-0">
             <chat-messages>
@@ -26,7 +26,7 @@
             </chat-messages>
           </div>
           <div class="col-span-3 max-h-content-screen">
-            <chat-members />
+            <!-- <chat-members /> -->
           </div>
         </div>
       </div>
