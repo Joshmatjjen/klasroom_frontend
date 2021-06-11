@@ -326,7 +326,7 @@
                             ref="input"
                             type="file"
                             name="image"
-                            accept="image/*"
+                            accept="application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, text/plain, application/pdf, image/*"
                             multiple
                             @change="setImage"
                           />
@@ -1377,52 +1377,6 @@ export default {
     callLog() {
       console.log('adding new')
     },
-    createNewWebinar() {
-      this.loading = true
-      const {
-        title,
-        subtitle,
-        introduction,
-        date,
-        startTime,
-        endTime,
-      } = this.createWebinar
-      const data = {
-        ...this.createWebinar,
-        webinarStart: moment(date + ' ' + startTime).format(
-          'YYYY-MM-DDTHH:mm:ss'
-        ),
-        webinarEnd: moment(date + ' ' + endTime).format('YYYY-MM-DDTHH:mm:ss'),
-      }
-      console.log('data: ', data)
-      this.$store
-        .dispatch('webinar/createWebinar', {
-          ...data,
-          publishNow: false,
-        })
-        .then((res) => {
-          this.loading = false
-          if (res) {
-            Swal.fire({
-              position: 'top-end',
-              width: '350px',
-              text: res.message,
-              backdrop: false,
-              allowOutsideClick: false,
-              showConfirmButton: false,
-              showCloseButton: true,
-              timer: 3000,
-            })
-
-            console.log('webinar data: ', res.data)
-
-            // Publish action
-            // if (this.userDash === 'tutor') this.gotoWebinar('tutor')
-            // else this.gotoWebinar('student')
-          }
-        })
-        .catch((e) => console.log('e: ', e))
-    },
     async publishWebinar() {
       try {
         if (this.webinar) {
@@ -1446,7 +1400,6 @@ export default {
               headers: getAccessTokenHeader(this.token),
             }
           )
-          newData = data
 
           Swal.fire({
             position: 'top-end',
@@ -1516,20 +1469,12 @@ export default {
               newData = data
             }
 
-            // const { data } = await this.$axios.$post(
-            //   `https://streaming.staging.klasroom.com/v1/webinars?publish_now=${false}`,
-            //   resData,
-            //   {
-            //     headers: getAccessTokenHeader(this.token),
-            //   }
-            // )
-            // newData = data
-
             console.log('webinar data: ', newData)
             this.webinar = newData
             this.loading = false
             this.webinarStates.organizers = true
             isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+            window.scrollTo(0, 0)
           } catch (e) {
             console.log(e)
             this.loading = false
@@ -1576,6 +1521,7 @@ export default {
             this.loading = false
             this.webinarStates.resources = true
             isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+            window.scrollTo(0, 0)
           } catch (e) {
             console.log(e)
             this.loading = false
@@ -1676,6 +1622,7 @@ export default {
             this.loading = false
             this.webinarStates.polls = true
             isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+            window.scrollTo(0, 0)
           } catch (e) {
             console.log(e)
             this.loading = false
@@ -1737,6 +1684,7 @@ export default {
             if (!this.pollsError) {
               this.webinarStates.settings = true
               isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+              window.scrollTo(0, 0)
             }
             this.loading = false
           } catch (e) {
