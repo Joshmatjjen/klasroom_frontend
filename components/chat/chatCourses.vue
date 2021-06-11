@@ -2,7 +2,7 @@
   <div
     class="flex flex-col flex-1 bg-white lg:bg-transparent rounded-xl border border-gray-300 lg:border-0 h-full max-h-screen antialiased"
   >
-    <tabs-menu v-model="menu" :tabs="['Courses', 'Students']" center />
+    <tabs-menu v-model="menu" :tabs="['Courses', 'Tutors']" center />
     <div
       ref="scrollbar"
       class="mt-4 mb-3 mx-2 md:ml-0 md:pl-0 md:mb-0 p-3 pt-1 flex flex-col space-y-4 overflow-y-auto scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch"
@@ -45,20 +45,20 @@
               {{ group.last_message }}
             </p>
           </div>
-          <!-- <div
+          <div
             v-if="group.handle || group.unread"
             class="flex flex-row mt-auto mb-1"
           >
-            <span
+            <!-- <span
               v-if="group.handle"
               class="notice"
               :class="{ spaced: group.unread }"
               >@</span
-            >
-            <span v-if="group.unread" class="notice">
+            > -->
+            <!-- <span v-if="group.unread" class="notice">
               {{ group.unread }}
-            </span>
-          </div> -->
+            </span> -->
+          </div>
         </div>
       </div>
     </div>
