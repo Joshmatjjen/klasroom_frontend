@@ -133,7 +133,8 @@
 </template>
 
 <script>
-import Vue from 'vue'
+import { mapState } from 'vuex'
+import { getAccessTokenHeader } from '~/utils'
 
 const courses = require('@/static/json/courses.json')
 const webinars = require('@/static/json/webinars.json')
@@ -147,9 +148,18 @@ export default {
   fetch({ store }) {
     store.commit('app/SET_TITLE', 'Webinars')
   },
+  // async asyncData(context) {
+  //   const { data } = await context.$axios.$get(
+  //     `https://streaming.staging.klasroom.com/v1/webinars/upcoming`,
+  //     {
+  //       headers: getAccessTokenHeader(context.token),
+  //     }
+  //   )
+  //   return { webinars: _.take(data, 4) }
+  // },
   data: () => ({
     courses: _.take(courses, 4),
-    webinars: _.take(webinars, 4),
+    webinars: [],
     undoneTasks: _.take(courses, 3),
     // Upcoming
     columnsUpcoming: [
@@ -223,6 +233,17 @@ export default {
       draft: false,
     },
   }),
+  computed: {
+    ...mapState({
+      user: (state) => state.auth.user,
+      token: (state) => state.auth.token,
+      userType: (state) =>
+        state.auth.user && state.auth.user.isTutor ? 'tutor' : 'student',
+    }),
+    userDash() {
+      return this.$route.path.split('/')[1]
+    },
+  },
   methods: {
     switcher: function (value) {
       switch (value) {
@@ -248,6 +269,19 @@ export default {
       }
       // some code to filter users
     },
+  },
+  async mounted() {
+    try {
+      const { data } = await this.$axios.$get(
+        `https://streaming.staging.klasroom.com/v1/webinars/upcoming`,
+        {
+          headers: getAccessTokenHeader(this.token),
+        }
+      )
+      this.webinars = _.take(data, 4)
+    } catch (err) {
+      console.log(err)
+    }
   },
 }
 </script>
