@@ -17,28 +17,28 @@
                   <p class="text-xs text-gray-700">Preliminary</p>
                 </button>
                 <button
-                  @click="organizerId ? switcher(1) : null"
+                  @click="webinarStates.organizers ? switcher(1) : null"
                   :class="{ active: isWebinarSwitch === 1 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Organizers</p>
                 </button>
                 <button
-                  @click="resourceId ? switcher(2) : null"
+                  @click="webinarStates.resources ? switcher(2) : null"
                   :class="{ active: isWebinarSwitch === 2 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Resources</p>
                 </button>
                 <button
-                  @click="pollId ? switcher(3) : null"
+                  @click="webinarStates.polls ? switcher(3) : null"
                   :class="{ active: isWebinarSwitch === 3 }"
                   class="menu-btn"
                 >
                   <p class="text-xs text-gray-700">Polls</p>
                 </button>
                 <button
-                  @click="settingId ? switcher(4) : null"
+                  @click="webinarStates.settings ? switcher(4) : null"
                   :class="{ active: isWebinarSwitch === 4 }"
                   class="menu-btn"
                 >
@@ -944,7 +944,9 @@
                                   </p>
                                 </div>
                                 <div class="col-span-5 text-right">
-                                  <input-toggle-switch v-model="autoplay" />
+                                  <input-toggle-switch
+                                    v-model="runPricePromotion"
+                                  />
                                 </div>
                               </div>
                               <div class="flex flex-row justify-between my-4">
@@ -1284,6 +1286,13 @@ export default {
     priceId: null,
     promotionId: null,
 
+    webinarStates: {
+      organizers: false,
+      resources: false,
+      polls: false,
+      settings: false,
+    },
+
     isWebinarSwitch: 0,
     createWebinar: {
       title: '',
@@ -1311,9 +1320,9 @@ export default {
       },
     ],
     settings: {
-      tutors: 0,
-      moderators: 0,
-      students: 0,
+      tutors: 1,
+      moderators: 1,
+      students: 50,
     },
     price: 0,
     promo: {
@@ -1321,6 +1330,7 @@ export default {
       startDate: '',
       endDate: '',
     },
+    runPricePromotion: false,
     pollsError: false,
     coHostFormError: false,
     moderatorFormError: false,
@@ -1350,6 +1360,10 @@ export default {
     async polls(value) {
       await this.$nextTick()
       console.log('polls: ', value)
+    },
+    async runPricePromotion(value) {
+      console.log('runPricePromotion: ', value)
+      // await this.$nextTick()
     },
   },
   methods: {
@@ -1413,13 +1427,19 @@ export default {
       try {
         if (this.webinar) {
           const { data, message } = await this.$axios.$put(
-            `https://streaming.staging.klasroom.com/v1/webinars?publish_now=${true}`,
+            `https://streaming.staging.klasroom.com/v1/webinars/${
+              this.webinar.id
+            }?publish_now=${true}`,
             {
               title: this.webinar.title,
               subtitle: this.webinar.subtitle,
               introduction: this.webinar.introduction,
-              webinarStart: this.webinar.startDateTime,
-              webinarEnd: this.webinar.endDateTime,
+              webinarStart: moment(
+                this.createWebinar.date + ' ' + this.createWebinar.startTime
+              ).format('YYYY-MM-DDTHH:mm:ss'),
+              webinarEnd: moment(
+                this.createWebinar.date + ' ' + this.createWebinar.endTime
+              ).format('YYYY-MM-DDTHH:mm:ss'),
               tags: this.webinar.tags,
             },
             {
@@ -1476,7 +1496,9 @@ export default {
 
             if (this.webinar) {
               const { data } = await this.$axios.$put(
-                `https://streaming.staging.klasroom.com/v1/webinars?publish_now=${false}`,
+                `https://streaming.staging.klasroom.com/v1/webinars/${
+                  this.webinar.id
+                }?publish_now=${false}`,
                 resData,
                 {
                   headers: getAccessTokenHeader(this.token),
@@ -1506,6 +1528,7 @@ export default {
             console.log('webinar data: ', newData)
             this.webinar = newData
             this.loading = false
+            this.webinarStates.organizers = true
             isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
           } catch (e) {
             console.log(e)
@@ -1551,6 +1574,7 @@ export default {
             this.organizerId = newData.id
 
             this.loading = false
+            this.webinarStates.resources = true
             isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
           } catch (e) {
             console.log(e)
@@ -1560,67 +1584,97 @@ export default {
           break
         case 2:
           this.loading = true
-          const formData = new FormData()
-          this.fileResources.map((i) => {
-            formData.append('resources', i, '.' + i.type.split('/')[1])
-          })
+          let resData
           try {
-            const { data, message } = await this.$axios.$post(
-              `/uploads`,
-              formData,
-              {
-                headers: getAccessTokenHeader(this.token),
-              }
-            )
-            console.log('uploaded: ', message, data)
+            const formData = new FormData()
+            if (this.fileResources.length > 0) {
+              this.fileResources.map((i) => {
+                formData.append(
+                  'webinar_resources',
+                  i,
+                  '.' + i.type.split('/')[1]
+                )
+              })
+              const { data, message } = await this.$axios.$post(
+                `/uploads`,
+                formData,
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              console.log('uploaded: ', message, data)
 
-            const resData = {
-              webinar_id: this.webinar.id,
-              resources: [
-                ...data.resources.map((i) => {
-                  return {
-                    resource: i.fileName,
-                    type: 'file',
-                  }
-                }),
-                ...this.linkResources.map((i) => {
-                  return {
-                    resource: i,
-                    type: 'link',
-                  }
-                }),
-              ],
+              resData = {
+                webinar_id: this.webinar.id,
+                resources: [
+                  ...data.webinar_resources.map((i) => {
+                    return {
+                      resource: i.fileName,
+                      type: 'file',
+                    }
+                  }),
+                ],
+              }
+            }
+
+            if (this.linkResources.length > 0) {
+              if (resData) {
+                resData.resources = [
+                  ...resData.resources,
+                  ...this.linkResources.map((i) => {
+                    return {
+                      resource: i,
+                      type: 'link',
+                    }
+                  }),
+                ]
+              } else {
+                resData = {
+                  webinar_id: this.webinar.id,
+                  resources: [
+                    ...this.linkResources.map((i) => {
+                      return {
+                        resource: i,
+                        type: 'link',
+                      }
+                    }),
+                  ],
+                }
+              }
             }
 
             console.log('resData: ', resData)
 
-            let newData
+            if (resData) {
+              let newData
 
-            if (this.resourceId) {
-              const { data } = await this.$axios.$put(
-                `https://streaming.staging.klasroom.com/v1/webinars/resources/${this.resourceId}`,
-                resData,
-                {
-                  headers: getAccessTokenHeader(this.token),
-                }
-              )
-              newData = data
-            } else {
-              const { data } = await this.$axios.$post(
-                `https://streaming.staging.klasroom.com/v1/webinars/resources`,
-                resData,
-                {
-                  headers: getAccessTokenHeader(this.token),
-                }
-              )
-              newData = data
+              if (this.resourceId) {
+                const { data } = await this.$axios.$put(
+                  `https://streaming.staging.klasroom.com/v1/webinars/resources/${this.resourceId}`,
+                  resData,
+                  {
+                    headers: getAccessTokenHeader(this.token),
+                  }
+                )
+                newData = data
+              } else {
+                const { data } = await this.$axios.$post(
+                  `https://streaming.staging.klasroom.com/v1/webinars/resources`,
+                  resData,
+                  {
+                    headers: getAccessTokenHeader(this.token),
+                  }
+                )
+                newData = data
+              }
+
+              console.log('newData: ', newData)
+
+              this.resourceId = newData.id
             }
 
-            console.log('newData: ', newData)
-
-            this.resourceId = newData.id
-
             this.loading = false
+            this.webinarStates.polls = true
             isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
           } catch (e) {
             console.log(e)
@@ -1632,55 +1686,59 @@ export default {
           this.loading = true
           try {
             this.polls.map((i) => {
-              if (!i.question) {
-                this.pollsError = true
-                return
-              }
-              if (!i.duration) {
-                this.pollsError = true
-                return
-              }
-              i.choices.map((j) => {
-                if (!j) {
+              if (i.question) {
+                if (!i.duration) {
                   this.pollsError = true
                   return
                 }
-              })
+                i.choices.map((j) => {
+                  if (!j) {
+                    this.pollsError = true
+                    return
+                  }
+                })
+              }
             })
-            const resData = {
-              webinar_id: this.webinar.id,
-              polls: [...this.polls],
+
+            if (!this.pollsError && this.polls[0].question) {
+              const resData = {
+                webinar_id: this.webinar.id,
+                polls: [...this.polls],
+              }
+
+              console.log('resData: ', resData)
+
+              let newData
+
+              if (this.pollId) {
+                const { data } = await this.$axios.$put(
+                  `https://streaming.staging.klasroom.com/v1/webinars/polls/${this.pollId}`,
+                  resData,
+                  {
+                    headers: getAccessTokenHeader(this.token),
+                  }
+                )
+                newData = data
+              } else {
+                const { data } = await this.$axios.$post(
+                  `https://streaming.staging.klasroom.com/v1/webinars/polls`,
+                  resData,
+                  {
+                    headers: getAccessTokenHeader(this.token),
+                  }
+                )
+                newData = data
+              }
+
+              console.log('Polls newData: ', newData)
+
+              this.pollId = newData.id
             }
-
-            console.log('resData: ', resData)
-
-            let newData
-
-            if (this.pollId) {
-              const { data } = await this.$axios.$put(
-                `https://streaming.staging.klasroom.com/v1/webinars/polls/${this.pollId}`,
-                resData,
-                {
-                  headers: getAccessTokenHeader(this.token),
-                }
-              )
-              newData = data
-            } else {
-              const { data } = await this.$axios.$post(
-                `https://streaming.staging.klasroom.com/v1/webinars/polls`,
-                resData,
-                {
-                  headers: getAccessTokenHeader(this.token),
-                }
-              )
-              newData = data
+            if (!this.pollsError) {
+              this.webinarStates.settings = true
+              isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
             }
-
-            console.log('Polls newData: ', newData)
-
-            this.pollId = newData.id
             this.loading = false
-            isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
           } catch (e) {
             console.log(e)
             this.loading = false
@@ -1698,40 +1756,17 @@ export default {
               endDate: moment(endDate).format('YYYY-MM-DDTHH:mm:ss'),
             }
 
-            let newData
-
             if (this.settingId) {
               const { data: settingsData } = await this.$axios.$put(
                 `https://streaming.staging.klasroom.com/v1/webinars/settings/${this.settingId}`,
                 {
-                  webinar_id: this.webinar.id,
                   ...this.settings,
                 },
                 {
                   headers: getAccessTokenHeader(this.token),
                 }
               )
-              const { data: priceData } = await this.$axios.$put(
-                `https://streaming.staging.klasroom.com/v1/webinars/price/${this.priceId}`,
-                {
-                  webinarId: this.webinar.id,
-                  price: this.price,
-                },
-                {
-                  headers: getAccessTokenHeader(this.token),
-                }
-              )
-              const { data: promotionData } = await this.$axios.$put(
-                `https://streaming.staging.klasroom.com/v1/webinars/promos/${this.promotionId}`,
-                {
-                  webinarId: this.webinar.id,
-                  ...resPromoData,
-                },
-                {
-                  headers: getAccessTokenHeader(this.token),
-                }
-              )
-              newData = { settingsData, priceData, promotionData }
+              this.settingId = settingsData.id
             } else {
               const { data: settingsData } = await this.$axios.$post(
                 `https://streaming.staging.klasroom.com/v1/webinars/settings`,
@@ -1743,6 +1778,20 @@ export default {
                   headers: getAccessTokenHeader(this.token),
                 }
               )
+              this.settingId = settingsData.id
+            }
+            if (this.priceId) {
+              const { data: priceData } = await this.$axios.$put(
+                `https://streaming.staging.klasroom.com/v1/webinars/price/${this.priceId}`,
+                {
+                  price: this.price,
+                },
+                {
+                  headers: getAccessTokenHeader(this.token),
+                }
+              )
+              this.priceId = priceData.id
+            } else {
               const { data: priceData } = await this.$axios.$post(
                 `https://streaming.staging.klasroom.com/v1/webinars/price`,
                 {
@@ -1753,27 +1802,38 @@ export default {
                   headers: getAccessTokenHeader(this.token),
                 }
               )
-              const { data: promotionData } = await this.$axios.$post(
-                `https://streaming.staging.klasroom.com/v1/webinars/promos`,
-                {
-                  webinarId: this.webinar.id,
-                  ...resPromoData,
-                },
-                {
-                  headers: getAccessTokenHeader(this.token),
-                }
-              )
-              newData = { settingsData, priceData, promotionData }
+              this.priceId = priceData.id
+            }
+            if (this.runPricePromotion) {
+              if (this.promotionId) {
+                const { data: promotionData } = await this.$axios.$put(
+                  `https://streaming.staging.klasroom.com/v1/webinars/promos/${this.promotionId}`,
+                  {
+                    ...resPromoData,
+                  },
+                  {
+                    headers: getAccessTokenHeader(this.token),
+                  }
+                )
+                this.promotionId = promotionData.id
+              } else {
+                const { data: promotionData } = await this.$axios.$post(
+                  `https://streaming.staging.klasroom.com/v1/webinars/promos`,
+                  {
+                    webinar_id: this.webinar.id,
+                    ...resPromoData,
+                  },
+                  {
+                    headers: getAccessTokenHeader(this.token),
+                  }
+                )
+                this.promotionId = promotionData.id
+              }
             }
 
-            console.log('Settings newData: ', newData)
-            this.settingId = newData.settingsData.id
-            this.priceId = newData.priceData.id
-            this.promotionId = newData.promotionData.id
             this.loading = false
 
-            // Change to public webinar
-            isWebinarSwitch >= 4 ? null : this.switcher(isWebinarSwitch + 1)
+            this.publishWebinar()
           } catch (e) {
             console.log(e)
             this.loading = false
@@ -1836,7 +1896,7 @@ export default {
       console.log('file: ', file)
 
       const formData = new FormData()
-      formData.append('webinar', file, '.' + file.type.split('/')[1])
+      formData.append('webinar_image', file, '.' + file.type.split('/')[1])
       try {
         const { data, message } = await this.$axios.$post(
           `/uploads`,
@@ -1847,7 +1907,7 @@ export default {
         )
         console.log('uploaded: ', message, data)
 
-        this.createWebinar.image = data.webinar
+        this.createWebinar.image = data.webinar_image
       } catch (e) {
         console.log(e)
         return
@@ -1928,6 +1988,7 @@ export default {
 }
 .currency-input {
   border: none !important;
+  background: #f5f5f3 !important;
 }
 .switcher {
   -ms-overflow-style: none; /* Internet Explorer 10+ */
