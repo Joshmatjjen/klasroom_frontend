@@ -92,10 +92,9 @@ const youLearn = require('@/static/json/courses-you-learn.json')
 
 export default {
   name: 'DashWebinarView',
-  fetch({ store }) {},
   async fetch() {
     this.$store.commit('app/SET_DARK_MENU', true)
-    this.$store.commit('app/SET_TITLE', 'Webinars')
+    this.$store.commit('app/SET_TITLE', 'View Webinar')
     console.log('$route', this.$route.params)
     try {
       const { data } = await this.$axios.$get(

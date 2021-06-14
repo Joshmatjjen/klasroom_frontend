@@ -3,6 +3,11 @@
     <div
       v-if="status === 'countdown'"
       class="banner-card w-full h-full text-center px-12 pt-40 pb-16"
+      :style="{
+        backgroundImage: image
+          ? `url(${image})`
+          : `url('/webinar-view-bg.jpg')`,
+      }"
     >
       <div class="mb-8">
         <p class="font-semibold text-sm text-white">
@@ -55,6 +60,7 @@ export default {
   props: {
     status: { type: String, default: 'inactive' }, // inactive / countdown / paused
     countdown: { type: String, required: false },
+    image: { type: String, required: false },
     roomName: { type: String, required: false },
   },
   methods: {

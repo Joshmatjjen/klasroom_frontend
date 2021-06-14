@@ -3,6 +3,7 @@
     <webinar-video-frame
       :countdown="webinar.webinar.startDateTime"
       :roomName="webinar.webinar.roomName"
+      :image="webinar.webinar.image"
       status="countdown"
       class="rounded-b-none mb-4"
     />

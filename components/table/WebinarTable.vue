@@ -26,7 +26,7 @@
       >
         <template slot="table-row" slot-scope="props">
           <nuxt-link
-            :to="'/tutor/webinars/preview/' + props.row.title"
+            :to="`/${userDash}/webinars/preview/` + props.row.id"
             class="relative"
           >
             <span
@@ -182,6 +182,11 @@ export default {
     toggleMenu(optId) {
       this.opt = !this.opt
       if (optId) this.optId = optId
+    },
+  },
+  computed: {
+    userDash() {
+      return this.$route.path.split('/')[1]
     },
   },
 }

@@ -1140,6 +1140,11 @@
                   <li class="lg:pb-8 flex flex-row justify-between relative">
                     <button
                       class="btn btn-primary mr-5 flex flex-row justify-between align-middle items-center"
+                      @click="
+                        $router.push(
+                          `/${userDash}/webinars/preview/${webinar.id}`
+                        )
+                      "
                     >
                       <span class="text-xs">Preview webinar</span>
                       <!-- <svg
