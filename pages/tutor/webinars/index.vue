@@ -1,5 +1,5 @@
 <template>
-  <dash-webinar-view />
+  <dash-webinar />
 </template>
 
 <script>

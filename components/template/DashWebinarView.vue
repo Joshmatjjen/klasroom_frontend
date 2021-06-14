@@ -2,129 +2,81 @@
   <div class="min-h-screen mb-24">
     <section class="bg-orange-100">
       <div class="container mx-auto mb-10 px-4 lg:px-0">
-        <div class="md:grid grid-cols-4 gap-5 space-y-3 md:space-y-0">
-          <dash-item-metrics
-            title="3 webinars"
-            label="Published"
-            :more="`/${userDash}/webinars`"
-          />
-          <dash-item-metrics
-            title="34,600"
-            label="Webinar sales"
-            :more="`/${userDash}/webinars`"
-          />
-          <dash-item-metrics title="3,540" label="Attendants" />
-          <dash-item-metrics title="20 webinars" label="Attended" />
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div
-        class="flex flex-row gap-10 place-items-start px-10 border-b-2 border-gray-200"
-      >
-        <button
-          v-on:click="switcher('upcoming')"
-          v-bind:class="{ active: isWebinars.upcoming }"
-          class="menu-btn"
-        >
-          <p class="text-xs text-gray-700">My upcoming webinars</p>
-        </button>
-        <button
-          v-on:click="switcher('recorded')"
-          v-bind:class="{ active: isWebinars.recorded }"
-          class="menu-btn"
-        >
-          <p class="text-xs text-gray-700">My recorded webinars</p>
-        </button>
-        <button
-          v-on:click="switcher('draft')"
-          v-bind:class="{ active: isWebinars.draft }"
-          class="menu-btn"
-        >
-          <p class="text-xs text-gray-700">My draft</p>
-        </button>
-      </div>
-    </section>
-
-    <section>
-      <!-- Upcoming -->
-      <div
-        v-if="isWebinars.upcoming"
-        class="container mx-auto my-10 px-2 lg:px-0"
-      >
-        <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-12">
-            <webinar-table :columns="columnsUpcoming" :rows="rowsUpcoming" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Recorded -->
-      <div
-        v-if="isWebinars.recorded"
-        class="container mx-auto my-10 px-2 lg:px-0"
-      >
-        <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-12">
-            <webinar-table :columns="columnsRecorded" :rows="rowsRecorded" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Draft -->
-      <div v-if="isWebinars.draft" class="container mx-auto my-10 px-2 lg:px-0">
-        <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-12">
-            <webinar-table
-              :columns="columnsDraft"
-              :rows="rowsDraft"
-              :onDraft="true"
-            />
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container mx-auto my-10 px-2 lg:px-0">
-        <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-12">
-            <dash-items-section-group
-              title="Upcoming Webinars"
-              :more="webinars.length > 0 && `/${userDash}/upcoming-webinars`"
+        <div class="grid grid-cols-12 gap-5">
+          <div
+            v-if="!$device.isMobile"
+            class="col-span-full lg:col-span-8 xl:col-span-8"
+          >
+            <div
+              class="bg-white rounded-xl border border-gray-300 shadow-hover overflow-hidden relative h-full"
             >
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-                <webinar-item
-                  v-for="(webinar, key) in webinars"
-                  :key="key"
-                  :webinar="webinar"
-                  :session="true"
-                  :userType="userDash"
-                />
-              </div>
-            </dash-items-section-group>
+              <webinar-view-details :webinar="webinar" />
+            </div>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="bg-orange-100">
-      <div class="container mx-auto my-10 px-2 lg:px-0">
-        <div class="md:grid grid-cols-3 gap-5 space-y-4 md:space-y-0">
-          <dash-webinars-calendar class="col-span-2" />
-          <dash-pre-recorded-webinars :items="undoneTasks" />
-        </div>
-      </div>
-    </section>
-
-    <section>
-      <div class="container mx-auto my-10 px-2 lg:px-0">
-        <div class="grid grid-cols-12 gap-4">
-          <div class="col-span-12">
-            <dash-items-section-group title="Previously Attended Webinars">
-              <dash-previously-attended-webinars />
-            </dash-items-section-group>
+          <div class="col-span-full lg:col-span-4 xl:col-span-4">
+            <div
+              class="flex flex-col flex-1 bg-white rounded-xl border border-gray-300 min-h-content-screen"
+            >
+              <tabs-menu v-model="tab" :tabs="tabs" />
+              <div v-if="$device.isMobile && tab === 0 && tabs.length === 5">
+                <webinar-view-details :webinar="webinar" />
+              </div>
+              <div
+                v-if="
+                  (tab === 0 && tabs.length === 4) ||
+                  (tab === 1 && tabs.length === 5)
+                "
+              >
+                <chat-messages no-card />
+              </div>
+              <div
+                v-if="
+                  (tab === 1 && tabs.length === 4) ||
+                  (tab === 2 && tabs.length === 5)
+                "
+                class="pl-4 md:pl-5 lg:pl-6 pb-5"
+              >
+                <webinar-people />
+              </div>
+              <div
+                v-if="
+                  (tab === 2 && tabs.length === 4) ||
+                  (tab === 3 && tabs.length === 5)
+                "
+                class="px-4 md:px-5 lg:px-6 py-4 pb-10"
+              >
+                <webinar-poll />
+              </div>
+              <div
+                v-if="
+                  (tab === 3 && tabs.length === 4) ||
+                  (tab === 4 && tabs.length === 5)
+                "
+                class="px-4 md:px-5 lg:px-6 py-4 pb-10"
+              >
+                <div class="space-y-4">
+                  <resource-list
+                    v-for="(item, key) in [
+                      'Businessstats.com / businessfailurerates',
+                    ]"
+                    :key="key"
+                    :name="item"
+                    desc="This will show you stats of business failure across countries of the world. This information will be useful for your assignment"
+                    link="#"
+                  />
+                  <resource-list
+                    v-for="(item, key) in [
+                      'Business finance spreadsheet.xls',
+                      'Business startup checklist.doc',
+                    ]"
+                    :key="key"
+                    :name="item"
+                    link="#"
+                    :download="true"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -136,163 +88,67 @@
 import { mapState } from 'vuex'
 import { getAccessTokenHeader } from '~/utils'
 
-const courses = require('@/static/json/courses.json')
-const webinars = require('@/static/json/webinars.json')
-const webinarCourse = require('@/static/json/webinar-course.json')
-const webinarRecorded = require('@/static/json/webinar-recorded.json')
-const webinarDraft = require('@/static/json/webinar-draft.json')
+const youLearn = require('@/static/json/courses-you-learn.json')
 
 export default {
   name: 'DashWebinarView',
-  data: () => ({
-    courses: _.take(courses, 4),
-    undoneTasks: _.take(courses, 3),
-    // Upcoming
-    columnsUpcoming: [
-      {
-        label: 'Webinar title',
-        field: 'webinarTitle',
-      },
-      {
-        label: 'Price',
-        field: 'price',
-      },
-      {
-        label: 'Sales',
-        field: 'sales',
-      },
-      {
-        label: 'Webinar Type',
-        field: 'webinarType',
-      },
-      {
-        label: 'Date',
-        field: 'date',
-        type: 'date',
-        dateInputFormat: 'yyyy-MM-dd',
-        dateOutputFormat: 'MMM do yy',
-      },
-    ],
-    rowsUpcoming: _.take(webinarCourse, 4),
-    // Recorded
-    columnsRecorded: [
-      {
-        label: 'Webinar title',
-        field: 'webinarTitle',
-      },
-      {
-        label: 'Price',
-        field: 'price',
-      },
-      {
-        label: 'Sales',
-        field: 'sales',
-      },
-      {
-        label: 'Attendees',
-        field: 'attendees',
-      },
-      {
-        label: 'Rating',
-        field: 'rating',
-      },
-      {
-        label: 'Held On',
-        field: 'heldOn',
-        type: 'date',
-        dateInputFormat: 'yyyy-MM-dd',
-        dateOutputFormat: 'MMM do yy',
-      },
-    ],
-    rowsRecorded: _.take(webinarRecorded, 4),
-    columnsDraft: [
-      {
-        label: 'Webinal title',
-        field: 'webinarTitle',
-      },
-    ],
-    rowsDraft: _.take(webinarDraft, 4),
+  fetch({ store }) {},
+  async fetch() {
+    this.$store.commit('app/SET_DARK_MENU', true)
+    this.$store.commit('app/SET_TITLE', 'Webinars')
+    console.log('$route', this.$route.params)
+    try {
+      const { data } = await this.$axios.$get(
+        `https://streaming.staging.klasroom.com/v1/webinars/${this.$route.params.slug}`,
+        {
+          headers: getAccessTokenHeader(this.token),
+        }
+      )
+      console.log('webinar: ', data)
 
-    isWebinars: {
-      upcoming: true,
-      recorded: false,
-      draft: false,
-    },
+      this.webinar = data
+    } catch (err) {
+      console.log(err)
+    }
+  },
+  fetchOnServer: false,
+  data: () => ({
+    home: 'home',
+    webinar: null,
+    youLearn,
+    tab: 0,
+    tabs: ['Chat', 'People', 'Poll', 'Resources'],
   }),
   computed: {
     ...mapState({
       user: (state) => state.auth.user,
       token: (state) => state.auth.token,
-      webinars: (state) =>
-        state.webinar.webinars ? _.take(state.webinar.webinars.data, 4) : [],
     }),
     userDash() {
       return this.$route.path.split('/')[1]
     },
   },
-  async fetch() {
-    this.$store.commit('app/SET_TITLE', 'Webinars')
-    try {
-      const { data, pagination, metaData } = await this.$axios.$get(
-        `https://streaming.staging.klasroom.com/v1/webinars/upcoming`,
-        {
-          headers: getAccessTokenHeader(this.token),
-        }
-      )
-      console.log('upcoming webinars: ', data)
-      this.$store.commit('webinar/FETCH_WEBINAR_SUCCESS', {
-        data,
-        pagination,
-        metaData,
-      })
-      // this.webinars = _.take(data, 4)
-    } catch (err) {
-      console.log(err)
+  mounted() {
+    if (this.$device.isMobile) {
+      this.tabs.unshift('Home')
     }
   },
-  // call fetch only on client-side
-  fetchOnServer: false,
   methods: {
-    switcher: function (value) {
-      switch (value) {
-        case 'upcoming':
-          this.isWebinars.upcoming = true
-          this.isWebinars.recorded = false
-          this.isWebinars.draft = false
-          break
-        case 'recorded':
-          this.isWebinars.upcoming = false
-          this.isWebinars.recorded = true
-          this.isWebinars.draft = false
-          break
-        case 'draft':
-          this.isWebinars.upcoming = false
-          this.isWebinars.recorded = false
-          this.isWebinars.draft = true
-          break
-        default:
-          this.isWebinars.upcoming = true
-          this.isWebinars.recorded = false
-          this.isWebinars.draft = false
-      }
-      // some code to filter users
+    scrollTo(e, id) {
+      if (e) e.preventDefault()
+      const el = document.getElementById(id)
+      el.scrollIntoView({ behavior: 'smooth' })
+    },
+    purchaseCourse() {
+      this.$store.commit('app/SET_MODAL', 'purchase-modal')
+      this.$store.commit('app/SET_VIEW_DATA', {
+        type: 'Webinar',
+        title: 'How to Build Multiple Sources of Income',
+        desc: `Learn how to build and manage multiple sources of 
+          income that leads to sustainable wealth`,
+        price: 2500,
+      })
     },
   },
 }
 </script>
-
-<style scoped>
-.menu-btn {
-  border-top: 5px solid;
-  border-bottom: 5px solid;
-  padding: 0.938rem 0;
-  display: inline-block;
-  border-color: transparent;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-}
-.menu-btn.active {
-  border-bottom-color: #f99e42;
-  font-weight: 700;
-}
-</style>

@@ -168,7 +168,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import EditChip from '~/components/chip/EditChip.vue'
 
 const webinars = require('@/static/json/latest-webinars.json')
@@ -180,20 +179,23 @@ export default {
   components: { EditChip },
   layout: 'dashboard',
   middleware: ['check-auth', 'auth'],
-  // async fetch() {
-  //   this.$store.commit('app/SET_DARK_MENU', true)
-  //   try {
-  //     const { data } = await this.$axios.$get(
-  //       `https://streaming.staging.klasroom.com/v1/webinars/upcoming`,
-  //       {
-  //         headers: getAccessTokenHeader(this.token),
-  //       }
-  //     )
-  //     this.webinarData = data
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // },
+  async fetch() {
+    this.$store.commit('app/SET_DARK_MENU', true)
+    console.log('$route', this.$route)
+
+    // try {
+    //   const { data } = await this.$axios.$get(
+    //     `https://streaming.staging.klasroom.com/v1/webinars/${}`,
+    //     {
+    //       headers: getAccessTokenHeader(this.token),
+    //     }
+    //   )
+    //   this.webinarData = data
+    // } catch (err) {
+    //   console.log(err)
+    // }
+  },
+  fetchOnServer: false,
   data: () => ({
     home: 'home',
     course: webinars[0],
