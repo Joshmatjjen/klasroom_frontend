@@ -109,7 +109,7 @@
     <section class="bg-white">
       <div class="container mx-auto my-16 px-4 lg:px-0">
         <items-section-group title="Latest Courses" more="/courses/latest">
-          <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div class="flex flex-row overflow-x-auto gap-5 scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch">
             <course-item
               v-for="(course, key) in latestCourses"
               :key="key"
@@ -129,7 +129,7 @@
     <section class="bg-white">
       <div class="container mx-auto my-16 px-4 lg:px-0">
         <items-section-group title="Trending" more="/trending">
-          <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div class="flex flex-row overflow-x-auto gap-5 scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch">
             <course-item
               v-for="(course, key) in latestCourses"
               :key="key"

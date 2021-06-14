@@ -3,12 +3,27 @@
     <div
       v-if="status === 'countdown'"
       class="banner-card w-full h-full text-center px-12 pt-40 pb-16"
+      :style="{
+        backgroundImage: image
+          ? `url(${image})`
+          : `url('/webinar-view-bg.jpg')`,
+      }"
     >
       <div class="mb-8">
         <p class="font-semibold text-sm text-white">
           This webinar will start in
         </p>
-        <div class="countdown-timer text-white mt-4">
+        <div v-if="date" class="countdown-timer text-white mt-4">
+          <span>{{ date.days }}</span>
+          days
+          <span>{{ date.hours }}</span>
+          hours
+          <span>{{ date.minutes }}</span>
+          minutes
+          <span>{{ date.seconds }}</span>
+          seconds
+        </div>
+        <div v-else class="countdown-timer text-white mt-4">
           <span>2</span>
           days
           <span>14</span>
@@ -25,7 +40,7 @@
       >
         Add to Calendar
       </button> -->
-      <nuxt-link to="/meeting/13673-13673"
+      <nuxt-link :to="roomName ? `/webinars/start/${roomName}` : ``"
         ><button class="btn btn-primary mx-auto my-auto">
           Start
         </button></nuxt-link
@@ -39,12 +54,34 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   props: {
     status: { type: String, default: 'inactive' }, // inactive / countdown / paused
+    countdown: { type: String, required: false },
+    image: { type: String, required: false },
+    roomName: { type: String, required: false },
   },
   methods: {
     addToCalendar() {},
+  },
+  data: () => ({
+    date: null,
+  }),
+  mounted() {
+    if (this.countdown) {
+      const datetime = moment.duration(
+        moment(this.countdown).diff(moment()),
+        'milliseconds'
+      )
+      this.date = {
+        days: datetime.days(),
+        hours: datetime.hours(),
+        minutes: datetime.minutes(),
+        seconds: datetime.seconds(),
+      }
+    }
   },
 }
 </script>

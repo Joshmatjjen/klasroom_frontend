@@ -138,7 +138,7 @@
               </div>
             </div>
             <items-section-group title="More like this">
-              <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 <course-item
                   v-for="(course, key) in courses"
                   :key="key"

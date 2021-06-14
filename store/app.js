@@ -26,6 +26,7 @@ export const state = () => ({
   changePasswordModal: null,
   editImageModal: null,
   deleteAccountModal: null,
+  addLinkModal: null,
 })
 
 // getters
@@ -97,6 +98,9 @@ export const mutations = {
   },
   DELETE_ACCOUNT_MODAL(state, data) {
     state.deleteAccountModal = data
+  },
+  ADD_LINK_MODAL(state, options) {
+    state.addLinkModal = options
   },
   SET_TYPE(state, type) {
     state.pageType = type

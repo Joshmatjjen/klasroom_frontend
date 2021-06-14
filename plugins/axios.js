@@ -10,7 +10,7 @@ export default ({ $axios, app, store, redirect, route }) => {
   // Request interceptor
   $axios.onRequest((request) => {
     request.baseURL = process.env.baseUrl
-
+    // console.log('request.headers:', request.headers)
     request.headers.common['Secret'] = process.env.secret
     request.headers.common['Content-Type'] = 'multipart/form-data'
 
@@ -18,7 +18,7 @@ export default ({ $axios, app, store, redirect, route }) => {
     // console.log('Axios token:', token)
     if (token) {
       // request.headers.common.Authorization = `Bearer ${token}`
-      request.headers.common['Access-Token'] = token
+      request.headers['Access-Token'] = token
     } else {
       delete request.headers.common.Authorization
     }

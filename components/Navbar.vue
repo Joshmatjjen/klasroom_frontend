@@ -85,7 +85,7 @@
             </a> -->
             <a
               href="#"
-              class="btn btn-primary lg:mt-0 lg:mr-4 flex flex-row"
+              class="btn btn-primary lg:mt-0 lg:mr-4 mr-4 flex flex-row"
               @click.prevent="() => toggleOpt('login')"
             >
               <p>Log In</p>

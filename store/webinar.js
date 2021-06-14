@@ -13,7 +13,6 @@ export const getters = {
 
 // mutations
 export const mutations = {
-
   FETCH_WEBINAR_SUCCESS(state, webinars) {
     state.webinars = webinars
   },
@@ -21,7 +20,6 @@ export const mutations = {
 
 // actions
 export const actions = {
-
   // async joinMeeting(vuexContext, webinarData) {
   //   try {
   //     console.log("creating webinar...")
@@ -41,15 +39,17 @@ export const actions = {
 
   async createWebinar(vuexContext, webinarData) {
     try {
-      console.log("creating webinar...")
+      console.log('creating webinar...')
       console.log(vuexContext.rootState.auth.user)
       const user = vuexContext.rootState.auth.user
-      const { data: newData, message } = await this.$axios.$post(`https://streaming.staging.klasroom.com/v1/webinars?publish_now=${webinarData.publishNow}`, webinarData, {
-        headers: getAccessTokenHeader(user.accessToken)
-      })
-      console.log("newData: ", newData)
-      return {newData, message}
-
+      const { data, message } = await this.$axios.$post(
+        `https://streaming.staging.klasroom.com/v1/webinars?publish_now=${webinarData.publishNow}`,
+        webinarData,
+        {
+          headers: getAccessTokenHeader(user.accessToken),
+        }
+      )
+      return { data, message }
     } catch (e) {
       console.log(e)
       return false
