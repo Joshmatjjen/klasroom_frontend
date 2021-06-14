@@ -62,6 +62,10 @@ export default {
    ** See https://nuxtjs.org/api/configuration-components
    */
   components: true,
+  loading: {
+    color: 'black',
+    height: '4px',
+  },
   /*
    ** Nuxt.js dev-modules
    */
