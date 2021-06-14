@@ -30,7 +30,7 @@
               title="Courses you started"
               more="/student/my-courses"
             >
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              <div class="flex flex-row overflow-x-auto gap-5 scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch">
                 <course-item
                   v-for="(course, key) in courses"
                   :key="key"
@@ -46,7 +46,7 @@
 
     <section class="bg-orange-100">
       <div class="container mx-auto my-10 px-2 lg:px-0">
-        <div class="grid grid-cols-3 gap-5">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
           <dash-webinars-calendar class="col-span-2" />
           <dash-pre-recorded-webinars :items="undoneTasks" />
         </div>
@@ -61,7 +61,7 @@
               title="Saved Courses"
               more="/student/saved-courses"
             >
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              <div class="flex flex-row overflow-x-auto gap-5 scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch">
                 <course-item
                   v-for="(course, key) in courses"
                   :key="key"
@@ -83,7 +83,7 @@
               title="Suggested Courses"
               more="/student/suggested-courses"
             >
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              <div class="flex flex-row overflow-x-auto gap-5 scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch">
                 <course-item
                   v-for="(course, key) in courses"
                   :key="key"
@@ -105,7 +105,7 @@
               title="Suggested Webinars"
               more="/student/suggested-webinars"
             >
-              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              <div class="flex flex-row overflow-x-auto gap-5 scrollbar-thumb-orange scrollbar-thumb-rounded scrollbar-track-orange-lighter scrollbar-w-2 scrolling-touch">
                 <course-item
                   v-for="(course, key) in courses"
                   :key="key"
