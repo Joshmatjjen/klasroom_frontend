@@ -51,6 +51,21 @@
               >
                 <span class="text-sm">Settings</span>
               </nuxt-link>
+              <a
+                v-if="userDash"
+                @click.prevent="switchDash"
+                class="user-menu-drop-item text-gray-700 block py-3 md:px-5 lg:px-6 hover:bg-gray-200"
+              >
+                <span class="text-sm">
+                  {{
+                    userDash === 'student' && userType === 'tutor'
+                      ? 'Switch to Tutor'
+                      : userDash === 'student' && userType === 'student'
+                      ? 'Become a Tutor'
+                      : 'Switch to Student'
+                  }}
+                </span>
+              </a>
               <a @click="logout" class="text-gray-700 block py-2">
                 <span class="text-sm">Sign out</span>
               </a>
@@ -84,6 +99,9 @@ export default {
         state.auth.user && state.auth.user.isTutor ? 'tutor' : 'student',
       profileImage: (state) => state.auth.profileImage,
     }),
+    userDash() {
+      return this.$route.path.split('/')[1]
+    },
   },
   props: {
     userDash: {
@@ -108,6 +126,16 @@ export default {
     toggleUserMenu(e) {
       if (e) e.preventDefault()
       this.userMenu = !this.userMenu
+    },
+    switchDash() {
+      if (this.userDash === 'student' && this.userType === 'tutor')
+        this.$router.push(`/tutor/dashboard`)
+      else if (this.userDash === 'student' && this.userType === 'student') {
+        // Become a tutor
+        console.log('become a tutor...')
+        // this.toggleUserMenu()
+        this.$store.commit('app/BECOME_A_TUTOR_MODAL', true)
+      } else this.$router.push(`/student/dashboard`)
     },
     logout() {
       this.$store.dispatch('auth/logout')
