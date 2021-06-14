@@ -44,7 +44,7 @@
             <div
               class="bg-white rounded-xl border border-gray-300 shadow-hover overflow-hidden relative h-full"
             >
-              <webinar-view-details />
+              <webinar-view-details :webinarData="webinarData" />
             </div>
           </div>
           <div class="col-span-full lg:col-span-4 xl:col-span-4">
@@ -180,13 +180,25 @@ export default {
   components: { EditChip },
   layout: 'dashboard',
   middleware: ['check-auth', 'auth'],
-  fetch({ store }) {
-    store.commit('app/SET_DARK_MENU', true)
-  },
+  // async fetch() {
+  //   this.$store.commit('app/SET_DARK_MENU', true)
+  //   try {
+  //     const { data } = await this.$axios.$get(
+  //       `https://streaming.staging.klasroom.com/v1/webinars/upcoming`,
+  //       {
+  //         headers: getAccessTokenHeader(this.token),
+  //       }
+  //     )
+  //     this.webinarData = data
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // },
   data: () => ({
     home: 'home',
     course: webinars[0],
     webinars: _.take(webinars, 3),
+    webinarData: null,
     youLearn,
     tab: 0,
     tabs: ['Chat', 'People', 'Poll', 'Resources'],

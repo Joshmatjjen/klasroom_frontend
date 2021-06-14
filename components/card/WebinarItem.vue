@@ -11,7 +11,7 @@
     </div>
     <div class="p-3 md:p-6">
       <p class="text-sm md:text-md text-gray-900 font-semibold mb-0">
-        {{ webinar.name }}
+        {{ webinar.title }}
       </p>
       <p class="text-xs md:text-sm text-gray-700 mt-2 md:mt-0">
         {{ webinar.author }}
@@ -19,7 +19,9 @@
     </div>
     <div class="md:absolute grid md:grid-cols-2 w-full bottom-0 mb-5">
       <div class="pl-3 md:pl-5">
-        <span class="text-xs md:text-sm text-gray-700">12th Oct. 2020</span>
+        <span class="text-xs md:text-sm text-gray-700">{{
+          formatDate(webinar.startDateTime)
+        }}</span>
       </div>
       <div
         class="text-xs md:text-sm text-gray-500 md:text-right pl-3 md:pl-0 md:pr-5"
@@ -31,6 +33,8 @@
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   props: {
     webinar: { type: Object, required: true },
@@ -39,12 +43,18 @@ export default {
   },
   computed: {
     view_route() {
-      const slug = _.get(this.webinar, 'slug', '')
+      const slug = _.get(this.webinar, 'id', '')
       return this.session
         ? this.userType === 'tutor'
           ? '/tutor/webinars/view/' + slug
           : '/student/webinars/view/' + slug
         : '/webinars/' + slug
+    },
+  },
+  methods: {
+    formatDate(date) {
+      console.log('formatDate', new Date(date))
+      return moment(date).format('Do MMM. YYYY')
     },
   },
 }

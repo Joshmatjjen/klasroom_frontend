@@ -91,8 +91,8 @@
         <div class="grid grid-cols-12 gap-4">
           <div class="col-span-12">
             <dash-items-section-group
-              title="Upcoming Websinars"
-              more="/student/my-webinars"
+              title="Upcoming Webinars"
+              :more="webinars.length > 0 && '/student/upcoming-webinars'"
             >
               <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
                 <webinar-item
@@ -100,7 +100,7 @@
                   :key="key"
                   :webinar="webinar"
                   :session="true"
-                  userType="student"
+                  :userType="userDash"
                 />
               </div>
             </dash-items-section-group>
@@ -145,9 +145,7 @@ const webinarDraft = require('@/static/json/webinar-draft.json')
 export default {
   layout: 'dashboard',
   middleware: ['check-auth', 'auth'],
-  fetch({ store }) {
-    store.commit('app/SET_TITLE', 'Webinars')
-  },
+
   // async asyncData(context) {
   //   const { data } = await context.$axios.$get(
   //     `https://streaming.staging.klasroom.com/v1/webinars/upcoming`,
@@ -159,7 +157,6 @@ export default {
   // },
   data: () => ({
     courses: _.take(courses, 4),
-    webinars: [],
     undoneTasks: _.take(courses, 3),
     // Upcoming
     columnsUpcoming: [
@@ -237,6 +234,8 @@ export default {
     ...mapState({
       user: (state) => state.auth.user,
       token: (state) => state.auth.token,
+      webinars: (state) =>
+        state.webinar.webinars ? _.take(state.webinar.webinars.data, 4) : [],
       userType: (state) =>
         state.auth.user && state.auth.user.isTutor ? 'tutor' : 'student',
     }),
@@ -244,6 +243,28 @@ export default {
       return this.$route.path.split('/')[1]
     },
   },
+  async fetch() {
+    this.$store.commit('app/SET_TITLE', 'Webinars')
+    try {
+      const { data, pagination, metaData } = await this.$axios.$get(
+        `https://streaming.staging.klasroom.com/v1/webinars/upcoming`,
+        {
+          headers: getAccessTokenHeader(this.token),
+        }
+      )
+      console.log('upcoming webinars: ', data)
+      this.$store.commit('webinar/FETCH_WEBINAR_SUCCESS', {
+        data,
+        pagination,
+        metaData,
+      })
+      // this.webinars = _.take(data, 4)
+    } catch (err) {
+      console.log(err)
+    }
+  },
+  // call fetch only on client-side
+  fetchOnServer: false,
   methods: {
     switcher: function (value) {
       switch (value) {
@@ -269,19 +290,6 @@ export default {
       }
       // some code to filter users
     },
-  },
-  async mounted() {
-    try {
-      const { data } = await this.$axios.$get(
-        `https://streaming.staging.klasroom.com/v1/webinars/upcoming`,
-        {
-          headers: getAccessTokenHeader(this.token),
-        }
-      )
-      this.webinars = _.take(data, 4)
-    } catch (err) {
-      console.log(err)
-    }
   },
 }
 </script>
