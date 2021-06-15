@@ -1,7 +1,7 @@
 <template>
   <div class="bg-orange-100" style="height: calc(100vh)">
     <webinar-testing-modal
-      v-if="startState !== 'done' && startState !== 'streaming'"
+      v-if="startState !== 'streaming'"
       :startState="startState"
       :confirmText="
         startState === 'closed'
@@ -18,7 +18,9 @@
           ? 'Testing your speaker'
           : startState === 'mic_carmera_test'
           ? 'Testing your mic and camera'
-          : 'Establishing connection. Please Wait...'
+          : startState === 'done'
+          ? 'Joining Meeting. Please Wait...'
+          : 'Establishing Connection. Please Wait...'
       "
       :devices="devices"
       :devicesOpt="devicesOpt"

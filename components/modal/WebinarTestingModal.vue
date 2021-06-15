@@ -205,7 +205,7 @@
               </div>
 
               <div
-                v-if="startState !== 'begin_test'"
+                v-if="startState !== 'begin_test' && startState !== 'done'"
                 class="flex text-center pt-8 pb-4 sm:pb-4"
               >
                 <span class="flex mx-auto">

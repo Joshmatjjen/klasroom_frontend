@@ -1,7 +1,7 @@
 <template>
   <div class="bg-orange-100" style="height: calc(100vh)">
     <webinar-testing-modal
-      v-if="startState !== 'done'"
+      v-if="startState !== 'streaming'"
       :startState="startState"
       :confirmText="
         startState === 'closed'
@@ -18,6 +18,8 @@
           ? 'Testing your speaker'
           : startState === 'mic_carmera_test'
           ? 'Testing your mic and camera'
+          : startState === 'done'
+          ? 'Joining Webinar. Please Wait...'
           : 'Establishing connection. Please Wait...'
       "
       :devices="devices"
@@ -634,11 +636,17 @@ export default {
         iceState == 'failed' ||
         iceState == 'disconnected'
       ) {
-        console.log('Ice state refreshing...')
-        this.webRTCAdaptor.stop(this.streamId)
-        this.webRTCAdaptor.closePeerConnection(this.streamId)
-        this.webRTCAdaptor.closeWebSocket()
-        initWebRTCAdaptor(true, this.autoRepublishEnabled)
+        if (
+          this.startState !== 'mic_carmera_test' &&
+          this.startState !== 'speaker_test' &&
+          this.startState !== 'done'
+        ) {
+          console.log('Ice state refreshing...')
+          this.webRTCAdaptor.stop(this.streamId)
+          this.webRTCAdaptor.closePeerConnection(this.streamId)
+          this.webRTCAdaptor.closeWebSocket()
+          initWebRTCAdaptor(true, this.autoRepublishEnabled)
+        }
       } else {
         console.log('Ice state connected')
       }
@@ -917,6 +925,7 @@ export default {
             //stream is being published
 
             this.isStreaming = true
+            this.startState = 'streaming'
             console.log('publish started: ')
             // if (
             //   obj.streamId === String(this.$store.getters['auth/user'].userId)
