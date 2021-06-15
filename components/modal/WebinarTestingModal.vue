@@ -106,8 +106,22 @@
                   <p
                     class="text-sm text-center leading-normal text-gray-700 mt-1"
                   >
-                    Perfect
+                    {{
+                      devices.filter(
+                        (i) =>
+                          i.kind === 'audioinput' && i.deviceId !== 'default'
+                      )
+                        ? 'Perfect'
+                        : 'Failed'
+                    }}
                   </p>
+                  <img
+                    @click="toogleAudio"
+                    :src="`/webinar/${isMute ? 'mute' : 'unmute'}.svg`"
+                    class="mx-auto cursor-pointer"
+                    :title="isMute ? 'unmute' : 'mute'"
+                    :style="{ marginTop: '20px' }"
+                  />
                 </div>
                 <div class="mt-4 w-1/2 px-6 border-l">
                   <div class="flex text-center mb-8" style="height: 100px">
@@ -136,8 +150,15 @@
                   <p
                     class="text-sm text-center leading-normal text-gray-700 mt-1"
                   >
-                    Perfect
+                    {{ stream ? 'Perfect' : 'Failed' }}
                   </p>
+                  <img
+                    @click="toogleVideo"
+                    :src="`/webinar/${isCameraOff ? 'videooff' : 'video'}.svg`"
+                    class="mx-auto cursor-pointer"
+                    :title="isCameraOff ? 'On video' : 'Off video'"
+                    :style="{ marginTop: '20px' }"
+                  />
                 </div>
               </div>
 
@@ -171,7 +192,14 @@
                   <p
                     class="text-sm text-center leading-normal text-gray-700 mt-1"
                   >
-                    Perfect
+                    {{
+                      devices.filter(
+                        (i) =>
+                          i.kind === 'audiooutput' && i.deviceId !== 'default'
+                      )
+                        ? 'Perfect'
+                        : 'Failed'
+                    }}
                   </p>
                 </div>
               </div>
@@ -239,6 +267,22 @@ export default {
       required: true,
     },
     stream: {
+      required: false,
+    },
+    toogleAudio: {
+      type: Function,
+      required: false,
+    },
+    isMute: {
+      type: Boolean,
+      required: false,
+    },
+    toogleVideo: {
+      type: Function,
+      required: false,
+    },
+    isCameraOff: {
+      type: Boolean,
       required: false,
     },
   },

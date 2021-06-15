@@ -1,15 +1,34 @@
 <template>
   <div class="bg-orange-100" style="height: calc(100vh)">
     <webinar-testing-modal
-      v-if="startState === 'closed'"
-      startState="closed"
-      confirmText="Return Home"
+      v-if="startState !== 'done'"
+      :startState="startState"
+      :confirmText="
+        startState === 'closed'
+          ? 'Return Home'
+          : startState === 'speaker_test'
+          ? 'Continue to webinar'
+          : 'Next'
+      "
       :confirm="confirm"
-      :title="endMsg"
+      :title="
+        startState === 'closed'
+          ? endMsg
+          : startState === 'speaker_test'
+          ? 'Testing your speaker'
+          : startState === 'mic_carmera_test'
+          ? 'Testing your mic and camera'
+          : 'Establishing connection. Please Wait...'
+      "
       :devices="devices"
       :devicesOpt="devicesOpt"
+      :stream="stream"
+      :toogleAudio="toogleAudio"
+      :isMute="isMute"
+      :toogleVideo="toogleVideo"
+      :isCameraOff="isCameraOff"
     />
-    <webinar-testing-modal
+    <!-- <webinar-testing-modal
       v-if="startState === 'begin_test'"
       startState="begin_test"
       confirmText="Next"
@@ -36,7 +55,7 @@
       title="Testing your speaker"
       :devices="devices"
       :devicesOpt="devicesOpt"
-    />
+    /> -->
 
     <!-- content -->
     <div class="grid grid-cols-12">
@@ -142,8 +161,8 @@
           </div>
           <div
             v-if="
-              (tab === 0 && tabs.length === 4) ||
-              (tab === 1 && tabs.length === 5)
+              (tab === 0 && tabs.length === 2) ||
+              (tab === 1 && tabs.length === 3)
             "
           >
             <div
@@ -226,50 +245,12 @@
           </div>
           <div
             v-if="
-              (tab === 1 && tabs.length === 4) ||
-              (tab === 2 && tabs.length === 5)
+              (tab === 1 && tabs.length === 2) ||
+              (tab === 2 && tabs.length === 3)
             "
             class="pl-4 md:pl-5 lg:pl-6 pb-5"
           >
             <webinar-people :people="peopleOnline" type="meeting" />
-          </div>
-          <div
-            v-if="
-              (tab === 2 && tabs.length === 4) ||
-              (tab === 3 && tabs.length === 5)
-            "
-            class="px-4 md:px-5 lg:px-6 py-4 pb-10"
-          >
-            <webinar-poll />
-          </div>
-          <div
-            v-if="
-              (tab === 3 && tabs.length === 4) ||
-              (tab === 4 && tabs.length === 5)
-            "
-            class="px-4 md:px-5 lg:px-6 py-4 pb-10"
-          >
-            <div class="space-y-4">
-              <resource-list
-                v-for="(item, key) in [
-                  'Businessstats.com / businessfailurerates',
-                ]"
-                :key="key"
-                :name="item"
-                desc="This will show you stats of business failure across countries of the world. This information will be useful for your assignment"
-                link="#"
-              />
-              <resource-list
-                v-for="(item, key) in [
-                  'Business finance spreadsheet.xls',
-                  'Business startup checklist.doc',
-                ]"
-                :key="key"
-                :name="item"
-                link="#"
-                :download="true"
-              />
-            </div>
           </div>
         </div>
       </div>
@@ -293,6 +274,7 @@ export default {
     startState: null,
     endMsg: 'Meeting Ended',
     isHost: false,
+    hostId: null,
     presenting: null,
     maxVideoBitrateKbps: 'unlimited',
     subscriberId: '123', // getUrlParameter("subscriberId"),
@@ -307,7 +289,7 @@ export default {
       audio: null,
     },
     tab: 0,
-    tabs: ['Chat', 'People', 'Poll', 'Resources'],
+    tabs: ['Chat', 'People'],
     isMute: true,
     isCameraOff: true,
     roomTimerId: -1,
@@ -566,6 +548,7 @@ export default {
       this.playStart = true
       this.isCameraOff = false
       this.isMute = false
+      this.hostId = newData.hostId
 
       if (this.streamId === newData.hostId) {
         this.isHost = true
@@ -706,6 +689,10 @@ export default {
 
         if (eventTyp == 'CAM_TURNED_OFF') {
           console.log('Camera turned off for : ', eventStreamId)
+        } else if (eventTyp == 'JOIN') {
+          if (hostId === userId) {
+          }
+          console.log('New user joined : ', eventStreamId)
         } else if (eventTyp == 'CAM_TURNED_ON') {
           console.log('Camera turned on for : ', eventStreamId)
         } else if (eventTyp == 'MIC_MUTED') {
@@ -807,12 +794,12 @@ export default {
               this.webRTCAdaptor.muteLocalMic()
               this.webRTCAdaptor.turnOffLocalCamera()
             }
-            if (publishImmediately) {
-              // this.webRTCAdaptor.publish(this.streamId, this.token)
-              joinRoom()
-            } else {
-              joinRoom()
-            }
+            // if (publishImmediately) {
+            //   // this.webRTCAdaptor.publish(this.streamId, this.token)
+            //   joinRoom()
+            // } else {
+            //   joinRoom()
+            // }
           } else if (info == 'joinedTheRoom') {
             const room = obj.ATTR_ROOM_NAME
             // this.roomOfStream[obj.streamId] = room
@@ -861,11 +848,15 @@ export default {
             this.devicesOpt.carmera = devices.filter(
               (i) => i.kind === 'videoinput'
             )[0]
+
+            if (this.webRTCAdaptor.localStream) {
+              this.stream = this.webRTCAdaptor.localStream
+              this.startState = 'mic_carmera_test'
+            }
+
             // document.querySelector('video#localVideoTest').srcObject = stream;
           } else if (info == 'publish_started') {
             //stream is being published
-
-            this.stream = this.webRTCAdaptor.localStream
 
             this.isStreaming = true
             console.log('publish started: ')
@@ -938,7 +929,6 @@ export default {
             //stream is being finished
             console.log('publish finished')
             this.isStreaming = false
-            // ANCHOR uncomment line in bottom
             this.startState = 'closed'
           } else if (info == 'browser_screen_share_supported') {
             console.log('browser screen share supported')
