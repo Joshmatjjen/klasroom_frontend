@@ -53,7 +53,11 @@
                 {{ title }}
               </h2>
               <div
-                v-if="startState === 'begin_test'"
+                v-if="
+                  !startState ||
+                  startState === 'begin_test' ||
+                  startState === 'done'
+                "
                 class="flex justify-center"
               >
                 <div
@@ -205,7 +209,12 @@
               </div>
 
               <div
-                v-if="startState !== 'begin_test' && startState !== 'done'"
+                v-if="
+                  startState &&
+                  startState !== 'begin_test' &&
+                  startState !== 'closed' &&
+                  startState !== 'done'
+                "
                 class="flex text-center pt-8 pb-4 sm:pb-4"
               >
                 <span class="flex mx-auto">
@@ -215,6 +224,29 @@
                     @click.prevent="() => confirm(startState)"
                   >
                     {{ confirmText || 'OK' }}
+                  </button>
+                </span>
+              </div>
+
+              <div
+                v-if="startState && startState === 'closed'"
+                class="flex text-center pt-8 pb-4 sm:pb-4"
+              >
+                <span class="flex mx-auto">
+                  <button
+                    type="button"
+                    class="btn btn-primary shadow mx-2"
+                    @click.prevent="() => confirm(startState)"
+                  >
+                    {{ confirmText || 'OK' }}
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-primary shadow mx-2"
+                    @click.prevent="() => $router.go()"
+                  >
+                    Rejoin
                   </button>
                 </span>
               </div>
