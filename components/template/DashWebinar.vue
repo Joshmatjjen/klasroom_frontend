@@ -84,6 +84,16 @@
           </div>
         </div>
       </div>
+
+      <!-- Pagination Dynamic -->
+      <t-pagination
+        :total-items="100"
+        :per-page="15"
+        :limit="4"
+        :variant="'roundedSmall'"
+        :value="2"
+        @change="changePage"
+      />
     </section>
 
     <section>
@@ -276,6 +286,10 @@ export default {
           this.isWebinars.draft = false
       }
       // some code to filter users
+    },
+
+    changePage(pagination) {
+      console.log('This is the pagination page -->', pagination)
     },
   },
 }
