@@ -53,7 +53,11 @@
                 {{ title }}
               </h2>
               <div
-                v-if="startState === 'begin_test'"
+                v-if="
+                  !startState ||
+                  startState === 'begin_test' ||
+                  startState === 'done'
+                "
                 class="flex justify-center"
               >
                 <div
@@ -106,8 +110,22 @@
                   <p
                     class="text-sm text-center leading-normal text-gray-700 mt-1"
                   >
-                    Perfect
+                    {{
+                      devices.filter(
+                        (i) =>
+                          i.kind === 'audioinput' && i.deviceId !== 'default'
+                      )
+                        ? 'Perfect'
+                        : 'Failed'
+                    }}
                   </p>
+                  <img
+                    @click="toogleAudio"
+                    :src="`/webinar/${isMute ? 'mute' : 'unmute'}.svg`"
+                    class="mx-auto cursor-pointer"
+                    :title="isMute ? 'unmute' : 'mute'"
+                    :style="{ marginTop: '20px' }"
+                  />
                 </div>
                 <div class="mt-4 w-1/2 px-6 border-l">
                   <div class="flex text-center mb-8" style="height: 100px">
@@ -136,8 +154,15 @@
                   <p
                     class="text-sm text-center leading-normal text-gray-700 mt-1"
                   >
-                    Perfect
+                    {{ stream ? 'Perfect' : 'Failed' }}
                   </p>
+                  <img
+                    @click="toogleVideo"
+                    :src="`/webinar/${isCameraOff ? 'videooff' : 'video'}.svg`"
+                    class="mx-auto cursor-pointer"
+                    :title="isCameraOff ? 'On video' : 'Off video'"
+                    :style="{ marginTop: '20px' }"
+                  />
                 </div>
               </div>
 
@@ -171,13 +196,25 @@
                   <p
                     class="text-sm text-center leading-normal text-gray-700 mt-1"
                   >
-                    Perfect
+                    {{
+                      devices.filter(
+                        (i) =>
+                          i.kind === 'audiooutput' && i.deviceId !== 'default'
+                      )
+                        ? 'Perfect'
+                        : 'Failed'
+                    }}
                   </p>
                 </div>
               </div>
 
               <div
-                v-if="startState !== 'begin_test'"
+                v-if="
+                  startState &&
+                  startState !== 'begin_test' &&
+                  startState !== 'closed' &&
+                  startState !== 'done'
+                "
                 class="flex text-center pt-8 pb-4 sm:pb-4"
               >
                 <span class="flex mx-auto">
@@ -187,6 +224,29 @@
                     @click.prevent="() => confirm(startState)"
                   >
                     {{ confirmText || 'OK' }}
+                  </button>
+                </span>
+              </div>
+
+              <div
+                v-if="startState && startState === 'closed'"
+                class="flex text-center pt-8 pb-4 sm:pb-4"
+              >
+                <span class="flex mx-auto">
+                  <button
+                    type="button"
+                    class="btn btn-primary shadow mx-2"
+                    @click.prevent="() => confirm(startState)"
+                  >
+                    {{ confirmText || 'OK' }}
+                  </button>
+
+                  <button
+                    type="button"
+                    class="btn btn-primary shadow mx-2"
+                    @click.prevent="() => $router.go()"
+                  >
+                    Rejoin
                   </button>
                 </span>
               </div>
@@ -239,6 +299,22 @@ export default {
       required: true,
     },
     stream: {
+      required: false,
+    },
+    toogleAudio: {
+      type: Function,
+      required: false,
+    },
+    isMute: {
+      type: Boolean,
+      required: false,
+    },
+    toogleVideo: {
+      type: Function,
+      required: false,
+    },
+    isCameraOff: {
+      type: Boolean,
       required: false,
     },
   },

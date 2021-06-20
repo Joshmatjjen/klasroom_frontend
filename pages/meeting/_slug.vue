@@ -1,15 +1,36 @@
 <template>
   <div class="bg-orange-100" style="height: calc(100vh)">
     <webinar-testing-modal
-      v-if="startState === 'closed'"
-      startState="closed"
-      confirmText="Return Home"
+      v-if="startState !== 'streaming'"
+      :startState="startState"
+      :confirmText="
+        startState === 'closed'
+          ? 'Return Home'
+          : startState === 'speaker_test'
+          ? 'Continue to webinar'
+          : 'Next'
+      "
       :confirm="confirm"
-      :title="endMsg"
+      :title="
+        startState === 'closed'
+          ? endMsg
+          : startState === 'speaker_test'
+          ? 'Testing your speaker'
+          : startState === 'mic_carmera_test'
+          ? 'Testing your mic and camera'
+          : startState === 'done'
+          ? 'Joining Meeting. Please Wait...'
+          : 'Establishing Connection. Please Wait...'
+      "
       :devices="devices"
       :devicesOpt="devicesOpt"
+      :stream="stream"
+      :toogleAudio="toogleAudio"
+      :isMute="isMute"
+      :toogleVideo="toogleVideo"
+      :isCameraOff="isCameraOff"
     />
-    <webinar-testing-modal
+    <!-- <webinar-testing-modal
       v-if="startState === 'begin_test'"
       startState="begin_test"
       confirmText="Next"
@@ -36,7 +57,7 @@
       title="Testing your speaker"
       :devices="devices"
       :devicesOpt="devicesOpt"
-    />
+    /> -->
 
     <!-- content -->
     <div class="grid grid-cols-12">
@@ -142,8 +163,8 @@
           </div>
           <div
             v-if="
-              (tab === 0 && tabs.length === 4) ||
-              (tab === 1 && tabs.length === 5)
+              (tab === 0 && tabs.length === 2) ||
+              (tab === 1 && tabs.length === 3)
             "
           >
             <div
@@ -226,50 +247,12 @@
           </div>
           <div
             v-if="
-              (tab === 1 && tabs.length === 4) ||
-              (tab === 2 && tabs.length === 5)
+              (tab === 1 && tabs.length === 2) ||
+              (tab === 2 && tabs.length === 3)
             "
             class="pl-4 md:pl-5 lg:pl-6 pb-5"
           >
             <webinar-people :people="peopleOnline" type="meeting" />
-          </div>
-          <div
-            v-if="
-              (tab === 2 && tabs.length === 4) ||
-              (tab === 3 && tabs.length === 5)
-            "
-            class="px-4 md:px-5 lg:px-6 py-4 pb-10"
-          >
-            <webinar-poll />
-          </div>
-          <div
-            v-if="
-              (tab === 3 && tabs.length === 4) ||
-              (tab === 4 && tabs.length === 5)
-            "
-            class="px-4 md:px-5 lg:px-6 py-4 pb-10"
-          >
-            <div class="space-y-4">
-              <resource-list
-                v-for="(item, key) in [
-                  'Businessstats.com / businessfailurerates',
-                ]"
-                :key="key"
-                :name="item"
-                desc="This will show you stats of business failure across countries of the world. This information will be useful for your assignment"
-                link="#"
-              />
-              <resource-list
-                v-for="(item, key) in [
-                  'Business finance spreadsheet.xls',
-                  'Business startup checklist.doc',
-                ]"
-                :key="key"
-                :name="item"
-                link="#"
-                :download="true"
-              />
-            </div>
           </div>
         </div>
       </div>
@@ -293,6 +276,7 @@ export default {
     startState: null,
     endMsg: 'Meeting Ended',
     isHost: false,
+    hostId: null,
     presenting: null,
     maxVideoBitrateKbps: 'unlimited',
     subscriberId: '123', // getUrlParameter("subscriberId"),
@@ -307,7 +291,7 @@ export default {
       audio: null,
     },
     tab: 0,
-    tabs: ['Chat', 'People', 'Poll', 'Resources'],
+    tabs: ['Chat', 'People'],
     isMute: true,
     isCameraOff: true,
     roomTimerId: -1,
@@ -389,6 +373,7 @@ export default {
 
       if (state === 'speaker_test') {
         this.startState = 'done'
+        this.joinRoom()
       }
       if (state === 'closed') this.$router.push(`/`)
     },
@@ -430,8 +415,11 @@ export default {
       this.webRTCAdaptor.stop(this.streamId)
       this.webRTCAdaptor.leaveFromRoom(this.roomName)
       this.webRTCAdaptor.closePeerConnection(this.streamId)
-      this.webRTCAdaptor.closeStream()
-      // this.webRTCAdaptor.closeWebSocket()
+      // this.webRTCAdaptor.closeStream()
+      setTimeout(() => {
+        this.webRTCAdaptor.closeWebSocket()
+        this.webRTCAdaptor = null
+      }, 1000)
 
       // this.webRTCAdaptor.leave(this.streamId)
       // this.webRTCAdaptor.closeStream()
@@ -502,15 +490,13 @@ export default {
     },
     sendNotificationEvent(eventType, msg) {
       if (this.isDataChannelOpen) {
-        // const iceState = this.webRTCAdaptor.iceConnectionState(this.streamId)
-        // if (
-        //   iceState != null &&
-        //   iceState != 'failed' &&
-        //   iceState != 'disconnected'
-        // ) {
         const notEvent = { streamId: this.streamId, eventType: eventType }
 
-        if (eventType === 'REMOVE_USER_DATA' || eventType === 'SEND_USER_DATA')
+        if (
+          eventType === 'REMOVE_USER_DATA' ||
+          eventType === 'SEND_USER_DATA' ||
+          eventType === 'JOIN'
+        )
           notEvent.eventObj = this.user // Adding user obj to sendData
 
         if (eventType === 'SEND_MESSAGE') notEvent.eventObj = msg // Adding msg to sendData
@@ -522,6 +508,9 @@ export default {
           'Could not send the notification because data channel is not open.'
         )
       }
+    },
+    joinRoom() {
+      this.webRTCAdaptor.joinRoom(this.roomName, this.streamId)
     },
   },
   watch: {
@@ -543,9 +532,9 @@ export default {
       console.log('isStreaming: ', value)
     },
   },
-  async beforeUnmount() {
-    this.stopPublishing()
-  },
+  // async beforeUnmount() {
+  //   this.stopPublishing()
+  // },
   async mounted() {
     // this.streamId = String(this.$store.getters['auth/user'].userId)
     this.roomName = this.$route.params.slug
@@ -566,6 +555,8 @@ export default {
       this.playStart = true
       this.isCameraOff = false
       this.isMute = false
+      this.hostId = newData.hostId
+      this.startState = 'begin_test'
 
       if (this.streamId === newData.hostId) {
         this.isHost = true
@@ -600,16 +591,20 @@ export default {
         iceState == 'failed' ||
         iceState == 'disconnected'
       ) {
-        console.log('Ice state refreshing...')
-        this.webRTCAdaptor.stop(this.streamId)
-        this.webRTCAdaptor.closePeerConnection(this.streamId)
-        this.webRTCAdaptor.closeWebSocket()
-        initWebRTCAdaptor(true, this.autoRepublishEnabled)
+        if (
+          this.startState !== 'mic_carmera_test' &&
+          this.startState !== 'speaker_test' &&
+          this.startState !== 'done'
+        ) {
+          console.log('Ice state refreshing...')
+          this.webRTCAdaptor.stop(this.streamId)
+          this.webRTCAdaptor.closePeerConnection(this.streamId)
+          this.webRTCAdaptor.closeWebSocket()
+          initWebRTCAdaptor(true, this.autoRepublishEnabled)
+        }
+      } else {
+        console.log('Ice state connected')
       }
-    }
-
-    const joinRoom = () => {
-      this.webRTCAdaptor.joinRoom(this.roomName, this.streamId)
     }
 
     const playVideo = (obj) => {
@@ -706,6 +701,29 @@ export default {
 
         if (eventTyp == 'CAM_TURNED_OFF') {
           console.log('Camera turned off for : ', eventStreamId)
+        } else if (eventTyp == 'JOIN') {
+          if (
+            this.hostId === this.user.userId &&
+            eventStreamId !== this.hostId
+          ) {
+            Swal.fire({
+              position: 'top-end',
+              width: '350px',
+              text: `${eventObj.name} want to join`,
+              backdrop: false,
+              allowOutsideClick: false,
+              showConfirmButton: true,
+              showCloseButton: false,
+              confirmButtonText: '<i class="fa fa-thumbs-up"></i> Admit',
+            }).then((result) => {
+              /* Read more about isConfirmed, isDenied below */
+              if (result.isConfirmed) {
+                // joinRoom(eventStreamId)
+                Swal.fire('Joined!', '', 'success')
+              }
+            })
+          }
+          console.log('New user joined : ', eventStreamId)
         } else if (eventTyp == 'CAM_TURNED_ON') {
           console.log('Camera turned on for : ', eventStreamId)
         } else if (eventTyp == 'MIC_MUTED') {
@@ -743,9 +761,23 @@ export default {
       }
     }
 
-    const publish = (streamName, token) => {
-      // publishStreamId = streamName;
-      this.webRTCAdaptor.publish(streamName, token)
+    const publish = (obj, token) => {
+      this.webRTCAdaptor.publish(obj.streamId, token)
+
+      if (obj.streams != null) {
+        obj.streams.forEach((item) => {
+          console.log('Stream joined with ID: ' + item)
+          this.webRTCAdaptor.play(item, this.token, this.roomName)
+        })
+        this.streamsList = obj.streams
+      }
+      this.roomTimerId = setInterval(() => {
+        this.webRTCAdaptor.getRoomInfo(
+          this.roomName,
+          this.streamId,
+          this.presenting
+        )
+      }, 5000)
     }
 
     const pc_config = {
@@ -786,7 +818,6 @@ export default {
     // if (location.protocol.startsWith('https')) {
     //   websocketURL = 'wss://' + websocketPath
     // }
-    this.startState = 'begin_test'
 
     const initWebRTCAdaptor = (publishImmediately, autoRepublishEnabled) => {
       this.webRTCAdaptor = new WebRTCAdaptor({
@@ -800,41 +831,19 @@ export default {
         bandwidth: this.maxVideoBitrateKbps,
         callback: (info, obj) => {
           if (info == 'initialized') {
-            console.log('initialized: ', obj)
-            // this.startState = 'begin_test'
+            console.log('Initialized')
+            this.startState = 'mic_carmera_test'
 
             if (!this.playStart) {
               this.webRTCAdaptor.muteLocalMic()
               this.webRTCAdaptor.turnOffLocalCamera()
             }
-            if (publishImmediately) {
-              // this.webRTCAdaptor.publish(this.streamId, this.token)
-              joinRoom()
-            } else {
-              joinRoom()
-            }
+
+            // this.sendNotificationEvent('JOIN')
+            // joinRoom()
           } else if (info == 'joinedTheRoom') {
-            const room = obj.ATTR_ROOM_NAME
-            // this.roomOfStream[obj.streamId] = room
             console.log('++++ joinedTheRoom: ' + obj)
-            // console.log(obj)
-
-            publish(obj.streamId, this.token)
-
-            if (obj.streams != null) {
-              obj.streams.forEach((item) => {
-                console.log('Stream joined with ID: ' + item)
-                this.webRTCAdaptor.play(item, this.token, this.roomName)
-              })
-              this.streamsList = obj.streams
-            }
-            this.roomTimerId = setInterval(() => {
-              this.webRTCAdaptor.getRoomInfo(
-                this.roomName,
-                this.streamId,
-                this.presenting
-              )
-            }, 5000)
+            publish(obj, this.token)
           } else if (info == 'newStreamAvailable') {
             console.log('++++ newStreamAvailable' + obj)
             playVideo(obj)
@@ -861,23 +870,26 @@ export default {
             this.devicesOpt.carmera = devices.filter(
               (i) => i.kind === 'videoinput'
             )[0]
-            // document.querySelector('video#localVideoTest').srcObject = stream;
+
+            if (this.webRTCAdaptor.localStream) {
+              this.stream = this.webRTCAdaptor.localStream
+              // this.startState = 'mic_carmera_test'
+            }
           } else if (info == 'publish_started') {
             //stream is being published
 
-            this.stream = this.webRTCAdaptor.localStream
-
             this.isStreaming = true
+            this.startState = 'streaming'
             console.log('publish started: ')
-            if (
-              obj.streamId === String(this.$store.getters['auth/user'].userId)
-            ) {
-              this.confirm('begin_test')
-            }
+            // if (
+            //   obj.streamId === String(this.$store.getters['auth/user'].userId)
+            // ) {
+            //   this.confirm('begin_test')
+            // }
 
-            startAnimation()
             if (autoRepublishEnabled && this.autoRepublishIntervalJob == null) {
               this.autoRepublishIntervalJob = setInterval(() => {
+                // startAnimation()
                 checkAndRepublishIfRequired()
               }, 3000)
             }
@@ -938,8 +950,7 @@ export default {
             //stream is being finished
             console.log('publish finished')
             this.isStreaming = false
-            // ANCHOR uncomment line in bottom
-            this.startState = 'closed'
+            // this.startState = 'closed'
           } else if (info == 'browser_screen_share_supported') {
             console.log('browser screen share supported')
           } else if (info == 'screen_share_stopped') {
@@ -959,7 +970,7 @@ export default {
             //It's especially useful when load balancer or firewalls close the websocket connection due to inactivity
           } else if (info == 'refreshConnestreamsListction') {
             console.log('refreshConnestreamsListction')
-            checkAndRepublishIfRequired()
+            // checkAndRepublishIfRequired()
           } else if (info == 'ice_connection_state_changed') {
             // console.log('iceConnectionState Changed: ', JSON.stringify(obj))
           } else if (info == 'updated_stats') {

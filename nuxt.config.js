@@ -48,6 +48,7 @@ export default {
     '~plugins/vue2-filters',
     '~plugins/webrtc-adaptor',
     '~plugins/vue-advanced-cropper',
+    { src: '~plugins/vue-tailwind', mode: 'client', ssr: false },
     { src: '~plugins/validate', mode: 'client' },
     { src: '~plugins/datepicker', mode: 'client' },
     { src: '~plugins/vue-select', mode: 'client' },
